@@ -5,7 +5,11 @@
             "name": "default",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_CRT_LINKAGE": "static",
+                "VCPKG_LIBRARY_LINKAGE": "static",
+                "VCPKG_TARGET_ARCHITECTURE": "x64",
+                "VCPKG_CMAKE_SYSTEM_NAME": "MinGW"
             }
         }
     ]
