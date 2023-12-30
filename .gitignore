@@ -1,6 +1,7 @@
 ### Self-defined
 
 build/
+vcpkg_installed/
 
 ### https://github.com/github/gitignore/blob/main/C.gitignore
 
