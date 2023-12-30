@@ -35,4 +35,3 @@ target_link_libraries(${PROJECT_NAME}
 PRIVATE minhook::minhook
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
-
