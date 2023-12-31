@@ -15,4 +15,9 @@
 
 #define RE2RRANDOMIZERAPI __declspec(dllexport)
 
+#include <memory>
+#include <windows.h>
+
+// RE2RRANDOMIZERAPI void *DetourFunction64(void *pSource, void *pDestination, uint32_t length);
+
 #endif
