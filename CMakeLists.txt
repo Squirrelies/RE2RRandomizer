@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
 find_package(minhook CONFIG REQUIRED)
 
 add_compile_options(
-    -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas
+    -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -m64
     $<$<CONFIG:RELEASE>:-O3> # Optimize.
     $<$<CONFIG:RELEASE>:-s> # Debug symbol stripping.
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.

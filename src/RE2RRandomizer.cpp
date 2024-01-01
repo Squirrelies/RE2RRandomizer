@@ -8,14 +8,16 @@ int wmain(void)
 	if (pid == 0)
 		return 1;
 
-	std::wstring DllPath = std::filesystem::current_path().native() + L"RE2RRandomizerHook.dll";
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	LPVOID pDllPath = VirtualAllocEx(handle, 0, GetStringSize(DllPath), MEM_COMMIT, PAGE_READWRITE);
-	WriteProcessMemory(handle, pDllPath, (LPVOID)DllPath.c_str(), GetStringSize(DllPath), 0);
-	FARPROC addressKernel32LoadLibraryW = GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW");
-	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0, (LPTHREAD_START_ROUTINE)addressKernel32LoadLibraryW, pDllPath, 0, 0);
+	std::wstring dllPath = std::filesystem::current_path().native() + L"\\libRE2RRandomizerHook.dll";
+	size_t dllPathSize = GetStringSize(dllPath);
+	HANDLE handle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pid);
+	LPVOID pDllPath = VirtualAllocEx(handle, 0, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
+	WriteProcessMemory(handle, pDllPath, (LPVOID)dllPath.c_str(), dllPathSize, nullptr);
+	LPTHREAD_START_ROUTINE addressKernel32LoadLibrary = reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW"));
+	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0, addressKernel32LoadLibrary, pDllPath, 0, 0);
 	WaitForSingleObject(hLoadThread, INFINITE);
-	VirtualFreeEx(handle, pDllPath, GetStringSize(DllPath), MEM_RELEASE);
+	VirtualFreeEx(handle, pDllPath, 0, MEM_RELEASE);
+	CloseHandle(handle);
 
 	return 0;
 }
