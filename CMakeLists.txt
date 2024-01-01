@@ -17,6 +17,9 @@ add_compile_definitions(
     $<$<CONFIG:RELEASE>:RELEASE>
     $<$<CONFIG:DEBUG>:DEBUG>
     )
+add_link_options(
+    -municode
+)
 
 include_directories(include)
 

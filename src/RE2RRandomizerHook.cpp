@@ -4,19 +4,19 @@
 // register volatile unsigned int ItemPickupId asm("%r8+70h");
 // register volatile unsigned int ItemPutdownId asm("%rdi+14h");
 
-typedef unsigned long long(__fastcall *ItemPickup)(long long param1, long long param2, unsigned long long param3, unsigned long long param4);
-ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>(0x1AD507F);
+typedef void(__declspec(naked) * ItemPickup)(void);
+ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + 0x1AD507F);
 ItemPickup itemPickupFunc = nullptr;
-__fastcall unsigned long long HookItemPickup(long long param1, long long param2, unsigned long long param3, unsigned long long param4)
+__declspec(naked) void HookItemPickup(void)
 {
-	volatile int itemId;
-	asm volatile("movl 70(%%r8), %0" : "=a"(itemId)); // Copy long (4-byte) value into variable.
-
-	return itemPickupFunc(param1, param2, param3, param4);
+	int *itemId = new int;
+	asm("movl 70(%%r8), %0" : "=a"(*itemId)); // Copy long (4-byte) value into variable.
+	printf("[RE2R-R] HookItemPickup called: %d\n", *itemId);
+	delete itemId;
 }
 
 HMODULE dllHandle;
-FILE *cout;
+FILE *cout, *cin, *cerr;
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call)
@@ -41,13 +41,18 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 bool Startup()
 {
-	return AllocConsole() && freopen_s(&cout, "CONOUT$", "w", stdout);
+	return AllocConsole() &&
+	       !freopen_s(&cin, "CONIN$", "r", stdin) &&
+	       !freopen_s(&cout, "CONOUT$", "w", stdout) &&
+	       !freopen_s(&cerr, "CONOUT$", "w", stderr);
 }
 
 void Shutdown()
 {
 	printf("[RE2R-R] Shutdown called.\n");
+	fclose(cerr);
 	fclose(cout);
+	fclose(cin);
 	FreeConsole();
 	CreateThread(NULL, 0, EjectThread, NULL, 0, NULL);
 }
@@ -64,11 +69,18 @@ DWORD WINAPI MenuThread(LPVOID lpThreadParameter)
 		return 1;
 	}
 
-	if ((status = MH_CreateHook(reinterpret_cast<void **>(itemPickupFuncTarget), reinterpret_cast<void **>(&HookItemPickup), reinterpret_cast<void **>(&itemPickupFunc))) != MH_OK)
+	if ((status = MH_CreateHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget), reinterpret_cast<LPVOID>(&HookItemPickup), reinterpret_cast<LPVOID *>(&itemPickupFunc))) != MH_OK)
 	{
 		printf("[RE2R-R] MinHook CreateHook failed: %s\n", MH_StatusToString(status));
 		Shutdown();
 		return 2;
+	}
+
+	if ((status = MH_EnableHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget))) != MH_OK)
+	{
+		printf("[RE2R-R] MinHook EnableHook failed: %s\n", MH_StatusToString(status));
+		Shutdown();
+		return 3;
 	}
 
 	printf("[RE2R-R] Usage:\n");

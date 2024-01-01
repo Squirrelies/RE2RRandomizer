@@ -1,8 +1,52 @@
 #include "RE2RRandomizer.h"
+#include <tlhelp32.h>
 
-int main(void)
+// int wmain(int argc, wchar_t *argv[])
+int wmain(void)
 {
+	DWORD pid = GetProcessIdByName(L"re2.exe");
+	if (pid == 0)
+		return 1;
+
+	std::wstring DllPath = std::filesystem::current_path().native() + L"RE2RRandomizerHook.dll";
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	LPVOID pDllPath = VirtualAllocEx(handle, 0, GetStringSize(DllPath), MEM_COMMIT, PAGE_READWRITE);
+	WriteProcessMemory(handle, pDllPath, (LPVOID)DllPath.c_str(), GetStringSize(DllPath), 0);
+	FARPROC addressKernel32LoadLibraryW = GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW");
+	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0, (LPTHREAD_START_ROUTINE)addressKernel32LoadLibraryW, pDllPath, 0, 0);
+	WaitForSingleObject(hLoadThread, INFINITE);
+	VirtualFreeEx(handle, pDllPath, GetStringSize(DllPath), MEM_RELEASE);
+
 	return 0;
+}
+
+template <typename charT>
+size_t GetStringSize(std::__cxx11::basic_string<charT> string)
+{
+	return (string.length() * sizeof(charT)) + sizeof(charT);
+}
+
+DWORD GetProcessIdByName(const TCHAR *name)
+{
+	DWORD pid = 0;
+
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PROCESSENTRY32 process;
+	process.dwSize = sizeof(process);
+	if (Process32First(snapshot, &process))
+	{
+		do
+		{
+			if (!_tcscmp(process.szExeFile, name))
+			{
+				pid = process.th32ProcessID;
+				break;
+			}
+		} while (Process32Next(snapshot, &process));
+	}
+	CloseHandle(snapshot);
+
+	return pid;
 }
 
 // void *DetourFunction64(void *pSource, void *pDestination, uint32_t length)
