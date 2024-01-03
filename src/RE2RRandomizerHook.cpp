@@ -4,15 +4,15 @@
 // register volatile unsigned int ItemPickupId asm("%r8+70h");
 // register volatile unsigned int ItemPutdownId asm("%rdi+14h");
 
-typedef void(__declspec(naked) * ItemPickup)(void);
-ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + 0x1AD507F);
+typedef void *(*ItemPickup)(void *param1, void *param2, void *param3, void *param4);
+ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + 0x1AD5070);
 ItemPickup itemPickupFunc = nullptr;
-__declspec(naked) void HookItemPickup(void)
+__fastcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
 {
-	int *itemId = new int;
-	asm("movl 70(%%r8), %0" : "=a"(*itemId)); // Copy long (4-byte) value into variable.
-	printf("[RE2R-R] HookItemPickup called: %d\n", *itemId);
-	delete itemId;
+	uint32_t *itemId = (uint32_t *)(param3 + 0x70);
+	uint8_t *idlocation = (uint8_t *)(param4 + 0x30);
+	printf("[RE2R-R] HookItemPickup called: %d (0x%x): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", *itemId, *itemId, idlocation[0], idlocation[1], idlocation[2], idlocation[3], idlocation[4], idlocation[5]);
+	return itemPickupFunc(param1, param2, param3, param4);
 }
 
 HMODULE dllHandle;
@@ -50,6 +50,7 @@ bool Startup()
 void Shutdown()
 {
 	printf("[RE2R-R] Shutdown called.\n");
+	MH_DisableHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget));
 	fclose(cerr);
 	fclose(cout);
 	fclose(cin);
