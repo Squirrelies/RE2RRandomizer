@@ -1,18 +1,39 @@
 #include "RE2RRandomizerHook.h"
 
-// register volatile unsigned int ItemPickupLocation asm("%r9+30h");
-// register volatile unsigned int ItemPickupId asm("%r8+70h");
-// register volatile unsigned int ItemPutdownId asm("%rdi+14h");
+#define DX11
+
+#ifdef DX12
+// DX12-WW as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
+constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
+#endif
+#ifdef DX11
+// DX11-WW as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
+constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
+#endif
 
 typedef void *(*ItemPickup)(void *param1, void *param2, void *param3, void *param4);
-ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + 0x1AD5070);
+ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
 ItemPickup itemPickupFunc = nullptr;
+
+typedef void (*ItemPutDownKeep)(void *param1, void *param2, void *param3);
+ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
+ItemPutDownKeep itemPutDownKeepFunc = nullptr;
+
 __fastcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
 {
-	uint32_t *itemId = (uint32_t *)(param3 + 0x70);
-	uint8_t *idlocation = (uint8_t *)(param4 + 0x30);
+	uint32_t *itemId = (((uint32_t *)param3) + 0x70);   // R8
+	uint8_t *idlocation = (((uint8_t *)param4) + 0x30); // R9
 	printf("[RE2R-R] HookItemPickup called: %d (0x%x): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", *itemId, *itemId, idlocation[0], idlocation[1], idlocation[2], idlocation[3], idlocation[4], idlocation[5]);
 	return itemPickupFunc(param1, param2, param3, param4);
+}
+
+__fastcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
+{
+	uint32_t *itemId = (((uint32_t *)param2) + 0x14); // RDI
+	printf("[RE2R-R] HookItemPutDownKeep called: %d (0x%x)\n", *itemId, *itemId);
+	itemPutDownKeepFunc(param1, param2, param3);
 }
 
 HMODULE dllHandle;
@@ -51,6 +72,7 @@ void Shutdown()
 {
 	printf("[RE2R-R] Shutdown called.\n");
 	MH_DisableHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget));
+	MH_DisableHook(reinterpret_cast<LPVOID>(itemPutDownKeepFuncTarget));
 	fclose(cerr);
 	fclose(cout);
 	fclose(cin);
@@ -72,14 +94,28 @@ DWORD WINAPI MenuThread(LPVOID lpThreadParameter)
 
 	if ((status = MH_CreateHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget), reinterpret_cast<LPVOID>(&HookItemPickup), reinterpret_cast<LPVOID *>(&itemPickupFunc))) != MH_OK)
 	{
-		printf("[RE2R-R] MinHook CreateHook failed: %s\n", MH_StatusToString(status));
+		printf("[RE2R-R] MinHook CreateHook (itemPickupFuncTarget) failed: %s\n", MH_StatusToString(status));
+		Shutdown();
+		return 2;
+	}
+
+	if ((status = MH_CreateHook(reinterpret_cast<LPVOID>(itemPutDownKeepFuncTarget), reinterpret_cast<LPVOID>(&HookItemPutDownKeep), reinterpret_cast<LPVOID *>(&itemPutDownKeepFunc))) != MH_OK)
+	{
+		printf("[RE2R-R] MinHook CreateHook (itemPutDownKeepFuncTarget) failed: %s\n", MH_StatusToString(status));
 		Shutdown();
 		return 2;
 	}
 
 	if ((status = MH_EnableHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget))) != MH_OK)
 	{
-		printf("[RE2R-R] MinHook EnableHook failed: %s\n", MH_StatusToString(status));
+		printf("[RE2R-R] MinHook EnableHook (itemPickupFuncTarget) failed: %s\n", MH_StatusToString(status));
+		Shutdown();
+		return 3;
+	}
+
+	if ((status = MH_EnableHook(reinterpret_cast<LPVOID>(itemPutDownKeepFuncTarget))) != MH_OK)
+	{
+		printf("[RE2R-R] MinHook EnableHook (itemPutDownKeepFuncTarget) failed: %s\n", MH_StatusToString(status));
 		Shutdown();
 		return 3;
 	}
