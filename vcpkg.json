@@ -1,6 +1,14 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "dependencies": [
-        "minhook"
+        "minhook",
+        {
+            "name": "imgui",
+            "features": [
+                "dx11-binding",
+                "dx12-binding",
+                "win32-binding"
+            ]
+        }
     ]
 }

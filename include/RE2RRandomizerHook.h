@@ -13,16 +13,25 @@
 #define WIN32_LEAD_AND_MEAN
 #endif
 
-#define RE2RRANDOMIZERHOOKAPI __declspec(dllexport)
-
+#include "DX11Hook.h"
 #include <MinHook.h>
 #include <memory>
 #include <windows.h>
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
-bool Startup();
-void Shutdown();
-DWORD WINAPI MenuThread(LPVOID lpThreadParameter);
-DWORD WINAPI EjectThread(LPVOID lpThreadParameter);
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
+	bool Startup();
+	void Shutdown();
+	DWORD WINAPI MainThread(LPVOID lpThreadParameter);
+	DWORD WINAPI DX11Thread(LPVOID lpThreadParameter);
+	DWORD WINAPI EjectThread(LPVOID lpThreadParameter);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

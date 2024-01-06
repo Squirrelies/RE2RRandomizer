@@ -83,7 +83,13 @@
         "ranges": "cpp",
         "codecvt": "cpp",
         "ratio": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "filesystem": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "C_Cpp.default.cppStandard": "gnu++20",
     "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe",

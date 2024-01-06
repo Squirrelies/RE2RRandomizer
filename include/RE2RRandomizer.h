@@ -15,15 +15,17 @@
 
 #include <windows.h>
 
+#include <filesystem>
+
 #define RE2RRANDOMIZERAPI __declspec(dllexport)
 
-#include <filesystem>
-#include <tchar.h>
-#include <tlhelp32.h>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-template <typename charT>
-RE2RRANDOMIZERAPI size_t GetStringSize(std::__cxx11::basic_string<charT> string);
-RE2RRANDOMIZERAPI DWORD GetProcessIdByName(const TCHAR *name);
-// RE2RRANDOMIZERAPI void *DetourFunction64(void *pSource, void *pDestination, uint32_t length);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

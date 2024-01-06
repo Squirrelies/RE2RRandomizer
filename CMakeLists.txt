@@ -5,6 +5,13 @@ set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
 
 # vcpkg dependencies.
 find_package(minhook CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+
+# Required libraries we'll link for ImGUI.
+find_library(D3D11_LIBRARY d3d11 REQUIRED)
+find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED)
+find_library(GDI32_LIBRARY Gdi32 REQUIRED)
+find_library(DWMAPI_LIBRARY dwmapi REQUIRED)
 
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -m64
@@ -12,21 +19,23 @@ add_compile_options(
     $<$<CONFIG:RELEASE>:-s> # Debug symbol stripping.
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
     $<$<CONFIG:DEBUG>:-ggdb3> # Set symbol type.
+    #$<$<CONFIG:DEBUG>:-gcodeview> # Set symbol type.
     )
 add_compile_definitions(
     $<$<CONFIG:RELEASE>:RELEASE>
     $<$<CONFIG:DEBUG>:DEBUG>
     )
 add_link_options(
-    -municode
+    -municode -static-libgcc -static-libstdc++ -static
 )
 
+target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY})
 include_directories(include)
 
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED src/${PROJECT_NAME}Hook.cpp)
 target_link_libraries(${PROJECT_NAME}Hook
-PRIVATE minhook::minhook
+PRIVATE minhook::minhook imgui::imgui
 )
 add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}Hook.dll)
 
