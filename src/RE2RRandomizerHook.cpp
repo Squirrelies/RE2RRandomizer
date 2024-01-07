@@ -128,6 +128,13 @@ DWORD WINAPI MainThread(LPVOID lpThreadParameter)
 	while (true)
 	{
 		Sleep(16);
+		if (GetAsyncKeyState(VK_F7) & 0x01)
+		{
+			logger->LogMessage("F7 key pressed, toggling UI...\n");
+			if (dx11Hook != nullptr)
+				dx11Hook->ToggleUI();
+			break;
+		}
 		if (GetAsyncKeyState(VK_F8) & 0x01)
 		{
 			logger->LogMessage("F8 key pressed, exiting...\n");
@@ -142,12 +149,13 @@ DWORD WINAPI MainThread(LPVOID lpThreadParameter)
 DWORD WINAPI DX11Thread(LPVOID lpThreadParameter)
 {
 	logger->LogMessage("DX11Thread start\n");
-	dx11Hook = new DX11Hook(dllHandle, FindWindow(L"via", L"RESIDENT EVIL 2"), stdoutLogFile);
+	// dx11Hook = new DX11Hook(dllHandle, FindWindow(L"via", L"RESIDENT EVIL 2"), stdoutLogFile);
+	dx11Hook = new DX11Hook(stdoutLogFile);
 
 	logger->LogMessage("DX11Thread loop\n");
 	while (dx11Hook != nullptr)
 	{
-		Sleep(1);
+		Sleep(16);
 	}
 	logger->LogMessage("DX11Thread end\n");
 
