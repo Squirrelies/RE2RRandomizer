@@ -79,7 +79,7 @@ ID3D11Device *pDevice = NULL;
 ID3D11DeviceContext *pContext = NULL;
 ID3D11RenderTargetView *mainRenderTargetView;
 bool init = false;
-bool isUIOpen = false;
+bool isUIOpen = true;
 
 void InitImGui()
 {
@@ -135,12 +135,19 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 			return oPresent(pSwapChain, SyncInterval, Flags);
 	}
 
+	ImGuiIO &io = ImGui::GetIO();
+	if (io.AppFocusLost)
+		io.MouseDrawCursor = false;
+	else
+		io.MouseDrawCursor = true;
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin("ImGui Window");
-	ImGui::End();
+	// ImGui::Begin("ImGui Window");
+	// ImGui::End();
+	ImGui::ShowDemoWindow(&isUIOpen);
 
 	ImGui::Render();
 
