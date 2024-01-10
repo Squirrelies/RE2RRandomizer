@@ -1,9 +1,21 @@
-#ifndef STRINGS_H
-#define STRINGS_H
+#ifndef RE2RR_STRINGS_H
+#define RE2RR_STRINGS_H
+
+#ifndef UNICODE
+#define UNICODE
+#endif
+
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+
+#ifndef WIN32_LEAD_AND_MEAN
+#define WIN32_LEAD_AND_MEAN
+#endif
 
 #include <string>
 
-#define STRINGSAPI __declspec(dllexport)
+#define RE2RRSTRINGSAPI __declspec(dllexport)
 
 #ifdef __cplusplus
 extern "C"
@@ -42,15 +54,9 @@ extern "C"
 #endif
 #endif
 
-	STRINGSAPI size_t GetStringSizeA(std::string string)
-	{
-		return (string.length() * sizeof(char)) + sizeof(char);
-	}
+	RE2RRSTRINGSAPI size_t GetStringSizeA(std::string string);
 
-	STRINGSAPI size_t GetStringSizeW(std::wstring string)
-	{
-		return (string.length() * sizeof(wchar_t)) + sizeof(wchar_t);
-	}
+	RE2RRSTRINGSAPI size_t GetStringSizeW(std::wstring string);
 
 #ifdef __cplusplus
 }

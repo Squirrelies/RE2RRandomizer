@@ -1,5 +1,13 @@
-#ifndef LOGGING_H
-#define LOGGING_H
+#ifndef RE2RR_LOGGING_H
+#define RE2RR_LOGGING_H
+
+#ifndef UNICODE
+#define UNICODE
+#endif
+
+#ifndef _UNICODE
+#define _UNICODE
+#endif
 
 #ifndef WIN32_LEAD_AND_MEAN
 #define WIN32_LEAD_AND_MEAN
@@ -9,14 +17,14 @@
 
 #include <stdio.h>
 
-#define LOGGINGAPI __declspec(dllexport)
+#define RE2RRLOGGINGAPI __declspec(dllexport)
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-	class LOGGINGAPI ImmediateLogger
+	class RE2RRLOGGINGAPI ImmediateLogger
 	{
 	private:
 		FILE *out;

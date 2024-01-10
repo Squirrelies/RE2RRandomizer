@@ -1,16 +1,4 @@
 #include "RE2RRandomizerHook.h"
-#define DX11
-
-#ifdef DX11
-// DX11-WW as of 20240102
-constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
-constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
-#endif
-#ifdef DX12
-// DX12-WW as of 20240102
-constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
-constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
-#endif
 
 HMODULE dllHandle;
 FILE *stdoutLogFile;
@@ -31,10 +19,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 				CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
 			}
 		}
-			// case DLL_PROCESS_DETACH:
-			// {
-			// 	Shutdown();
-			// }
 	}
 
 	return TRUE;
@@ -56,6 +40,7 @@ void Shutdown()
 {
 	logger->LogMessage("[RE2R-R] Shutdown called.\n");
 	MH_DisableHook(MH_ALL_HOOKS);
+	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 	if (logger != nullptr)
 	{
@@ -66,15 +51,13 @@ void Shutdown()
 	FreeConsole();
 }
 
-typedef void *(*ItemPickup)(void *param1, void *param2, void *param3, void *param4);
 ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
 ItemPickup itemPickupFunc = nullptr;
 
-typedef void (*ItemPutDownKeep)(void *param1, void *param2, void *param3);
 ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
 ItemPutDownKeep itemPutDownKeepFunc = nullptr;
 
-__fastcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
+__stdcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
 {
 	uint32_t *itemId = (uint32_t *)(param3 + 0x70);   // R8
 	uint8_t *idlocation = (uint8_t *)(param4 + 0x30); // R9
@@ -82,16 +65,13 @@ __fastcall void *HookItemPickup(void *param1, void *param2, void *param3, void *
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
-__fastcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
+__stdcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
 {
 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI
 	logger->LogMessage("[RE2R-R] HookItemPutDownKeep called: %d (0x%x)\n", *itemId, *itemId);
 	itemPutDownKeepFunc(param1, param2, param3);
 }
 
-typedef HRESULT(__stdcall *Present)(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags);
-typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 Present oPresent;
 HWND window = NULL;
 WNDPROC oWndProc;
@@ -99,6 +79,7 @@ ID3D11Device *pDevice = NULL;
 ID3D11DeviceContext *pContext = NULL;
 ID3D11RenderTargetView *mainRenderTargetView;
 bool init = false;
+bool isUIOpen = false;
 
 void InitImGui()
 {
@@ -111,6 +92,20 @@ void InitImGui()
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	switch (uMsg)
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+			case VK_F7:
+				logger->LogMessage("[RE2R-R] F7 pressed, toggling UI.\n");
+				isUIOpen = !isUIOpen;
+				return 0;
+			case VK_F8:
+				logger->LogMessage("[RE2R-R] F8 pressed, exiting!\n");
+				Shutdown();
+				return 0;
+		}
+
 	if (true && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
 
@@ -215,25 +210,20 @@ DWORD WINAPI MainThread(LPVOID lpThreadParameter)
 	logger->LogMessage("[RE2R-R] Menu called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
+	MH_STATUS status;
 	do
 	{
 		SetVTables();
-	} while (!HookFunction((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent));
-	HookFunction(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc);
-	HookFunction(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc);
+	} while (!HookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
+	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
+	if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");
-	return TRUE;
-}
 
-template <class FuncT>
-bool HookFunction(FuncT target, FuncT hook, FuncT *original)
-{
-	MH_STATUS createHookStatus, enableHookStatus;
-	createHookStatus = MH_CreateHook(target, hook, original);
-	enableHookStatus = MH_EnableHook(target);
-	bool hookStatus = createHookStatus == MH_OK && enableHookStatus == MH_OK;
-	if (!hookStatus)
-		logger->LogMessage("[RE2R-R] Hook failed: CreateHook %s / EnableHook %s\n", MH_StatusToString(createHookStatus), MH_StatusToString(enableHookStatus));
-	return hookStatus;
+	logger->LogMessage("[RE2R-R] Usage:\n");
+	logger->LogMessage("\t(F7): Toggle UI)\n");
+	logger->LogMessage("\t(F8): Exit)\n");
+	return TRUE;
 }

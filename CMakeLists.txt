@@ -24,6 +24,9 @@ add_compile_options(
 add_compile_definitions(
     $<$<CONFIG:RELEASE>:RELEASE>
     $<$<CONFIG:DEBUG>:DEBUG>
+    UNICODE
+    _UNICODE
+    WIN32_LEAD_AND_MEAN
     )
 add_link_options(
     -municode -static-libgcc -static-libstdc++ -static
@@ -33,7 +36,9 @@ target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3DCOMPILER_LIBR
 include_directories(include)
 
 ### Library
-add_library(${PROJECT_NAME}Hook SHARED src/${PROJECT_NAME}Hook.cpp)
+add_library(${PROJECT_NAME}Hook SHARED
+src/${PROJECT_NAME}Hook.cpp
+)
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui
 )
@@ -42,5 +47,7 @@ add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}
 ### Executable
 add_executable(${PROJECT_NAME}
 src/${PROJECT_NAME}.cpp
+src/Strings.cpp
+src/Process.cpp
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)

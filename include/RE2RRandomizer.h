@@ -1,5 +1,5 @@
-#ifndef RE2RRANDOMIZER_H
-#define RE2RRANDOMIZER_H
+#ifndef RE2RR_RE2RRANDOMIZER_H
+#define RE2RR_RE2RRANDOMIZER_H
 
 #ifndef UNICODE
 #define UNICODE
@@ -15,17 +15,7 @@
 
 #include <windows.h>
 
+#include "Process.h"
 #include <filesystem>
-
-#define RE2RRANDOMIZERAPI __declspec(dllexport)
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
