@@ -13,25 +13,22 @@
 #define WIN32_LEAD_AND_MEAN
 #endif
 
-#include "DX11Hook.h"
+#include "Logging.h"
 #include <MinHook.h>
+#include <d3d11.h>
+#include <dxgi.h>
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
 #include <memory>
 #include <windows.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
-	bool Startup();
-	void Shutdown();
-	DWORD WINAPI MainThread(LPVOID lpThreadParameter);
-	DWORD WINAPI DX11Thread(LPVOID lpThreadParameter);
-	DWORD WINAPI EjectThread(LPVOID lpThreadParameter);
-
-#ifdef __cplusplus
-}
-#endif
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
+bool Startup();
+void Shutdown();
+DWORD WINAPI MainThread(LPVOID lpThreadParameter);
+void HookDX11();
+template <class FuncT>
+bool HookFunction(FuncT target, FuncT hook, FuncT *original);
 
 #endif

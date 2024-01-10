@@ -14,7 +14,7 @@ find_library(GDI32_LIBRARY Gdi32 REQUIRED)
 find_library(DWMAPI_LIBRARY dwmapi REQUIRED)
 
 add_compile_options(
-    -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -m64
+    -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -fpermissive -m64
     $<$<CONFIG:RELEASE>:-O3> # Optimize.
     $<$<CONFIG:RELEASE>:-s> # Debug symbol stripping.
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
@@ -37,13 +37,10 @@ add_library(${PROJECT_NAME}Hook SHARED src/${PROJECT_NAME}Hook.cpp)
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui
 )
-add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}Hook.dll)
+add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all lib${PROJECT_NAME}Hook.dll)
 
 ### Executable
 add_executable(${PROJECT_NAME}
 src/${PROJECT_NAME}.cpp
-)
-target_link_libraries(${PROJECT_NAME}
-PRIVATE minhook::minhook
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)

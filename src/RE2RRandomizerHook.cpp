@@ -1,22 +1,70 @@
 #include "RE2RRandomizerHook.h"
-#include "DX11Hook.h"
 #define DX11
 
-HMODULE dllHandle;
-FILE *stdoutLogFile;
-ImmediateLogger *logger;
-DX11Hook *dx11Hook;
-
-#ifdef DX12
-// DX12-WW as of 20240102
-constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
-constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
-#endif
 #ifdef DX11
 // DX11-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
 constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
 #endif
+#ifdef DX12
+// DX12-WW as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
+constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
+#endif
+
+HMODULE dllHandle;
+FILE *stdoutLogFile;
+ImmediateLogger *logger;
+
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+{
+	switch (ul_reason_for_call)
+	{
+		case DLL_PROCESS_ATTACH:
+		{
+			DisableThreadLibraryCalls(hModule);
+			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+			if (Startup())
+			{
+				logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) called.\n");
+				dllHandle = hModule;
+				CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
+			}
+		}
+			// case DLL_PROCESS_DETACH:
+			// {
+			// 	Shutdown();
+			// }
+	}
+
+	return TRUE;
+}
+
+bool Startup()
+{
+	FILE *dummy;
+	return (AllocConsole() || AttachConsole(ATTACH_PARENT_PROCESS)) && // CONIN$ & CONOUT$
+	       !freopen_s(&dummy, "CONIN$", "r", stdin) &&
+	       !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
+	       !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
+	       !fopen_s(&stdoutLogFile, "RE2R-Randomizer-stdout.log", "w") &&
+	       (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
+	       MH_Initialize() == MH_OK;
+}
+
+void Shutdown()
+{
+	logger->LogMessage("[RE2R-R] Shutdown called.\n");
+	MH_DisableHook(MH_ALL_HOOKS);
+	MH_Uninitialize();
+	if (logger != nullptr)
+	{
+		delete logger;
+		logger = nullptr;
+	}
+	fclose(stdoutLogFile);
+	FreeConsole();
+}
 
 typedef void *(*ItemPickup)(void *param1, void *param2, void *param3, void *param4);
 ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
@@ -41,130 +89,151 @@ __fastcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
 	itemPutDownKeepFunc(param1, param2, param3);
 }
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+typedef HRESULT(__stdcall *Present)(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags);
+typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+Present oPresent;
+HWND window = NULL;
+WNDPROC oWndProc;
+ID3D11Device *pDevice = NULL;
+ID3D11DeviceContext *pContext = NULL;
+ID3D11RenderTargetView *mainRenderTargetView;
+bool init = false;
+
+void InitImGui()
 {
-	switch (ul_reason_for_call)
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+	ImGui_ImplWin32_Init(window);
+	ImGui_ImplDX11_Init(pDevice, pContext);
+}
+
+LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (true && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
+
+	return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
+}
+
+HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags)
+{
+	if (!init)
 	{
-		case DLL_PROCESS_ATTACH:
+		if (SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void **)&pDevice)))
 		{
-			DisableThreadLibraryCalls(hModule);
-			if (Startup())
-			{
-				logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) called.\n");
-				dllHandle = hModule;
-				CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
-				CreateThread(NULL, 0, DX11Thread, NULL, 0, NULL);
-			}
+			pDevice->GetImmediateContext(&pContext);
+			DXGI_SWAP_CHAIN_DESC sd;
+			pSwapChain->GetDesc(&sd);
+			window = sd.OutputWindow;
+			ID3D11Texture2D *pBackBuffer;
+			pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&pBackBuffer);
+			pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
+			pBackBuffer->Release();
+			oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
+			InitImGui();
+			init = true;
 		}
-		default:
-		{
-			break;
-		}
+
+		else
+			return oPresent(pSwapChain, SyncInterval, Flags);
 	}
 
-	return TRUE;
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("ImGui Window");
+	ImGui::End();
+
+	ImGui::Render();
+
+	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
-bool Startup()
-{
-	FILE *dummy;
-	return (AllocConsole() || AttachConsole(ATTACH_PARENT_PROCESS)) && // CONIN$ & CONOUT$
-	       !freopen_s(&dummy, "CONIN$", "r", stdin) &&
-	       !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
-	       !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
-	       !fopen_s(&stdoutLogFile, "RE2R-Randomizer-stdout.log", "w") &&
-	       (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
-	       MH_Initialize() == MH_OK;
-}
+static void **vtableDXGISwapChain = nullptr;
+static void **vtableD3D11Device = nullptr;
+static void **vtableD3D11DeviceContext = nullptr;
 
-void Shutdown()
+static void __stdcall SetVTables(void)
 {
-	logger->LogMessage("[RE2R-R] Shutdown called.\n");
-	delete logger;
-	delete dx11Hook;
-	MH_DisableHook(MH_ALL_HOOKS);
-	MH_Uninitialize();
-	fclose(stdoutLogFile);
-	FreeConsole();
-	CreateThread(NULL, 0, EjectThread, NULL, 0, NULL);
+	logger->LogMessage("Start of SetVTables() 1.0\n");
+
+	DXGI_SWAP_CHAIN_DESC sd;
+	memset(&sd, 0, sizeof(sd));
+	sd.BufferCount = 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.OutputWindow = FindWindow(L"via", L"RESIDENT EVIL 2");
+	sd.SampleDesc.Count = 1;
+	sd.Windowed = TRUE;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+	const D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0};
+	IDXGISwapChain *dxgiSwapChain;
+	ID3D11Device *d3d11Device;
+	ID3D11DeviceContext *d3d11DeviceContext;
+	if (D3D11CreateDeviceAndSwapChain(
+	        nullptr,
+	        D3D_DRIVER_TYPE_HARDWARE,
+	        nullptr,
+	        0,
+	        featureLevels,
+	        sizeof(featureLevels) / sizeof(D3D_FEATURE_LEVEL),
+	        D3D11_SDK_VERSION,
+	        &sd,
+	        &dxgiSwapChain,
+	        &d3d11Device,
+	        nullptr,
+	        &d3d11DeviceContext) == S_OK)
+	//&d3d11DeviceContext) == S_OK)
+	{
+		logger->LogMessage("Start of SetVTables() 1.1t\n");
+
+		vtableDXGISwapChain = (void **)calloc(40, sizeof(void *));
+		memcpy(vtableDXGISwapChain, *(void ***)dxgiSwapChain, 40 * sizeof(void *));
+
+		vtableD3D11Device = (void **)calloc(43, sizeof(void *));
+		memcpy(vtableD3D11Device, *(void ***)d3d11Device, 43 * sizeof(void *));
+
+		vtableD3D11DeviceContext = (void **)calloc(144, sizeof(void *));
+		memcpy(vtableD3D11DeviceContext, *(void ***)d3d11DeviceContext, 144 * sizeof(void *));
+
+		dxgiSwapChain->Release();
+		d3d11Device->Release();
+		d3d11Device = nullptr;
+
+		logger->LogMessage("Start of SetVTables() 1.2 (IDXGISwapChain::Present: %p, IDXGISwapChain1::Present1: %p)\n", vtableDXGISwapChain[8], vtableDXGISwapChain[22]);
+	}
 }
 
 DWORD WINAPI MainThread(LPVOID lpThreadParameter)
 {
 	logger->LogMessage("[RE2R-R] Menu called.\n");
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
-	MH_STATUS status;
-	if ((status = MH_CreateHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget), reinterpret_cast<LPVOID>(&HookItemPickup), reinterpret_cast<LPVOID *>(&itemPickupFunc))) != MH_OK)
+	do
 	{
-		logger->LogMessage("[RE2R-R] MinHook CreateHook (itemPickupFuncTarget) failed: %s\n", MH_StatusToString(status));
-		Shutdown();
-		return 2;
-	}
+		SetVTables();
+	} while (!HookFunction((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent));
+	HookFunction(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc);
+	HookFunction(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc);
 
-	if ((status = MH_EnableHook(reinterpret_cast<LPVOID>(itemPickupFuncTarget))) != MH_OK)
-	{
-		logger->LogMessage("[RE2R-R] MinHook EnableHook (itemPickupFuncTarget) failed: %s\n", MH_StatusToString(status));
-		Shutdown();
-		return 3;
-	}
-
-	if ((status = MH_CreateHook(reinterpret_cast<LPVOID>(itemPutDownKeepFuncTarget), reinterpret_cast<LPVOID>(&HookItemPutDownKeep), reinterpret_cast<LPVOID *>(&itemPutDownKeepFunc))) != MH_OK)
-	{
-		logger->LogMessage("[RE2R-R] MinHook CreateHook (itemPutDownKeepFuncTarget) failed: %s\n", MH_StatusToString(status));
-		Shutdown();
-		return 2;
-	}
-
-	if ((status = MH_EnableHook(reinterpret_cast<LPVOID>(itemPutDownKeepFuncTarget))) != MH_OK)
-	{
-		logger->LogMessage("[RE2R-R] MinHook EnableHook (itemPutDownKeepFuncTarget) failed: %s\n", MH_StatusToString(status));
-		Shutdown();
-		return 3;
-	}
-
-	logger->LogMessage("[RE2R-R] Usage:\n");
-	logger->LogMessage("\t(F8) Exit\n");
-
-	while (true)
-	{
-		Sleep(16);
-		if (GetAsyncKeyState(VK_F7) & 0x01)
-		{
-			logger->LogMessage("F7 key pressed, toggling UI...\n");
-			if (dx11Hook != nullptr)
-				dx11Hook->ToggleUI();
-			break;
-		}
-		if (GetAsyncKeyState(VK_F8) & 0x01)
-		{
-			logger->LogMessage("F8 key pressed, exiting...\n");
-			break;
-		}
-	}
-
-	Shutdown();
-	return 0;
+	logger->LogMessage("[RE2R-R] Hooked.\n");
+	return TRUE;
 }
 
-DWORD WINAPI DX11Thread(LPVOID lpThreadParameter)
+template <class FuncT>
+bool HookFunction(FuncT target, FuncT hook, FuncT *original)
 {
-	logger->LogMessage("DX11Thread start\n");
-	// dx11Hook = new DX11Hook(dllHandle, FindWindow(L"via", L"RESIDENT EVIL 2"), stdoutLogFile);
-	dx11Hook = new DX11Hook(stdoutLogFile);
-
-	logger->LogMessage("DX11Thread loop\n");
-	while (dx11Hook != nullptr)
-	{
-		Sleep(16);
-	}
-	logger->LogMessage("DX11Thread end\n");
-
-	return 0;
-}
-
-DWORD WINAPI EjectThread(LPVOID lpThreadParameter)
-{
-	Sleep(100);
-	FreeLibraryAndExitThread(dllHandle, 0);
-	return 0;
+	MH_STATUS createHookStatus, enableHookStatus;
+	createHookStatus = MH_CreateHook(target, hook, original);
+	enableHookStatus = MH_EnableHook(target);
+	bool hookStatus = createHookStatus == MH_OK && enableHookStatus == MH_OK;
+	if (!hookStatus)
+		logger->LogMessage("[RE2R-R] Hook failed: CreateHook %s / EnableHook %s\n", MH_StatusToString(createHookStatus), MH_StatusToString(enableHookStatus));
+	return hookStatus;
 }
