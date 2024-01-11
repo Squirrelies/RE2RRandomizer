@@ -42,11 +42,15 @@ typedef void *(__stdcall *ItemPickup)(void *param1, void *param2, void *param3, 
 typedef void(__stdcall *ItemPutDownKeep)(void *param1, void *param2, void *param3);
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
 bool Startup();
 void Shutdown();
 DWORD WINAPI MainThread(LPVOID lpThreadParameter);
+
+void CreateRenderTarget(IDXGISwapChain *swapChain);
+void CleanupRenderTarget();
 
 #endif

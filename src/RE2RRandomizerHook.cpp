@@ -73,66 +73,69 @@ __stdcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
 }
 
 Present oPresent;
-HWND window = NULL;
+HWND window = FindWindow(L"via", L"RESIDENT EVIL 2");
 WNDPROC oWndProc;
-ID3D11Device *pDevice = NULL;
-ID3D11DeviceContext *pContext = NULL;
+ID3D11Device *device;
+ID3D11DeviceContext *deviceContext;
 ID3D11RenderTargetView *mainRenderTargetView;
 bool init = false;
 bool isUIOpen = true;
+UINT resizeWidth = 0U;
+UINT resizeHeight = 0U;
 
-void InitImGui()
+void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {
+	device->GetImmediateContext(&deviceContext);
+	ID3D11Texture2D *backBuffer;
+	swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&backBuffer);
+	device->CreateRenderTargetView(backBuffer, nullptr, &mainRenderTargetView);
+	backBuffer->Release();
+	oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
+	device->GetImmediateContext(&deviceContext);
+	CreateRenderTarget(swapChain);
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
-	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
 	ImGui_ImplWin32_Init(window);
-	ImGui_ImplDX11_Init(pDevice, pContext);
+	ImGui_ImplDX11_Init(device, deviceContext);
 }
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-			case VK_F7:
-				logger->LogMessage("[RE2R-R] F7 pressed, toggling UI.\n");
-				isUIOpen = !isUIOpen;
-				return 0;
-			case VK_F8:
-				logger->LogMessage("[RE2R-R] F8 pressed, exiting!\n");
-				Shutdown();
-				return 0;
-		}
-
-	if (true && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
+
+	switch (uMsg)
+	{
+		case WM_SIZE:
+			if (wParam == SIZE_MINIMIZED)
+				return 0;
+			resizeWidth = (UINT)LOWORD(lParam); // Queue resize
+			resizeHeight = (UINT)HIWORD(lParam);
+			return 0;
+		case WM_SYSCOMMAND:
+			if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+				return 0;
+			break;
+		case WM_DESTROY:
+			Shutdown();
+			return 0;
+	}
 
 	return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags)
+HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT flags)
 {
 	if (!init)
 	{
-		if (SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void **)&pDevice)))
+		if (SUCCEEDED(swapChain->GetDevice(__uuidof(ID3D11Device), (void **)&device)))
 		{
-			pDevice->GetImmediateContext(&pContext);
-			DXGI_SWAP_CHAIN_DESC sd;
-			pSwapChain->GetDesc(&sd);
-			window = sd.OutputWindow;
-			ID3D11Texture2D *pBackBuffer;
-			pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&pBackBuffer);
-			pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
-			pBackBuffer->Release();
-			oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
-			InitImGui();
+			InitImGui(swapChain, device);
 			init = true;
 		}
-
 		else
-			return oPresent(pSwapChain, SyncInterval, Flags);
+			return oPresent(swapChain, syncInterval, flags);
 	}
 
 	ImGuiIO &io = ImGui::GetIO();
@@ -140,6 +143,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 		io.MouseDrawCursor = false;
 	else
 		io.MouseDrawCursor = true;
+
+	if (resizeWidth != 0 && resizeHeight != 0)
+	{
+		CleanupRenderTarget();
+		swapChain->ResizeBuffers(0, resizeWidth, resizeHeight, DXGI_FORMAT_UNKNOWN, 0);
+		resizeWidth = resizeHeight = 0;
+		CreateRenderTarget(swapChain);
+	}
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -151,9 +162,9 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT 
 
 	ImGui::Render();
 
-	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+	deviceContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	return oPresent(pSwapChain, SyncInterval, Flags);
+	return oPresent(swapChain, syncInterval, flags);
 }
 
 static void **vtableDXGISwapChain = nullptr;
@@ -169,7 +180,7 @@ static void __stdcall SetVTables(void)
 	sd.BufferCount = 1;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sd.OutputWindow = FindWindow(L"via", L"RESIDENT EVIL 2");
+	sd.OutputWindow = window;
 	sd.SampleDesc.Count = 1;
 	sd.Windowed = TRUE;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -191,7 +202,6 @@ static void __stdcall SetVTables(void)
 	        &d3d11Device,
 	        nullptr,
 	        &d3d11DeviceContext) == S_OK)
-	//&d3d11DeviceContext) == S_OK)
 	{
 		logger->LogMessage("Start of SetVTables() 1.1t\n");
 
@@ -209,6 +219,23 @@ static void __stdcall SetVTables(void)
 		d3d11Device = nullptr;
 
 		logger->LogMessage("Start of SetVTables() 1.2 (IDXGISwapChain::Present: %p, IDXGISwapChain1::Present1: %p)\n", vtableDXGISwapChain[8], vtableDXGISwapChain[22]);
+	}
+}
+
+void CreateRenderTarget(IDXGISwapChain *swapChain)
+{
+	ID3D11Texture2D *backBuffer;
+	swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	device->CreateRenderTargetView(backBuffer, nullptr, &mainRenderTargetView);
+	backBuffer->Release();
+}
+
+void CleanupRenderTarget()
+{
+	if (mainRenderTargetView)
+	{
+		mainRenderTargetView->Release();
+		mainRenderTargetView = nullptr;
 	}
 }
 
