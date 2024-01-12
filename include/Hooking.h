@@ -18,17 +18,15 @@
 template <class FuncT>
 bool HookFunction(FuncT target, FuncT hook, FuncT *original, MH_STATUS &status)
 {
-	MH_STATUS createHookStatus, enableHookStatus;
-	createHookStatus = MH_CreateHook(target, hook, original);
-	enableHookStatus = MH_EnableHook(target);
-	if (createHookStatus != MH_OK)
-		status = createHookStatus;
-	else if (enableHookStatus != MH_OK)
-		status = enableHookStatus;
-	else
-		status = MH_OK;
+	status = MH_CreateHook(target, hook, original);
+	if (status != MH_OK)
+		return false;
 
-	return status == MH_OK;
+	status = MH_EnableHook(target);
+	if (status != MH_OK)
+		return false;
+
+	return true;
 }
 
 #endif

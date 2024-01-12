@@ -13,6 +13,20 @@ find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED)
 find_library(GDI32_LIBRARY Gdi32 REQUIRED)
 find_library(DWMAPI_LIBRARY dwmapi REQUIRED)
 
+# Required libraries we'll link.
+find_library(DXGUID_LIBRARY dxguid REQUIRED)
+find_library(DINPUT8_LIBRARY dinput8 REQUIRED)
+
+include(CMakePrintHelpers)
+cmake_print_variables(
+    D3D11_LIBRARY,
+    DXGUID_LIBRARY
+    DINPUT8_LIBRARY,
+    D3DCOMPILER_LIBRARY,
+    GDI32_LIBRARY,
+    DWMAPI_LIBRARY
+)
+
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -fpermissive -m64
     $<$<CONFIG:RELEASE>:-O3> # Optimize.
@@ -40,7 +54,7 @@ add_library(${PROJECT_NAME}Hook SHARED
 src/${PROJECT_NAME}Hook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
-PRIVATE minhook::minhook imgui::imgui
+PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
 )
 add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}> ARGS --strip-all lib${PROJECT_NAME}Hook.dll)
 
