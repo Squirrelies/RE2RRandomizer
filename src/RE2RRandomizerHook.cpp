@@ -1,10 +1,32 @@
 #include "RE2RRandomizerHook.h"
 
 HINSTANCE dllInstance;
+HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
 ImmediateLogger *logger;
 bool allocedConsole;
 bool attachedConsole;
+void **vtableDXGISwapChain = nullptr;
+void **vtableD3D11Device = nullptr;
+void **vtableD3D11DeviceContext = nullptr;
+void **vtableDirectInput8 = nullptr;
+void **vtableDirectInputDevice8 = nullptr;
+Present oPresent;
+GetDeviceState oGetDeviceState;
+HWND window = FindWindow(L"via", L"RESIDENT EVIL 2");
+WNDPROC oWndProc;
+ID3D11Device *device;
+ID3D11DeviceContext *deviceContext;
+ID3D11RenderTargetView *mainRenderTargetView;
+bool initPresent = false;
+bool initGetDeviceState = false;
+bool isUIOpen = true;
+UINT resizeWidth = 0U;
+UINT resizeHeight = 0U;
+ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
+ItemPickup itemPickupFunc = nullptr;
+ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
+ItemPutDownKeep itemPutDownKeepFunc = nullptr;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)
 {
@@ -18,20 +40,44 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 			{
 				logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) called.\n");
 				dllInstance = hinstDLL;
-				CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
+				mainThreadHandle = CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
 			}
-		}
-
-		default: // 0 2 3
-		{
-			// DLL_PROCESS_DETACH	0
-			// DLL_THREAD_ATTACH	2
-			// DLL_THREAD_DETACH	3
-			printf("DllMain(): 0x%X\n", fdwReason);
+			break;
 		}
 	}
 
 	return TRUE;
+}
+
+DWORD WINAPI MainThread(LPVOID lpThreadParameter)
+{
+	logger->LogMessage("[RE2R-R] Menu called.\n");
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
+	MH_STATUS status;
+	do
+	{
+		SetVTables();
+	} while (!HookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
+	if (!HookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &oGetDeviceState, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
+	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
+	if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
+
+	logger->LogMessage("[RE2R-R] Hooked.\n");
+
+	logger->LogMessage("[RE2R-R] Usage:\n");
+	logger->LogMessage("\t(F7): Toggle UI)\n");
+	logger->LogMessage("\t(F8): Exit)\n");
+	return TRUE;
+}
+
+DWORD WINAPI ShutdownThread(LPVOID lpThreadParameter)
+{
+	Sleep(100);
+	FreeLibrary(dllInstance);
 }
 
 bool Startup()
@@ -55,6 +101,11 @@ void Shutdown()
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
+	CleanupRenderTarget();
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
 	if (logger != nullptr)
 	{
@@ -62,16 +113,14 @@ void Shutdown()
 		logger = nullptr;
 	}
 	fclose(stdoutLogFile);
+	fclose(stdin);
+	fclose(stdout);
+	fclose(stderr);
 	if (allocedConsole)
 		FreeConsole();
-	FreeLibraryAndExitThread(dllInstance, 0);
+	CreateThread(NULL, 0, ShutdownThread, NULL, 0, NULL);
+	TerminateThread(mainThreadHandle, 0);
 }
-
-ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
-ItemPickup itemPickupFunc = nullptr;
-
-ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
-ItemPutDownKeep itemPutDownKeepFunc = nullptr;
 
 __stdcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
 {
@@ -87,19 +136,6 @@ __stdcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
 	logger->LogMessage("[RE2R-R] HookItemPutDownKeep called: %d (0x%x)\n", *itemId, *itemId);
 	itemPutDownKeepFunc(param1, param2, param3);
 }
-
-Present oPresent;
-GetDeviceState oGetDeviceState;
-HWND window = FindWindow(L"via", L"RESIDENT EVIL 2");
-WNDPROC oWndProc;
-ID3D11Device *device;
-ID3D11DeviceContext *deviceContext;
-ID3D11RenderTargetView *mainRenderTargetView;
-bool initPresent = false;
-bool initGetDeviceState = false;
-bool isUIOpen = true;
-UINT resizeWidth = 0U;
-UINT resizeHeight = 0U;
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {
@@ -139,7 +175,6 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 					break;
 
 				case VK_F8:
-					SendMessage(hWnd, WM_QUIT, 0, 0);
 					Shutdown();
 					break;
 
@@ -224,13 +259,7 @@ HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *device, DWORD cbData, 
 	return oGetDeviceState(device, cbData, lpvData);
 }
 
-static void **vtableDXGISwapChain = nullptr;
-static void **vtableD3D11Device = nullptr;
-static void **vtableD3D11DeviceContext = nullptr;
-static void **vtableDirectInput8 = nullptr;
-static void **vtableDirectInputDevice8 = nullptr;
-
-static void __stdcall SetVTables(void)
+void __stdcall SetVTables(void)
 {
 	logger->LogMessage("SetVTables() 1.0\n");
 
@@ -320,29 +349,4 @@ void CleanupRenderTarget()
 		mainRenderTargetView->Release();
 		mainRenderTargetView = nullptr;
 	}
-}
-
-DWORD WINAPI MainThread(LPVOID lpThreadParameter)
-{
-	logger->LogMessage("[RE2R-R] Menu called.\n");
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-
-	MH_STATUS status;
-	do
-	{
-		SetVTables();
-	} while (!HookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
-	if (!HookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &oGetDeviceState, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
-	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
-	if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
-
-	logger->LogMessage("[RE2R-R] Hooked.\n");
-
-	logger->LogMessage("[RE2R-R] Usage:\n");
-	logger->LogMessage("\t(F7): Toggle UI)\n");
-	logger->LogMessage("\t(F8): Exit)\n");
-	return TRUE;
 }

@@ -41,20 +41,27 @@ constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
 constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
 #endif
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
+
 typedef void *(__stdcall *ItemPickup)(void *, void *, void *, void *);
 typedef void(__stdcall *ItemPutDownKeep)(void *, void *, void *);
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
-LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
-BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID);
-bool Startup();
-void Shutdown();
+BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID);
 DWORD WINAPI MainThread(LPVOID);
-
+DWORD WINAPI ShutdownThread(LPVOID);
+bool Startup(void);
+void Shutdown(void);
+__stdcall void *HookItemPickup(void *, void *, void *, void *);
+__stdcall void HookItemPutDownKeep(void *, void *, void *);
+void InitImGui(IDXGISwapChain *, ID3D11Device *);
+LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
+HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
+HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
+void __stdcall SetVTables(void);
 void CreateRenderTarget(IDXGISwapChain *);
-void CleanupRenderTarget();
+void CleanupRenderTarget(void);
 
 #endif
