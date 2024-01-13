@@ -155,6 +155,7 @@ void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
 	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+	io.IniFilename = "RE2RR.ini";
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX11_Init(device, deviceContext);
 }
@@ -235,8 +236,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 
 	if (isUIOpen)
 	{
-		ImGui::Begin("ImGui Window", &isUIOpen, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse);
-		ImGui::End();
+		DrawMainUI();
 		// ImGui::ShowDemoWindow();
 	}
 
@@ -245,6 +245,80 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 	deviceContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	return oPresent(swapChain, syncInterval, flags);
+}
+
+void __stdcall DrawMainUI()
+{
+	static bool show_Help_AboutRE2RR = false;
+
+	// We specify a default position/size in case there's no data in the .ini file.
+	// We only do it to make the demo applications a little more welcoming, but typically this isn't required.
+	const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 400, main_viewport->WorkPos.y + 400), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
+
+	if (show_Help_AboutRE2RR)
+		DrawHelpAboutRE2RRUI(&show_Help_AboutRE2RR);
+
+	;
+
+	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", &isUIOpen, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Menu Bar
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Help"))
+		{
+			ImGui::MenuItem("About RE2RR", NULL, &show_Help_AboutRE2RR);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	static int character = 0;
+	ImGui::SeparatorText("Character");
+	ImGui::RadioButton("Leon", &character, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("Claire", &character, 1);
+	ImGui::Spacing();
+
+	static int scenario = 0;
+	ImGui::SeparatorText("Scenario");
+	ImGui::RadioButton("A", &scenario, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("B", &scenario, 1);
+	ImGui::Spacing();
+
+	static int difficulty = 0;
+	ImGui::SeparatorText("Difficulty");
+	ImGui::RadioButton("Assisted", &difficulty, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("Normal", &difficulty, 1);
+	ImGui::SameLine();
+	ImGui::RadioButton("Hardcore", &difficulty, 2);
+	ImGui::Spacing();
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (ImGui::Button("Generate Seed"))
+		logger->LogMessage("Generate Seed clicked!\n");
+	ImGui::SameLine();
+	if (ImGui::Button("Enable Randomizer"))
+		logger->LogMessage("Enable Randomizer clicked!\n");
+
+	ImGui::End();
+}
+
+void __stdcall DrawHelpAboutRE2RRUI(bool *open)
+{
+	ImGui::Begin("RE2RR: About", open, ImGuiWindowFlags_NoCollapse);
+
+	ImGui::End();
 }
 
 HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *device, DWORD cbData, LPVOID lpvData)
