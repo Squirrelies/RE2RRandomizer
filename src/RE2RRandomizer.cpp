@@ -12,8 +12,7 @@ int wmain(void)
 	HANDLE handle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pid);
 	LPVOID pDllPath = VirtualAllocEx(handle, 0, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
 	WriteProcessMemory(handle, pDllPath, (LPVOID)dllPath.c_str(), dllPathSize, nullptr);
-	LPTHREAD_START_ROUTINE addressKernel32LoadLibrary = reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW"));
-	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0, addressKernel32LoadLibrary, pDllPath, 0, 0);
+	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0, (LPTHREAD_START_ROUTINE)(void *)GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW"), pDllPath, 0, 0);
 	WaitForSingleObject(hLoadThread, INFINITE);
 	VirtualFreeEx(handle, pDllPath, 0, MEM_RELEASE);
 	CloseHandle(handle);

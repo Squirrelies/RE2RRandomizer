@@ -28,7 +28,8 @@ cmake_print_variables(
 )
 
 add_compile_options(
-    -Wall -Wextra -Wpedantic -Wno-overflow -Wno-unused-but-set-variable -Wno-unknown-pragmas -fpermissive -m64
+    -Wall -Wextra -Wpedantic
+    -m64
     $<$<CONFIG:RELEASE>:-O3> # Optimize.
     $<$<CONFIG:RELEASE>:-s> # Debug symbol stripping.
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
