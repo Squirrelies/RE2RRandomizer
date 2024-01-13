@@ -28,7 +28,7 @@ ItemPickup itemPickupFunc = nullptr;
 ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
 ItemPutDownKeep itemPutDownKeepFunc = nullptr;
 
-BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)
+BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
 	switch (fdwReason)
 	{
@@ -49,7 +49,7 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	return TRUE;
 }
 
-DWORD WINAPI MainThread(LPVOID lpThreadParameter)
+DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 {
 	logger->LogMessage("[RE2R-R] Menu called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
@@ -74,10 +74,11 @@ DWORD WINAPI MainThread(LPVOID lpThreadParameter)
 	return TRUE;
 }
 
-DWORD WINAPI ShutdownThread(LPVOID lpThreadParameter)
+DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 {
 	Sleep(100);
 	FreeLibrary(dllInstance);
+	return 0;
 }
 
 bool Startup()
@@ -122,7 +123,7 @@ void Shutdown()
 	TerminateThread(mainThreadHandle, 0);
 }
 
-__stdcall void *HookItemPickup(void *param1, void *param2, void *param3, void *param4)
+__stdcall void *HookItemPickup(uint8_t *param1, uint8_t *param2, uint8_t *param3, uint8_t *param4)
 {
 	uint32_t *itemId = (uint32_t *)(param3 + 0x70);   // R8
 	uint8_t *idlocation = (uint8_t *)(param4 + 0x30); // R9
@@ -130,7 +131,7 @@ __stdcall void *HookItemPickup(void *param1, void *param2, void *param3, void *p
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
-__stdcall void HookItemPutDownKeep(void *param1, void *param2, void *param3)
+__stdcall void HookItemPutDownKeep(uint8_t *param1, uint8_t *param2, uint8_t *param3)
 {
 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI
 	logger->LogMessage("[RE2R-R] HookItemPutDownKeep called: %d (0x%x)\n", *itemId, *itemId);
@@ -177,10 +178,8 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				case VK_F8:
 					Shutdown();
 					break;
-
-				default:
-					break;
 			}
+			break;
 		}
 
 		case WM_SIZE:
@@ -297,7 +296,7 @@ void __stdcall SetVTables(void)
 	         dllInstance,
 	         DIRECTINPUT_VERSION,
 	         IID_IDirectInput8,
-	         &directInput8,
+	         (void **)&directInput8,
 	         NULL)) == DI_OK &&
 	    (result = directInput8->CreateDevice(
 	         GUID_SysKeyboard,
