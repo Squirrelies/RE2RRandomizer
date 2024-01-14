@@ -77,7 +77,7 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 {
 	Sleep(100);
-	FreeLibrary(dllInstance);
+	FreeLibraryAndExitThread(dllInstance, 0);
 	return 0;
 }
 
@@ -87,7 +87,7 @@ bool Startup()
 	allocedConsole = AllocConsole();
 	if (!allocedConsole)
 		attachedConsole = AttachConsole(ATTACH_PARENT_PROCESS);
-	return (allocedConsole || allocedConsole) && // CONIN$ & CONOUT$
+	return (allocedConsole || attachedConsole) && // CONIN$ & CONOUT$
 	       !freopen_s(&dummy, "CONIN$", "r", stdin) &&
 	       !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
 	       !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
@@ -102,10 +102,20 @@ void Shutdown()
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
-	CleanupRenderTarget();
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	CleanupRenderTarget();
+	if (deviceContext)
+	{
+		deviceContext->Release();
+		deviceContext = nullptr;
+	}
+	if (device)
+	{
+		device->Release();
+		device = nullptr;
+	}
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
 	if (logger != nullptr)
@@ -140,7 +150,7 @@ __stdcall void HookItemPutDownKeep(uint8_t *param1, uint8_t *param2, uint8_t *pa
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {
-	device->GetImmediateContext(&deviceContext);
+	// device->GetImmediateContext(&deviceContext);
 	ID3D11Texture2D *backBuffer;
 	swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&backBuffer);
 	device->CreateRenderTargetView(backBuffer, nullptr, &mainRenderTargetView);
