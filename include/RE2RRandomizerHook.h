@@ -5,7 +5,7 @@
 #define DXVERSION 11
 
 // Whether to show a debug console window on attach or not. Info is still logged to file either way.
-#define RE2RRDEBUGWINDOW 0
+#define RE2RRDEBUGWINDOW 1
 
 // Version. This is defined at compile time so this is just a placeholder.
 #define RE2RR_VERSION "1.0.0"
@@ -43,6 +43,7 @@
 
 #include "Hooking.h"
 #include "Logging.h"
+#include "RE2RRUI.h"
 #include <MinHook.h>
 #include <d3d11.h>
 #include <dinput.h>
@@ -68,6 +69,7 @@ typedef void *(__stdcall *ItemPickup)(uint8_t *, uint8_t *, uint8_t *, uint8_t *
 typedef void(__stdcall *ItemPutDownKeep)(uint8_t *, uint8_t *, uint8_t *);
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
+typedef HRESULT(__stdcall *GetDeviceData)(IDirectInputDevice8 *, DWORD, LPDIDEVICEOBJECTDATA, LPDWORD, DWORD);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID);
@@ -80,11 +82,8 @@ __stdcall void HookItemPutDownKeep(uint8_t *, uint8_t *, uint8_t *);
 void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
-void __stdcall DrawMainUI();
-void __stdcall DrawFileImportSeedUI(bool *open);
-void __stdcall DrawFileExportSeedUI(bool *open);
-void __stdcall DrawHelpAboutRE2RRUI(bool *);
 HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
+HRESULT __stdcall HookGetDeviceData(IDirectInputDevice8 *, DWORD, LPDIDEVICEOBJECTDATA, LPDWORD, DWORD);
 void __stdcall SetVTables(void);
 void CreateRenderTarget(IDXGISwapChain *);
 void CleanupRenderTarget(void);
