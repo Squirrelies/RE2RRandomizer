@@ -4,8 +4,8 @@ HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
 ImmediateLogger *logger;
-bool allocedConsole;
-bool attachedConsole;
+bool allocedConsole = true;
+bool attachedConsole = true;
 void **vtableDXGISwapChain = nullptr;
 void **vtableD3D11Device = nullptr;
 void **vtableD3D11DeviceContext = nullptr;
@@ -83,17 +83,22 @@ DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 
 bool Startup()
 {
+#if RE2RRDEBUGWINDOW == 1
 	FILE *dummy;
 	allocedConsole = AllocConsole();
 	if (!allocedConsole)
 		attachedConsole = AttachConsole(ATTACH_PARENT_PROCESS);
-	return (allocedConsole || attachedConsole) && // CONIN$ & CONOUT$
-	       !freopen_s(&dummy, "CONIN$", "r", stdin) &&
-	       !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
-	       !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
-	       !fopen_s(&stdoutLogFile, "RE2R-Randomizer-stdout.log", "w") &&
-	       (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
-	       MH_Initialize() == MH_OK;
+#endif
+	return
+#if RE2RRDEBUGWINDOW == 1
+	    (allocedConsole || attachedConsole) && // CONIN$ & CONOUT$
+	    !freopen_s(&dummy, "CONIN$", "r", stdin) &&
+	    !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
+	    !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
+#endif
+	    !fopen_s(&stdoutLogFile, "RE2R-Randomizer-stdout.log", "w") &&
+	    (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
+	    MH_Initialize() == MH_OK;
 }
 
 void Shutdown()
@@ -127,8 +132,10 @@ void Shutdown()
 	fclose(stdin);
 	fclose(stdout);
 	fclose(stderr);
+#if RE2RRDEBUGWINDOW == 1
 	if (allocedConsole)
 		FreeConsole();
+#endif
 	CreateThread(NULL, 0, ShutdownThread, NULL, 0, NULL);
 	TerminateThread(mainThreadHandle, 0);
 }
@@ -179,7 +186,6 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 		case WM_KEYDOWN:
 		{
-			logger->LogMessage("WndProc Hook called! hWnd: 0x%p, uMsg 0x%X, wParam 0x%llX, lParam 0x%llX\n", hWnd, uMsg, wParam, lParam);
 			switch (wParam)
 			{
 				case VK_F7:
@@ -261,8 +267,6 @@ void __stdcall DrawMainUI()
 	static bool show_Help_AboutRE2RR = false;
 
 	// Specify a default position/size in case there's no data in the .ini file.
-	// const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
-	// ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 300, main_viewport->WorkPos.y + 300), ImGuiCond_FirstUseEver);
 	ImGuiIO &io = ImGui::GetIO();
 	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(330, 240), ImGuiCond_FirstUseEver);
@@ -336,7 +340,8 @@ void __stdcall DrawMainUI()
 void __stdcall DrawFileImportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+	ImGuiIO &io = ImGui::GetIO();
+	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
 
 	if (!ImGui::Begin("RE2RR: Import Seed", open, ImGuiWindowFlags_NoCollapse))
@@ -351,7 +356,8 @@ void __stdcall DrawFileImportSeedUI(bool *open)
 void __stdcall DrawFileExportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+	ImGuiIO &io = ImGui::GetIO();
+	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
 
 	if (!ImGui::Begin("RE2RR: Export Seed", open, ImGuiWindowFlags_NoCollapse))
@@ -366,7 +372,8 @@ void __stdcall DrawFileExportSeedUI(bool *open)
 void __stdcall DrawHelpAboutRE2RRUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+	ImGuiIO &io = ImGui::GetIO();
+	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 
 	if (!ImGui::Begin("RE2RR: About", open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 	{
