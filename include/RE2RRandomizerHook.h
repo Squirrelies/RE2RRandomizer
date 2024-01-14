@@ -1,7 +1,9 @@
 #ifndef RE2RR_RE2RRANDOMIZERHOOK_H
 #define RE2RR_RE2RRANDOMIZERHOOK_H
 
-#define DX11
+#define DXVERSION 11
+#define RE2RR_VERSION "1.0.0"
+#define RE2RR_VERSION_BUILD 1234
 
 #ifndef UNICODE
 #define UNICODE
@@ -42,12 +44,11 @@
 #include <imgui_impl_win32.h>
 #include <memory>
 
-#ifdef DX11
+#if DXVERSION == 11
 // DX11-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
 constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
-#endif
-#ifdef DX12
+#elif DXVERSION == 12
 // DX12-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
 constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
@@ -72,8 +73,8 @@ void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
 void __stdcall DrawMainUI();
-void __stdcall DrawFileGenerateSeedUI(bool *);
-void __stdcall DrawFileEnableRandomizerUI(bool *);
+void __stdcall DrawFileImportSeedUI(bool *open);
+void __stdcall DrawFileExportSeedUI(bool *open);
 void __stdcall DrawHelpAboutRE2RRUI(bool *);
 HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
 void __stdcall SetVTables(void);

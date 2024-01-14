@@ -235,10 +235,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 	ImGui::NewFrame();
 
 	if (isUIOpen)
-	{
 		DrawMainUI();
-		// ImGui::ShowDemoWindow();
-	}
 
 	ImGui::Render();
 
@@ -249,18 +246,23 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 
 void __stdcall DrawMainUI()
 {
+	static bool show_File_ImportSeed = false;
+	static bool show_File_ExportSeed = false;
 	static bool show_Help_AboutRE2RR = false;
 
-	// We specify a default position/size in case there's no data in the .ini file.
-	// We only do it to make the demo applications a little more welcoming, but typically this isn't required.
-	const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 400, main_viewport->WorkPos.y + 400), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
+	// Specify a default position/size in case there's no data in the .ini file.
+	// const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
+	// ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 300, main_viewport->WorkPos.y + 300), ImGuiCond_FirstUseEver);
+	ImGuiIO &io = ImGui::GetIO();
+	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(330, 240), ImGuiCond_FirstUseEver);
 
-	if (show_Help_AboutRE2RR)
+	if (show_File_ImportSeed)
+		DrawFileImportSeedUI(&show_File_ImportSeed);
+	else if (show_File_ExportSeed)
+		DrawFileExportSeedUI(&show_File_ExportSeed);
+	else if (show_Help_AboutRE2RR)
 		DrawHelpAboutRE2RRUI(&show_Help_AboutRE2RR);
-
-	;
 
 	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", &isUIOpen, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 	{
@@ -271,6 +273,13 @@ void __stdcall DrawMainUI()
 	// Menu Bar
 	if (ImGui::BeginMenuBar())
 	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::MenuItem("Import Seed", NULL, &show_File_ImportSeed);
+			ImGui::MenuItem("Export Seed", NULL, &show_File_ExportSeed);
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Help"))
 		{
 			ImGui::MenuItem("About RE2RR", NULL, &show_Help_AboutRE2RR);
@@ -314,9 +323,108 @@ void __stdcall DrawMainUI()
 	ImGui::End();
 }
 
+void __stdcall DrawFileImportSeedUI(bool *open)
+{
+	// Specify a default position/size in case there's no data in the .ini file.
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
+
+	if (!ImGui::Begin("RE2RR: Import Seed", open, ImGuiWindowFlags_NoCollapse))
+	{
+		ImGui::End();
+		return;
+	}
+
+	ImGui::End();
+}
+
+void __stdcall DrawFileExportSeedUI(bool *open)
+{
+	// Specify a default position/size in case there's no data in the .ini file.
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
+
+	if (!ImGui::Begin("RE2RR: Export Seed", open, ImGuiWindowFlags_NoCollapse))
+	{
+		ImGui::End();
+		return;
+	}
+
+	ImGui::End();
+}
+
 void __stdcall DrawHelpAboutRE2RRUI(bool *open)
 {
-	ImGui::Begin("RE2RR: About", open, ImGuiWindowFlags_NoCollapse);
+	// Specify a default position/size in case there's no data in the .ini file.
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver, ImVec2(0.1f, 0.2f));
+
+	if (!ImGui::Begin("RE2RR: About", open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::End();
+		return;
+	}
+
+	ImGui::Text("Resident Evil 2 (2019) Randomizer");
+	ImGui::Text("v%s (%d)", RE2RR_VERSION, RE2RR_VERSION_BUILD);
+	ImGui::Separator();
+	ImGui::BulletText("Contributors\n\tBenn Powell\n\tSquirrelies");
+	ImGui::Spacing();
+	ImGui::Spacing();
+	bool copyToClipboard = ImGui::Button("Copy to clipboard");
+	ImGui::Spacing();
+	if (ImGui::BeginChild("buildInfo", ImVec2(0, 0), ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if (copyToClipboard)
+		{
+			ImGui::LogToClipboard();
+			ImGui::LogText("```\n"); // Back quotes will make text appears without formatting when pasting on GitHub
+		}
+
+		ImGui::Text("Resident Evil 2 (2019) Randomizer");
+		ImGui::Text("v%s (%d)", RE2RR_VERSION, RE2RR_VERSION_BUILD);
+		ImGui::Separator();
+		ImGui::Text("Build datetime: %s %s", __DATE__, __TIME__);
+		ImGui::Text("sizeof(void *): %d", (int)sizeof(void *));
+#ifdef _WIN32
+		ImGui::Text("define: _WIN32");
+#endif
+#ifdef _WIN64
+		ImGui::Text("define: _WIN64");
+#endif
+		ImGui::Text("define: __cplusplus=%d", (int)__cplusplus);
+#ifdef __STDC__
+		ImGui::Text("define: __STDC__=%d", (int)__STDC__);
+#endif
+#ifdef __STDC_VERSION__
+		ImGui::Text("define: __STDC_VERSION__=%d", (int)__STDC_VERSION__);
+#endif
+#ifdef __GNUC__
+		ImGui::Text("define: __GNUC__=%d", (int)__GNUC__);
+#endif
+#ifdef __clang_version__
+		ImGui::Text("define: __clang_version__=%s", __clang_version__);
+#endif
+
+#ifdef _MSC_VER
+		ImGui::Text("define: _MSC_VER=%d", _MSC_VER);
+#endif
+#ifdef _MSVC_LANG
+		ImGui::Text("define: _MSVC_LANG=%d", (int)_MSVC_LANG);
+#endif
+#ifdef __MINGW32__
+		ImGui::Text("define: __MINGW32__");
+#endif
+#ifdef __MINGW64__
+		ImGui::Text("define: __MINGW64__");
+#endif
+
+		if (copyToClipboard)
+		{
+			ImGui::LogText("\n```");
+			ImGui::LogFinish();
+		}
+		ImGui::EndChild();
+	}
 
 	ImGui::End();
 }
