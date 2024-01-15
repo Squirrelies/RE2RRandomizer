@@ -200,9 +200,16 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
 
-	// ImGuiIO &io = ImGui::GetIO();
 	switch (uMsg)
 	{
+		case WM_INPUT:
+		{
+			ImGuiIO &io = ImGui::GetIO();
+			if (io.WantCaptureMouse) // Stop sending mouse input to the game if ImGui wants to capture it.
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			break;
+		}
+
 		case WM_KEYDOWN:
 		{
 			switch (wParam)
@@ -218,39 +225,28 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			break;
 		}
 
-			// case WM_LBUTTONDOWN:
-			// case WM_NCLBUTTONDOWN:
-			// {
-			// 	logger->LogMessage("[LMB]\n");
-			// 	if (io.WantCaptureMouse)
-			// 		return 0;
-			// 	break;
-			// }
-
-			// case WM_RBUTTONDOWN:
-			// case WM_NCRBUTTONDOWN:
-			// {
-			// 	logger->LogMessage("[RMB]\n");
-			// 	if (io.WantCaptureMouse)
-			// 		return 0;
-			// 	break;
-			// }
-
 		case WM_SIZE:
+		{
 			if (wParam == SIZE_MINIMIZED)
-				return 0;
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 			resizeWidth = (UINT)LOWORD(lParam); // Queue resize
 			resizeHeight = (UINT)HIWORD(lParam);
-			return 0;
+			// return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			break;
+		}
 
 		case WM_SYSCOMMAND:
+		{
 			if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
-				return 0;
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
+		}
 
 		case WM_DESTROY:
+		{
 			Shutdown();
-			return 0;
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		}
 	}
 
 	return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
