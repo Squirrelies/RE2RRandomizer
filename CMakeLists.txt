@@ -54,6 +54,8 @@ include_directories(include)
 add_library(${PROJECT_NAME}Hook SHARED
 src/${PROJECT_NAME}Hook.cpp
 src/RE2RRUI.cpp
+src/RE2RRLogic.cpp
+src/RE2RRSeedGen.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}

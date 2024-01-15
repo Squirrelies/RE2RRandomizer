@@ -14,7 +14,6 @@ void **vtableDirectInput8 = nullptr;
 void **vtableDirectInputDevice8 = nullptr;
 Present oPresent;
 GetDeviceState oGetDeviceState;
-GetDeviceData oGetDeviceData;
 HWND window = FindWindow(L"via", L"RESIDENT EVIL 2");
 WNDPROC oWndProc;
 ID3D11Device *device;
@@ -65,15 +64,13 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	{
 		SetVTables();
 	} while (!HookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
+
 	if (!HookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &oGetDeviceState, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookGetDeviceState): %s\n", MH_StatusToString(status));
-	if (!HookFunction<GetDeviceData>((GetDeviceData)vtableDirectInputDevice8[10], (GetDeviceData)HookGetDeviceData, &oGetDeviceData, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookGetDeviceData): %s\n", MH_StatusToString(status));
-
-	// HookGetDeviceData
 
 	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
+
 	if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
 
@@ -326,53 +323,7 @@ HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *device, DWORD cbData, 
 		initGetDeviceStateJ2 = true;
 	}
 
-	if (cbData == sizeof(DIMOUSESTATE))
-	{
-		DIMOUSESTATE *mouseData = (DIMOUSESTATE *)lpvData;
-		for (int i = 0; i < 4; ++i)
-			if (mouseData->rgbButtons[i] != 0)
-				logger->LogMessage("HookGetDeviceState() -> Mouse 1: rgbButtons[%d] = 0x%X", i, mouseData->rgbButtons[i]);
-	}
-	else if (cbData == sizeof(DIMOUSESTATE2))
-	{
-		DIMOUSESTATE2 *mouseData = (DIMOUSESTATE2 *)lpvData;
-		for (int i = 0; i < 8; ++i)
-			if (mouseData->rgbButtons[i] != 0)
-				logger->LogMessage("HookGetDeviceState() -> Mouse 2: rgbButtons[%d] = 0x%X", i, mouseData->rgbButtons[i]);
-	}
-	else if (cbData == sizeof(DIJOYSTATE))
-	{
-		DIJOYSTATE *joypadData = (DIJOYSTATE *)lpvData;
-		for (int i = 0; i < 128; ++i)
-			if (joypadData->rgbButtons[i] != 0)
-				logger->LogMessage("HookGetDeviceState() -> Joypad 1: rgbButtons[%d] = 0x%X", i, joypadData->rgbButtons[i]);
-	}
-	else if (cbData == sizeof(DIJOYSTATE2))
-	{
-		DIJOYSTATE2 *joypadData = (DIJOYSTATE2 *)lpvData;
-		for (int i = 0; i < 128; ++i)
-			if (joypadData->rgbButtons[i] != 0)
-				logger->LogMessage("HookGetDeviceState() -> Joypad 2: rgbButtons[%d] = 0x%X", i, joypadData->rgbButtons[i]);
-	}
-
 	return oGetDeviceState(device, cbData, lpvData);
-}
-
-// SEEMS UNUSED
-HRESULT __stdcall HookGetDeviceData(IDirectInputDevice8 *device, DWORD cbObjectData, LPDIDEVICEOBJECTDATA rgdod, LPDWORD pdwInOut, DWORD dwFlags)
-{
-	// ImGuiIO &io = ImGui::GetIO();
-	for (unsigned long i = 0; i < *pdwInOut; ++i)
-	{
-		for (unsigned long i = 0; i < 32; ++i)
-			if (rgdod[i].dwOfs == (FIELD_OFFSET(DIMOUSESTATE, rgbButtons) + i) && rgdod[i].dwData != 0)
-				logger->LogMessage("[MB%d]: %d", i, rgdod[i].dwData);
-		for (unsigned long i = 0; i < 32; ++i)
-			if (rgdod[i].dwOfs == DIJOFS_BUTTON(i) && rgdod[i].dwData != 0)
-				logger->LogMessage("[JB%d]: %d", i, rgdod[i].dwData);
-	}
-
-	return oGetDeviceData(device, cbObjectData, rgdod, pdwInOut, dwFlags);
 }
 
 void __stdcall SetVTables(void)

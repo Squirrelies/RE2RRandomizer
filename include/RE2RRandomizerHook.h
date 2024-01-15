@@ -69,7 +69,6 @@ typedef void *(__stdcall *ItemPickup)(uint8_t *, uint8_t *, uint8_t *, uint8_t *
 typedef void(__stdcall *ItemPutDownKeep)(uint8_t *, uint8_t *, uint8_t *);
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
-typedef HRESULT(__stdcall *GetDeviceData)(IDirectInputDevice8 *, DWORD, LPDIDEVICEOBJECTDATA, LPDWORD, DWORD);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID);
@@ -83,7 +82,6 @@ void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
 HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
-HRESULT __stdcall HookGetDeviceData(IDirectInputDevice8 *, DWORD, LPDIDEVICEOBJECTDATA, LPDWORD, DWORD);
 void __stdcall SetVTables(void);
 void CreateRenderTarget(IDXGISwapChain *);
 void CleanupRenderTarget(void);

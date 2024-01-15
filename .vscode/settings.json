@@ -92,7 +92,9 @@
         "thread": "cpp",
         "map": "cpp",
         "unordered_set": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "chrono": "cpp",
+        "future": "cpp"
     },
     "C_Cpp.default.cppStandard": "gnu++20",
     "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe",
