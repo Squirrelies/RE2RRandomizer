@@ -1,6 +1,7 @@
 #ifndef RE2RR_RE2RRSEEDGEN_H
 #define RE2RR_RE2RRSEEDGEN_H
 
+#include "RE2RRSeedShuffler.h"
 #include <algorithm>
 #include <future>
 #include <map>

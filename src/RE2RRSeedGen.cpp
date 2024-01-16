@@ -2819,11 +2819,13 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 		n = 1;
 	}
 
-	for (int i = 0; i < n; i++)
+	std::vector<RE2RRSeedShuffler *> shufflers;
+	shufflers.reserve(n);
+	for (int i = 0; i < n; ++i)
 	{
-		SeedGeneratorInstance *newInstance = new SeedGeneratorInstance();
-
-		m_Futures.push_back(std::async(&SeedGeneratorInstance::AsyncShuffle, newInstance, i, character == Leon, difficulty == Hardcore, scenario == B));
+		RE2RRSeedShuffler *newInstance = new RE2RRSeedShuffler(character, scenario, difficulty);
+		shufflers.push_back(newInstance);
+		m_Futures.push_back(std::async(&RE2RRSeedShuffler::AsyncShuffle, newInstance, i));
 	}
 
 	bool alldone = false;
@@ -2870,6 +2872,9 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 			}
 		}
 	}
+	for (int i = 0; i < n; ++i)
+		delete shufflers[i];
+	shufflers.clear();
 
 	printf("All Finished!\n");
 
