@@ -25,24 +25,13 @@
 #define WIN32_LEAD_AND_MEAN
 #endif
 
-#ifdef __GNUC__
-#define UNUSED(x) UNUSED_##x __attribute__((__unused__))
-#else
-#define UNUSED(x) UNUSED_##x
-#endif
-
-#ifdef __GNUC__
-#define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_##x
-#else
-#define UNUSED_FUNCTION(x) UNUSED_##x
-#endif
-
 #define DIRECTINPUT_VERSION 0x0800
 
 #include <windows.h>
 
 #include "Hooking.h"
 #include "Logging.h"
+#include "RE2RRTypes.h"
 #include "RE2RRUI.h"
 #include <MinHook.h>
 #include <d3d11.h>

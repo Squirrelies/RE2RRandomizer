@@ -2821,7 +2821,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 
 	std::vector<RE2RRSeedShuffler *> shufflers;
 	shufflers.reserve(n);
-	for (int i = 0; i < n; ++i)
+	for (unsigned int i = 0; i < n; ++i)
 	{
 		RE2RRSeedShuffler *newInstance = new RE2RRSeedShuffler(character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
 		shufflers.push_back(newInstance);
@@ -2859,6 +2859,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 				{
 					printf("Seed generated!\n");
 					finalList = result;
+					CreateCheatSheetVector(character, scenario, difficulty, mixWeapons);
 					alldone = true;
 
 					if (mixWeapons)
@@ -2872,7 +2873,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 			}
 		}
 	}
-	for (int i = 0; i < n; ++i)
+	for (unsigned int i = 0; i < n; ++i)
 		delete shufflers[i];
 	shufflers.clear();
 
@@ -2882,7 +2883,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 	// WriteDataToFile(character, scenario, difficulty, mixWeapons);
 }
 
-void RE2RRSeedGen::MixWeapons(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty)
+void RE2RRSeedGen::MixWeapons(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty UNUSED(difficulty))
 {
 
 	printf("Shuffling Weapons/Ammo/Powders...");
@@ -3180,7 +3181,7 @@ void RE2RRSeedGen::MixWeapons(RE2RRCharacter character, RE2RRScenario scenario, 
 	printf("done!\n");
 }
 
-std::unique_ptr<char[]> FormatString(const char *format, ...)
+std::unique_ptr<char[]> RE2RRSeedGen::FormatCharArray(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -3190,34 +3191,669 @@ std::unique_ptr<char[]> FormatString(const char *format, ...)
 	return returnValue;
 }
 
-FILE *OpenFile(const char *filename, const char *mode)
+std::unique_ptr<std::string> RE2RRSeedGen::FormatString(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	std::unique_ptr<std::string> returnValue = std::unique_ptr<std::string>(new std::string(vsprintf(nullptr, format, args) + sizeof(char), '\0'));
+	vsprintf(returnValue.get()->data(), format, args);
+	va_end(args);
+	return returnValue;
+}
+
+FILE *RE2RRSeedGen::OpenFile(const char *filename, const char *mode)
 {
 	FILE *file;
 	errno_t err;
 
 	if (!(err = fopen_s(&file, filename, mode)))
-		throw new std::runtime_error(FormatString("Unable to open file %s with mode %s: %d", filename, mode, err).get());
+		throw new std::runtime_error(FormatCharArray("Unable to open file %s with mode %s: %d", filename, mode, err).get());
 
 	return file;
 }
 
-void RE2RRSeedGen::PrintCheatSheetItemToFile(FILE *file, const int itemId)
+// void RE2RRSeedGen::PrintCheatSheetItemToFile(FILE *file, const int itemId)
+// {
+// 	fprintf(file, "\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
+// }
+
+std::unique_ptr<std::string> RE2RRSeedGen::CheatSheetItemToString(const int itemId)
 {
-	fprintf(file, "\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
+	return FormatString("\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
 }
 
-void RE2RRSeedGen::WriteDataToFile(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool mixWeapons)
+std::vector<int> RE2RRSeedGen::GetSeed(void)
+{
+	return finalList;
+}
+
+std::vector<std::string> RE2RRSeedGen::GetCheatSheet(void)
+{
+	return finalCheatSheet;
+}
+
+// ***FINDME***
+
+void RE2RRSeedGen::CreateCheatSheetVector(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool mixWeapons)
+{
+	finalCheatSheet.clear();
+
+	finalCheatSheet.push_back("Version 0.6.8 Beta\n");
+
+	if (mixWeapons)
+	{
+		finalCheatSheet.push_back("Mixed Weapons / Ammo / Gunpowder Enabled, Items removed are at the bottom of the Cheat Sheet\n");
+	}
+
+	for (int i = 0; i < m_ListLength; ++i)
+	{
+		if (i == 0)
+		{
+			finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RPD & SEWERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+			if (scenario == B)
+			{
+				finalCheatSheet.push_back("B SCENARIO ENTRANCE\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(257).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(258).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(71).get());
+
+				finalCheatSheet.push_back("GUARD ROOM\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(4).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(259).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(260).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(43).get());
+
+				finalCheatSheet.push_back("MAIN HALL\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(57).get());
+			}
+			else
+			{
+				finalCheatSheet.push_back("MAIN HALL\n");
+			}
+		}
+		else if (i == 5)
+		{
+			finalCheatSheet.push_back("RECEPTION\n");
+		}
+		else if (i == 7)
+		{
+			finalCheatSheet.push_back("OPERATIONS ROOM\n");
+		}
+		else if (i == 8)
+		{
+			finalCheatSheet.push_back("WESTERN AREA 1F\n");
+		}
+		else if (i == 11)
+		{
+			finalCheatSheet.push_back("WEST OFFICE\n");
+		}
+		else if (i == 15)
+		{
+			finalCheatSheet.push_back("DARK ROOM\n");
+		}
+		else if (i == 18)
+		{
+			finalCheatSheet.push_back("SAFETY DEPOSIT ROOM\n");
+		}
+		else if (i == 26)
+		{
+			finalCheatSheet.push_back("PRESS ROOM\n");
+		}
+		else if (i == 27)
+		{
+			finalCheatSheet.push_back("EAST CLOSET AMBUSH\n");
+		}
+		else if (i == 29)
+		{
+			finalCheatSheet.push_back("BATHROOM\n");
+		}
+		else if (i == 30)
+		{
+			finalCheatSheet.push_back("DETONATOR ROOM\n");
+		}
+		else if (i == 34)
+		{
+			finalCheatSheet.push_back("RECORDS ROOM\n");
+		}
+		else if (i == 37)
+		{
+			finalCheatSheet.push_back("EAST OFFICE\n");
+		}
+		else if (i == 44)
+		{
+			finalCheatSheet.push_back("WAITING ROOM\n");
+		}
+		else if (i == 46)
+		{
+			finalCheatSheet.push_back("WESTERN AREA 2F\n");
+		}
+		else if (i == 51)
+		{
+			finalCheatSheet.push_back("WESTERN AREA 3F\n");
+		}
+		else if (i == 54)
+		{
+			finalCheatSheet.push_back("WEST STORAGE ROOM\n");
+		}
+		else if (i == 58)
+		{
+			finalCheatSheet.push_back("MAIDEN STATUE AREA\n");
+		}
+		else if (i == 59)
+		{
+			finalCheatSheet.push_back("LIBRARY\n");
+		}
+		else if (i == 62)
+		{
+			finalCheatSheet.push_back("LOUNGE\n");
+		}
+		else if (i == 64)
+		{
+			finalCheatSheet.push_back("CHOPPER CRASH AREA\n");
+		}
+		else if (i == 66)
+		{
+			finalCheatSheet.push_back("ART ROOM\n");
+		}
+		else if (i == 69)
+		{
+			finalCheatSheet.push_back("FIRE ESCAPE\n");
+		}
+		else if (i == 72)
+		{
+			finalCheatSheet.push_back("MAIN HALL 3F\n");
+		}
+		else if (i == 73)
+		{
+			finalCheatSheet.push_back("BEHIND CLOCK TOWER\n");
+		}
+		else if (i == 74)
+		{
+			finalCheatSheet.push_back("CLOCK TOWER\n");
+		}
+		else if (i == 76)
+		{
+			finalCheatSheet.push_back("EAST STORAGE ROOM\n");
+		}
+		else if (i == 79)
+		{
+			finalCheatSheet.push_back("EAST AREA 3F\n");
+		}
+		else if (i == 82)
+		{
+			finalCheatSheet.push_back("BALCONY\n");
+		}
+		else if (i == 83)
+		{
+			finalCheatSheet.push_back("ROOF AREA\n");
+		}
+		else if (i == 87)
+		{
+
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("BOILER ROOM\n");
+			}
+		}
+		else if (i == 89)
+		{
+			finalCheatSheet.push_back("OUTSIDE OBSERVATION ROOM\n");
+		}
+		else if (i == 90)
+		{
+			finalCheatSheet.push_back("OBSERVATION ROOM\n");
+		}
+		else if (i == 92)
+		{
+			finalCheatSheet.push_back("INTERROGATION ROOM\n");
+
+			if (difficulty == Hardcore)
+			{
+				finalCheatSheet.push_back(*CheatSheetItemToString(253).get());
+			}
+		}
+		else if (i == 93)
+		{
+			finalCheatSheet.push_back("OUTSIDE STARS OFFICE\n");
+		}
+		else if (i == 95)
+		{
+			finalCheatSheet.push_back("STARS OFFICE\n");
+			finalCheatSheet.push_back(*CheatSheetItemToString(250).get()); // shotgun shells mistake override
+		}
+		else if (i == 101)
+		{
+			finalCheatSheet.push_back("LINEN ROOM\n");
+		}
+		else if (i == 103)
+		{
+			finalCheatSheet.push_back("SECRET ROOM\n");
+		}
+		else if (i == 105)
+		{
+			finalCheatSheet.push_back("UNDERGROUND STAIRS\n");
+		}
+		else if (i == 107)
+		{
+			finalCheatSheet.push_back("MACHINERY ROOM\n");
+		}
+		else if (i == 116)
+		{
+			finalCheatSheet.push_back("OPERATORS ROOM\n");
+		}
+		else if (i == 117)
+		{
+			finalCheatSheet.push_back("PARKING GARAGE\n");
+		}
+		else if (i == 118)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("JAIL ENTRANCE\n");
+			}
+		}
+		else if (i == 119)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("JAIL\n");
+			}
+		}
+		else if (i == 122)
+		{
+			finalCheatSheet.push_back("OUTSIDE KENNEL\n");
+		}
+		else if (i == 123)
+		{
+			finalCheatSheet.push_back("KENNEL\n");
+		}
+		else if (i == 124)
+		{
+			finalCheatSheet.push_back("MORGUE\n");
+		}
+		else if (i == 127)
+		{
+			finalCheatSheet.push_back("FIRING RANGE\n");
+		}
+		else if (i == 129)
+		{
+			finalCheatSheet.push_back("FIRING RANGE LOCKERS\n");
+		}
+		else if (i == 131)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("GENERATOR ROOM\n");
+			}
+			else
+			{
+				if (scenario == B)
+				{
+					finalCheatSheet.push_back("GENERATOR ROOM\n");
+					finalCheatSheet.push_back(*CheatSheetItemToString(146).get());
+					finalCheatSheet.push_back(*CheatSheetItemToString(147).get());
+				}
+
+				finalCheatSheet.push_back("ELEVATOR CONTROLS ROOM\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(87).get()); // claire item sequence break
+				finalCheatSheet.push_back(*CheatSheetItemToString(88).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(118).get());
+			}
+		}
+		else if (i == 134)
+		{
+			if (character == Claire && scenario == B)
+			{
+				finalCheatSheet.push_back("OUTSIDE BREAK ROOM\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(261).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(144).get());
+
+				finalCheatSheet.push_back("BREAK ROOM\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(262).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(263).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(264).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(145).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(265).get());
+			}
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("OUTSIDE BREAK ROOM\n");
+			}
+			else
+			{
+				finalCheatSheet.push_back("PATH TO CHIEF'S OFFICE\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(131).get()); // claire item sequence break
+
+				finalCheatSheet.push_back("CHIEF'S OFFICE\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(137).get());
+			}
+		}
+		else if (i == 135)
+		{
+			if (character == Leon)
+			{
+				// do nothing
+			}
+			else
+			{
+				finalCheatSheet.push_back("HEART ROOM EAST STORAGE\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(135).get()); // claire item sequence break
+				finalCheatSheet.push_back(*CheatSheetItemToString(132).get());
+			}
+		}
+		else if (i == 136)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("BREAK ROOM\n");
+			}
+			else
+			{
+				finalCheatSheet.push_back("PRIVATE COLLECTION ROOM\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(120).get()); // claire item sequence break
+				finalCheatSheet.push_back(*CheatSheetItemToString(140).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(139).get());
+			}
+		}
+		else if (i == 141)
+		{
+			finalCheatSheet.push_back("OUTSIDE RPD\n");
+		}
+		else if (i == 142)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("GUN SHOP\n");
+			}
+			else
+			{
+				finalCheatSheet.push_back("BASKETBALL COURT\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(133).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(138).get());
+			}
+		}
+		else if (i == 145)
+		{
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("SEWER ENTRANCE\n");
+			}
+			else
+			{
+				finalCheatSheet.push_back("OUTSIDE BUS\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(136).get());
+
+				finalCheatSheet.push_back("BUS\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(142).get());
+
+				if (difficulty == Hardcore)
+				{
+					finalCheatSheet.push_back("ORPHANAGE\n");
+					finalCheatSheet.push_back(*CheatSheetItemToString(254).get());
+				}
+
+				finalCheatSheet.push_back("ORPHANAGE UPSTAIRS\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(121).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(245).get());
+
+				finalCheatSheet.push_back("OFFICE AREA (AFTER SHERRY / MR X CHASE)\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(134).get());
+				finalCheatSheet.push_back(*CheatSheetItemToString(143).get());
+
+				if (difficulty == Hardcore)
+				{
+					finalCheatSheet.push_back(*CheatSheetItemToString(255).get());
+				}
+			}
+		}
+		else if (i == 148)
+		{
+			finalCheatSheet.push_back("UPPER WATERWAY\n");
+		}
+		else if (i == 150)
+		{
+			finalCheatSheet.push_back("ROOK BRIDGE AREA\n");
+		}
+		else if (i == 152)
+		{
+			finalCheatSheet.push_back("WORKERS BREAK ROOM\n");
+		}
+		else if (i == 154)
+		{
+			finalCheatSheet.push_back("RPD ACCESS ROOM\n");
+		}
+		else if (i == 155)
+		{
+			finalCheatSheet.push_back("LOWER WATERWAY PRE-SLIDE\n");
+		}
+		else if (i == 156)
+		{
+			finalCheatSheet.push_back("WATER INJECTION CHAMBER\n");
+		}
+		else if (i == 158)
+		{
+			finalCheatSheet.push_back("LOWER WATERWAY\n");
+		}
+		else if (i == 160)
+		{
+			finalCheatSheet.push_back("CONTROL ROOM\n");
+		}
+		else if (i == 162)
+		{
+			finalCheatSheet.push_back("MONITOR ROOM\n");
+		}
+		else if (i == 166)
+		{
+			finalCheatSheet.push_back("TREATMENT POOL ROOM\n");
+		}
+		else if (i == 170)
+		{
+			finalCheatSheet.push_back("BOTTOM WATERWAY OVERPASS\n");
+		}
+		else if (i == 173)
+		{
+			finalCheatSheet.push_back("BOTTOM WATERWAY\n");
+		}
+		else if (i == 175)
+		{
+			finalCheatSheet.push_back("SUPPLIES STORAGE ROOM\n");
+		}
+		else if (i == 180)
+		{
+			finalCheatSheet.push_back("WORKROOM\n");
+		}
+		else if (i == 183)
+		{
+			finalCheatSheet.push_back("WORKROOM LIFT\n");
+		}
+		else if (i == 184)
+		{
+			finalCheatSheet.push_back("OUTSIDE GARBAGE ROOM\n");
+		}
+		else if (i == 186)
+		{
+			finalCheatSheet.push_back("MAIN POWER ROOM\n");
+		}
+		else if (i == 187)
+		{
+			finalCheatSheet.push_back("G2 FIGHT ROOM\n");
+		}
+		else if (i == 191)
+		{
+			finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LAB AREA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+			if (difficulty == Hardcore)
+			{
+				finalCheatSheet.push_back("RECEPTION\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(251).get());
+			}
+
+			finalCheatSheet.push_back("SECURITY ROOM\n");
+		}
+		else if (i == 192)
+		{
+			finalCheatSheet.push_back("CAFETERIA\n");
+		}
+		else if (i == 195)
+		{
+			finalCheatSheet.push_back("KITCHEN\n");
+		}
+		else if (i == 197)
+		{
+			finalCheatSheet.push_back("NAP ROOM\n");
+		}
+		else if (i == 201)
+		{
+			finalCheatSheet.push_back("LOBBY\n");
+		}
+		else if (i == 203)
+		{
+			finalCheatSheet.push_back("FIRST PLANT ROOM\n");
+		}
+		else if (i == 204)
+		{
+			finalCheatSheet.push_back("GREENHOUSE CONTROL ROOM\n");
+		}
+		else if (i == 206)
+		{
+			finalCheatSheet.push_back("GREENHOUSE\n");
+		}
+		else if (i == 209)
+		{
+			finalCheatSheet.push_back("DRUG TESTING LAB\n");
+		}
+		else if (i == 211)
+		{
+			finalCheatSheet.push_back("UNDERNEATH GREENHOUSE\n");
+		}
+		else if (i == 212)
+		{
+			finalCheatSheet.push_back("LOUNGE\n");
+		}
+		else if (i == 215)
+		{
+			finalCheatSheet.push_back("SERVER ROOM\n");
+		}
+		else if (i == 218)
+		{
+			finalCheatSheet.push_back("LOW-TEMP TESTING LAB\n");
+		}
+		else if (i == 219)
+		{
+			finalCheatSheet.push_back("MODULATOR ROOM\n");
+		}
+		else if (i == 222)
+		{
+			finalCheatSheet.push_back("BIOTESTING LAB\n");
+		}
+		else if (i == 226)
+		{
+			finalCheatSheet.push_back("P-4 LEVEL TESTING LAB\n");
+		}
+		else if (i == 229)
+		{
+			finalCheatSheet.push_back("BIOREACTORS ROOM\n");
+		}
+		else if (i == 239)
+		{
+			finalCheatSheet.push_back("MONITOR ROOM\n");
+		}
+		else if (i == 241)
+		{
+			finalCheatSheet.push_back("PUMP ROOM\n");
+		}
+		else if (i == 244)
+		{
+
+			if (difficulty == Hardcore)
+			{
+				finalCheatSheet.push_back(*CheatSheetItemToString(252).get());
+			}
+
+			if (character == Leon)
+			{
+				finalCheatSheet.push_back("ESCAPE SHAFT\n");
+			}
+			else
+			{
+				finalCheatSheet.push_back("TURNTABLE\n");
+				finalCheatSheet.push_back(*CheatSheetItemToString(119).get());
+			}
+		}
+		else if (i == 247)
+		{
+			finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~EXTRA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			finalCheatSheet.push_back("HIDDEN ITEMS - PRESS ROOM\n");
+		}
+		else if (i == 248)
+		{
+			finalCheatSheet.push_back("HIDDEN ITEMS - STARS OFFICE\n");
+		}
+		else if (i == 250)
+		{
+			// finalCheatSheet.push_back("SHOTGUN SHELLS IN THE STARS OFFICE THAT I FORGOT ABOUT I'M SORRY D:\n");
+			break;
+		}
+
+		if (character == Leon)
+		{
+
+			bool condition = true;
+
+			if (scenario == B)
+			{
+				condition = condition && (i != 4 && i != 71 && i != 131 && i != 213);
+			}
+
+			if (condition)
+			{
+				finalCheatSheet.push_back(*CheatSheetItemToString(i).get());
+			}
+		}
+		else
+		{
+
+			if (ItemNames[i] != "UNUSED")
+			{
+
+				bool condition = (i != 87 && i != 88 && i != 118 && i != 119 && i != 120 && i != 121 && i != 131 && i != 132 && i != 133 && i != 134 && i != 135 && i != 136 && i != 137 && i != 138 && i != 139 && i != 140 && i != 142);
+
+				if (scenario == B)
+				{
+					condition = condition && (i != 4 && i != 43 && i != 57 && i != 71 && i != 146 && i != 147 && i != 213);
+				}
+
+				if (condition)
+				{
+					finalCheatSheet.push_back(*CheatSheetItemToString(i).get());
+				}
+			}
+		}
+	}
+
+	if (mixWeapons)
+	{
+		finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DISCARDED ITEMS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+		while (m_AmmoGunpowderList.empty() == false)
+		{
+			finalCheatSheet.push_back(*FormatString("%s\n", ItemNames[m_AmmoGunpowderList.back()]).get());
+			m_AmmoGunpowderList.pop_back();
+		}
+	}
+}
+
+void RE2RRSeedGen::WriteDataToFile(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool UNUSED(mixWeapons))
 {
 	// ItemList
 	{
-		std::unique_ptr<char[]> itemListFileName = FormatString("ItemList%s%s%s.txt", character, scenario, difficulty);
+		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", character, scenario, difficulty);
 
 		printf("Writing to %s . . .", itemListFileName.get());
 		FILE *itemListFile = OpenFile(itemListFileName.get(), "w");
 		for (int i = 0; i < m_ListLength; ++i)
-		{
 			fprintf(itemListFile, "%d\n", finalList[i]);
-		}
 		fflush(itemListFile);
 		fclose(itemListFile);
 		printf("done!\n");
@@ -3225,618 +3861,16 @@ void RE2RRSeedGen::WriteDataToFile(RE2RRCharacter character, RE2RRScenario scena
 
 	// CheatSheet
 	{
-		std::unique_ptr<char[]> cheatSheetFileName = FormatString("CheatSheet%s%s%s.txt", character, scenario, difficulty);
+		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", character, scenario, difficulty);
 
 		printf("Writing to %s . . .", cheatSheetFileName.get());
 		FILE *cheatSheetFile = OpenFile(cheatSheetFileName.get(), "w");
-
-		fprintf(cheatSheetFile, "Version 0.6.8 Beta\n");
-
-		if (mixWeapons)
-		{
-			fprintf(cheatSheetFile, "Mixed Weapons / Ammo / Gunpowder Enabled, Items removed are at the bottom of the Cheat Sheet\n");
-		}
-
-		for (int i = 0; i < m_ListLength; ++i)
-		{
-			if (i == 0)
-			{
-				fprintf(cheatSheetFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RPD & SEWERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-
-				if (scenario == B)
-				{
-					fprintf(cheatSheetFile, "B SCENARIO ENTRANCE\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 257);
-					PrintCheatSheetItemToFile(cheatSheetFile, 258);
-					PrintCheatSheetItemToFile(cheatSheetFile, 71);
-
-					fprintf(cheatSheetFile, "GUARD ROOM\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 4);
-					PrintCheatSheetItemToFile(cheatSheetFile, 259);
-					PrintCheatSheetItemToFile(cheatSheetFile, 260);
-					PrintCheatSheetItemToFile(cheatSheetFile, 43);
-
-					fprintf(cheatSheetFile, "MAIN HALL\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 57);
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "MAIN HALL\n");
-				}
-			}
-			else if (i == 5)
-			{
-				fprintf(cheatSheetFile, "RECEPTION\n");
-			}
-			else if (i == 7)
-			{
-				fprintf(cheatSheetFile, "OPERATIONS ROOM\n");
-			}
-			else if (i == 8)
-			{
-				fprintf(cheatSheetFile, "WESTERN AREA 1F\n");
-			}
-			else if (i == 11)
-			{
-				fprintf(cheatSheetFile, "WEST OFFICE\n");
-			}
-			else if (i == 15)
-			{
-				fprintf(cheatSheetFile, "DARK ROOM\n");
-			}
-			else if (i == 18)
-			{
-				fprintf(cheatSheetFile, "SAFETY DEPOSIT ROOM\n");
-			}
-			else if (i == 26)
-			{
-				fprintf(cheatSheetFile, "PRESS ROOM\n");
-			}
-			else if (i == 27)
-			{
-				fprintf(cheatSheetFile, "EAST CLOSET AMBUSH\n");
-			}
-			else if (i == 29)
-			{
-				fprintf(cheatSheetFile, "BATHROOM\n");
-			}
-			else if (i == 30)
-			{
-				fprintf(cheatSheetFile, "DETONATOR ROOM\n");
-			}
-			else if (i == 34)
-			{
-				fprintf(cheatSheetFile, "RECORDS ROOM\n");
-			}
-			else if (i == 37)
-			{
-				fprintf(cheatSheetFile, "EAST OFFICE\n");
-			}
-			else if (i == 44)
-			{
-				fprintf(cheatSheetFile, "WAITING ROOM\n");
-			}
-			else if (i == 46)
-			{
-				fprintf(cheatSheetFile, "WESTERN AREA 2F\n");
-			}
-			else if (i == 51)
-			{
-				fprintf(cheatSheetFile, "WESTERN AREA 3F\n");
-			}
-			else if (i == 54)
-			{
-				fprintf(cheatSheetFile, "WEST STORAGE ROOM\n");
-			}
-			else if (i == 58)
-			{
-				fprintf(cheatSheetFile, "MAIDEN STATUE AREA\n");
-			}
-			else if (i == 59)
-			{
-				fprintf(cheatSheetFile, "LIBRARY\n");
-			}
-			else if (i == 62)
-			{
-				fprintf(cheatSheetFile, "LOUNGE\n");
-			}
-			else if (i == 64)
-			{
-				fprintf(cheatSheetFile, "CHOPPER CRASH AREA\n");
-			}
-			else if (i == 66)
-			{
-				fprintf(cheatSheetFile, "ART ROOM\n");
-			}
-			else if (i == 69)
-			{
-				fprintf(cheatSheetFile, "FIRE ESCAPE\n");
-			}
-			else if (i == 72)
-			{
-				fprintf(cheatSheetFile, "MAIN HALL 3F\n");
-			}
-			else if (i == 73)
-			{
-				fprintf(cheatSheetFile, "BEHIND CLOCK TOWER\n");
-			}
-			else if (i == 74)
-			{
-				fprintf(cheatSheetFile, "CLOCK TOWER\n");
-			}
-			else if (i == 76)
-			{
-				fprintf(cheatSheetFile, "EAST STORAGE ROOM\n");
-			}
-			else if (i == 79)
-			{
-				fprintf(cheatSheetFile, "EAST AREA 3F\n");
-			}
-			else if (i == 82)
-			{
-				fprintf(cheatSheetFile, "BALCONY\n");
-			}
-			else if (i == 83)
-			{
-				fprintf(cheatSheetFile, "ROOF AREA\n");
-			}
-			else if (i == 87)
-			{
-
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "BOILER ROOM\n");
-				}
-			}
-			else if (i == 89)
-			{
-				fprintf(cheatSheetFile, "OUTSIDE OBSERVATION ROOM\n");
-			}
-			else if (i == 90)
-			{
-				fprintf(cheatSheetFile, "OBSERVATION ROOM\n");
-			}
-			else if (i == 92)
-			{
-				fprintf(cheatSheetFile, "INTERROGATION ROOM\n");
-
-				if (difficulty == Hardcore)
-				{
-					PrintCheatSheetItemToFile(cheatSheetFile, 253);
-				}
-			}
-			else if (i == 93)
-			{
-				fprintf(cheatSheetFile, "OUTSIDE STARS OFFICE\n");
-			}
-			else if (i == 95)
-			{
-				fprintf(cheatSheetFile, "STARS OFFICE\n");
-				PrintCheatSheetItemToFile(cheatSheetFile, 250); // shotgun shells mistake override
-			}
-			else if (i == 101)
-			{
-				fprintf(cheatSheetFile, "LINEN ROOM\n");
-			}
-			else if (i == 103)
-			{
-				fprintf(cheatSheetFile, "SECRET ROOM\n");
-			}
-			else if (i == 105)
-			{
-				fprintf(cheatSheetFile, "UNDERGROUND STAIRS\n");
-			}
-			else if (i == 107)
-			{
-				fprintf(cheatSheetFile, "MACHINERY ROOM\n");
-			}
-			else if (i == 116)
-			{
-				fprintf(cheatSheetFile, "OPERATORS ROOM\n");
-			}
-			else if (i == 117)
-			{
-				fprintf(cheatSheetFile, "PARKING GARAGE\n");
-			}
-			else if (i == 118)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "JAIL ENTRANCE\n");
-				}
-			}
-			else if (i == 119)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "JAIL\n");
-				}
-			}
-			else if (i == 122)
-			{
-				fprintf(cheatSheetFile, "OUTSIDE KENNEL\n");
-			}
-			else if (i == 123)
-			{
-				fprintf(cheatSheetFile, "KENNEL\n");
-			}
-			else if (i == 124)
-			{
-				fprintf(cheatSheetFile, "MORGUE\n");
-			}
-			else if (i == 127)
-			{
-				fprintf(cheatSheetFile, "FIRING RANGE\n");
-			}
-			else if (i == 129)
-			{
-				fprintf(cheatSheetFile, "FIRING RANGE LOCKERS\n");
-			}
-			else if (i == 131)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "GENERATOR ROOM\n");
-				}
-				else
-				{
-					if (scenario == B)
-					{
-						fprintf(cheatSheetFile, "GENERATOR ROOM\n");
-						PrintCheatSheetItemToFile(cheatSheetFile, 146);
-						PrintCheatSheetItemToFile(cheatSheetFile, 147);
-					}
-
-					fprintf(cheatSheetFile, "ELEVATOR CONTROLS ROOM\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 87); // claire item sequence break
-					PrintCheatSheetItemToFile(cheatSheetFile, 88);
-					PrintCheatSheetItemToFile(cheatSheetFile, 118);
-				}
-			}
-			else if (i == 134)
-			{
-				if (character == Claire && scenario == B)
-				{
-					fprintf(cheatSheetFile, "OUTSIDE BREAK ROOM\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 261);
-					PrintCheatSheetItemToFile(cheatSheetFile, 144);
-
-					fprintf(cheatSheetFile, "BREAK ROOM\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 262);
-					PrintCheatSheetItemToFile(cheatSheetFile, 263);
-					PrintCheatSheetItemToFile(cheatSheetFile, 264);
-					PrintCheatSheetItemToFile(cheatSheetFile, 145);
-					PrintCheatSheetItemToFile(cheatSheetFile, 265);
-				}
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "OUTSIDE BREAK ROOM\n");
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "PATH TO CHIEF'S OFFICE\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 131); // claire item sequence break
-
-					fprintf(cheatSheetFile, "CHIEF'S OFFICE\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 137);
-				}
-			}
-			else if (i == 135)
-			{
-				if (character == Leon)
-				{
-					// do nothing
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "HEART ROOM EAST STORAGE\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 135); // claire item sequence break
-					PrintCheatSheetItemToFile(cheatSheetFile, 132);
-				}
-			}
-			else if (i == 136)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "BREAK ROOM\n");
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "PRIVATE COLLECTION ROOM\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 120); // claire item sequence break
-					PrintCheatSheetItemToFile(cheatSheetFile, 140);
-					PrintCheatSheetItemToFile(cheatSheetFile, 139);
-				}
-			}
-			else if (i == 141)
-			{
-				fprintf(cheatSheetFile, "OUTSIDE RPD\n");
-			}
-			else if (i == 142)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "GUN SHOP\n");
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "BASKETBALL COURT\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 133);
-					PrintCheatSheetItemToFile(cheatSheetFile, 138);
-				}
-			}
-			else if (i == 145)
-			{
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "SEWER ENTRANCE\n");
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "OUTSIDE BUS\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 136);
-
-					fprintf(cheatSheetFile, "BUS\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 142);
-
-					if (difficulty == Hardcore)
-					{
-						fprintf(cheatSheetFile, "ORPHANAGE\n");
-						PrintCheatSheetItemToFile(cheatSheetFile, 254);
-					}
-
-					fprintf(cheatSheetFile, "ORPHANAGE UPSTAIRS\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 121);
-					PrintCheatSheetItemToFile(cheatSheetFile, 245);
-
-					fprintf(cheatSheetFile, "OFFICE AREA (AFTER SHERRY / MR X CHASE)\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 134);
-					PrintCheatSheetItemToFile(cheatSheetFile, 143);
-
-					if (difficulty == Hardcore)
-					{
-						PrintCheatSheetItemToFile(cheatSheetFile, 255);
-					}
-				}
-			}
-			else if (i == 148)
-			{
-				fprintf(cheatSheetFile, "UPPER WATERWAY\n");
-			}
-			else if (i == 150)
-			{
-				fprintf(cheatSheetFile, "ROOK BRIDGE AREA\n");
-			}
-			else if (i == 152)
-			{
-				fprintf(cheatSheetFile, "WORKERS BREAK ROOM\n");
-			}
-			else if (i == 154)
-			{
-				fprintf(cheatSheetFile, "RPD ACCESS ROOM\n");
-			}
-			else if (i == 155)
-			{
-				fprintf(cheatSheetFile, "LOWER WATERWAY PRE-SLIDE\n");
-			}
-			else if (i == 156)
-			{
-				fprintf(cheatSheetFile, "WATER INJECTION CHAMBER\n");
-			}
-			else if (i == 158)
-			{
-				fprintf(cheatSheetFile, "LOWER WATERWAY\n");
-			}
-			else if (i == 160)
-			{
-				fprintf(cheatSheetFile, "CONTROL ROOM\n");
-			}
-			else if (i == 162)
-			{
-				fprintf(cheatSheetFile, "MONITOR ROOM\n");
-			}
-			else if (i == 166)
-			{
-				fprintf(cheatSheetFile, "TREATMENT POOL ROOM\n");
-			}
-			else if (i == 170)
-			{
-				fprintf(cheatSheetFile, "BOTTOM WATERWAY OVERPASS\n");
-			}
-			else if (i == 173)
-			{
-				fprintf(cheatSheetFile, "BOTTOM WATERWAY\n");
-			}
-			else if (i == 175)
-			{
-				fprintf(cheatSheetFile, "SUPPLIES STORAGE ROOM\n");
-			}
-			else if (i == 180)
-			{
-				fprintf(cheatSheetFile, "WORKROOM\n");
-			}
-			else if (i == 183)
-			{
-				fprintf(cheatSheetFile, "WORKROOM LIFT\n");
-			}
-			else if (i == 184)
-			{
-				fprintf(cheatSheetFile, "OUTSIDE GARBAGE ROOM\n");
-			}
-			else if (i == 186)
-			{
-				fprintf(cheatSheetFile, "MAIN POWER ROOM\n");
-			}
-			else if (i == 187)
-			{
-				fprintf(cheatSheetFile, "G2 FIGHT ROOM\n");
-			}
-			else if (i == 191)
-			{
-				fprintf(cheatSheetFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LAB AREA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-
-				if (difficulty == Hardcore)
-				{
-					fprintf(cheatSheetFile, "RECEPTION\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 251);
-				}
-
-				fprintf(cheatSheetFile, "SECURITY ROOM\n");
-			}
-			else if (i == 192)
-			{
-				fprintf(cheatSheetFile, "CAFETERIA\n");
-			}
-			else if (i == 195)
-			{
-				fprintf(cheatSheetFile, "KITCHEN\n");
-			}
-			else if (i == 197)
-			{
-				fprintf(cheatSheetFile, "NAP ROOM\n");
-			}
-			else if (i == 201)
-			{
-				fprintf(cheatSheetFile, "LOBBY\n");
-			}
-			else if (i == 203)
-			{
-				fprintf(cheatSheetFile, "FIRST PLANT ROOM\n");
-			}
-			else if (i == 204)
-			{
-				fprintf(cheatSheetFile, "GREENHOUSE CONTROL ROOM\n");
-			}
-			else if (i == 206)
-			{
-				fprintf(cheatSheetFile, "GREENHOUSE\n");
-			}
-			else if (i == 209)
-			{
-				fprintf(cheatSheetFile, "DRUG TESTING LAB\n");
-			}
-			else if (i == 211)
-			{
-				fprintf(cheatSheetFile, "UNDERNEATH GREENHOUSE\n");
-			}
-			else if (i == 212)
-			{
-				fprintf(cheatSheetFile, "LOUNGE\n");
-			}
-			else if (i == 215)
-			{
-				fprintf(cheatSheetFile, "SERVER ROOM\n");
-			}
-			else if (i == 218)
-			{
-				fprintf(cheatSheetFile, "LOW-TEMP TESTING LAB\n");
-			}
-			else if (i == 219)
-			{
-				fprintf(cheatSheetFile, "MODULATOR ROOM\n");
-			}
-			else if (i == 222)
-			{
-				fprintf(cheatSheetFile, "BIOTESTING LAB\n");
-			}
-			else if (i == 226)
-			{
-				fprintf(cheatSheetFile, "P-4 LEVEL TESTING LAB\n");
-			}
-			else if (i == 229)
-			{
-				fprintf(cheatSheetFile, "BIOREACTORS ROOM\n");
-			}
-			else if (i == 239)
-			{
-				fprintf(cheatSheetFile, "MONITOR ROOM\n");
-			}
-			else if (i == 241)
-			{
-				fprintf(cheatSheetFile, "PUMP ROOM\n");
-			}
-			else if (i == 244)
-			{
-
-				if (difficulty == Hardcore)
-				{
-					PrintCheatSheetItemToFile(cheatSheetFile, 252);
-				}
-
-				if (character == Leon)
-				{
-					fprintf(cheatSheetFile, "ESCAPE SHAFT\n");
-				}
-				else
-				{
-					fprintf(cheatSheetFile, "TURNTABLE\n");
-					PrintCheatSheetItemToFile(cheatSheetFile, 119);
-				}
-			}
-			else if (i == 247)
-			{
-				fprintf(cheatSheetFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~EXTRA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-				fprintf(cheatSheetFile, "HIDDEN ITEMS - PRESS ROOM\n");
-			}
-			else if (i == 248)
-			{
-				fprintf(cheatSheetFile, "HIDDEN ITEMS - STARS OFFICE\n");
-			}
-			else if (i == 250)
-			{
-				// fprintf(cheatSheetFile, "SHOTGUN SHELLS IN THE STARS OFFICE THAT I FORGOT ABOUT I'M SORRY D:\n");
-				break;
-			}
-
-			if (character == Leon)
-			{
-
-				bool condition = true;
-
-				if (scenario == B)
-				{
-					condition = condition && (i != 4 && i != 71 && i != 131 && i != 213);
-				}
-
-				if (condition)
-				{
-					PrintCheatSheetItemToFile(cheatSheetFile, i);
-				}
-			}
-			else
-			{
-
-				if (ItemNames[i] != "UNUSED")
-				{
-
-					bool condition = (i != 87 && i != 88 && i != 118 && i != 119 && i != 120 && i != 121 && i != 131 && i != 132 && i != 133 && i != 134 && i != 135 && i != 136 && i != 137 && i != 138 && i != 139 && i != 140 && i != 142);
-
-					if (scenario == B)
-					{
-						condition = condition && (i != 4 && i != 43 && i != 57 && i != 71 && i != 146 && i != 147 && i != 213);
-					}
-
-					if (condition)
-					{
-						PrintCheatSheetItemToFile(cheatSheetFile, i);
-					}
-				}
-			}
-		}
-
-		if (mixWeapons)
-		{
-			fprintf(cheatSheetFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DISCARDED ITEMS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-
-			while (m_AmmoGunpowderList.empty() == false)
-			{
-				fprintf(cheatSheetFile, "%s\n", ItemNames[m_AmmoGunpowderList.back()]);
-				m_AmmoGunpowderList.pop_back();
-			}
-		}
-
+		for (size_t i = 0; i < finalCheatSheet.size(); ++i)
+			fprintf(cheatSheetFile, "%s\n", finalCheatSheet[i].c_str());
 		fflush(cheatSheetFile);
 		fclose(cheatSheetFile);
 		printf("done!\n");
 	}
+
+	printf("done!\n");
 }

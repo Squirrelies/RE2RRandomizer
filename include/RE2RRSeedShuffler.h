@@ -1,7 +1,10 @@
 #ifndef RE2RR_RE2RRSEEDSHUFFLER_H
 #define RE2RR_RE2RRSEEDSHUFFLER_H
 
-#include "RE2RRSeedGen.h"
+#include "RE2RRTypes.h"
+
+#include <algorithm>
+#include <ctime>
 #include <map>
 #include <random>
 #include <string>
