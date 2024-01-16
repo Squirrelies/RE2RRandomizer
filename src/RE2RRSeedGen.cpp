@@ -2823,7 +2823,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 	shufflers.reserve(n);
 	for (int i = 0; i < n; ++i)
 	{
-		RE2RRSeedShuffler *newInstance = new RE2RRSeedShuffler(character, scenario, difficulty);
+		RE2RRSeedShuffler *newInstance = new RE2RRSeedShuffler(character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
 		shufflers.push_back(newInstance);
 		m_Futures.push_back(std::async(&RE2RRSeedShuffler::AsyncShuffle, newInstance, i));
 	}

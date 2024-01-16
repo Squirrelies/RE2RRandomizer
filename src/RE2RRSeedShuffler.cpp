@@ -1,10 +1,25 @@
 #include "RE2RRSeedShuffler.h"
 
-RE2RRSeedShuffler::RE2RRSeedShuffler(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty)
+RE2RRSeedShuffler::RE2RRSeedShuffler(
+    RE2RRCharacter character,
+    RE2RRScenario scenario,
+    RE2RRDifficulty difficulty,
+    int listLength,
+    bool &m_HasFoundSeed,
+    std::vector<std::string> &ItemNames,
+    std::map<int, std::vector<int>> &DisallowedZoneMap,
+    std::vector<int> &ZoneIDByItemID,
+    std::map<int, std::map<int, std::vector<int>>> &ZoneRequiredItems)
 {
 	this->character = character;
 	this->scenario = scenario;
 	this->difficulty = difficulty;
+	this->m_ListLength = listLength;
+	this->m_HasFoundSeed = m_HasFoundSeed;
+	this->ItemNames = ItemNames;
+	this->DisallowedZoneMap = DisallowedZoneMap;
+	this->ZoneIDByItemID = ZoneIDByItemID;
+	this->ZoneRequiredItems = ZoneRequiredItems;
 }
 
 RE2RRSeedShuffler::~RE2RRSeedShuffler()
@@ -42,7 +57,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 	int chippos = 195 + (rand() % 5);
 
 	// Unique Item IDs
-	for (int i = 0; i < CRE2SeedGeneratorDlg::m_ListLength; ++i)
+	for (int i = 0; i < m_ListLength; ++i)
 	{
 
 		bool exceptions;
@@ -113,7 +128,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 	std::vector<int> KeyItems;
 	std::vector<int> NonKeyItems;
 
-	for (int i = 0; i < CRE2SeedGeneratorDlg::m_ListLength; ++i)
+	for (int i = 0; i < m_ListLength; ++i)
 	{
 
 		bool exceptions;
@@ -158,10 +173,10 @@ void RE2RRSeedShuffler::ShuffleItems()
 						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == B)
 						{
 
-							if (CRE2SeedGeneratorDlg::ItemNames[i] != "UNUSED")
+							if (ItemNames[i] != "UNUSED")
 							{
 
-								std::vector<int> DisZones = CRE2SeedGeneratorDlg::DisallowedZoneMap[i];
+								std::vector<int> DisZones = DisallowedZoneMap[i];
 
 								if (DisZones.size() > 0)
 								{
@@ -180,10 +195,10 @@ void RE2RRSeedShuffler::ShuffleItems()
 						if (i != 151) // rook piece exception
 						{
 
-							if (CRE2SeedGeneratorDlg::ItemNames[i] != "UNUSED")
+							if (ItemNames[i] != "UNUSED")
 							{
 
-								std::vector<int> DisZones = CRE2SeedGeneratorDlg::DisallowedZoneMap[i];
+								std::vector<int> DisZones = DisallowedZoneMap[i];
 
 								if (DisZones.size() > 0)
 								{
@@ -243,9 +258,9 @@ void RE2RRSeedShuffler::ShuffleItems()
 
 		int randomnumber = std::rand() % UniqueIDList.size();
 
-		int NewItemZone = CRE2SeedGeneratorDlg::ZoneIDByItemID[UniqueIDList[randomnumber]];
+		int NewItemZone = ZoneIDByItemID[UniqueIDList[randomnumber]];
 
-		std::vector<int> DisZones = CRE2SeedGeneratorDlg::DisallowedZoneMap[KeyItems[randomkeyitem]];
+		std::vector<int> DisZones = DisallowedZoneMap[KeyItems[randomkeyitem]];
 
 		bool isvalid = true;
 
@@ -274,7 +289,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 			for (int i = 0; i < UniqueIDList.size(); ++i)
 			{
 
-			    int testzone = CRE2SeedGeneratorDlg::ZoneIDByItemID[UniqueIDList[i]];
+			    int testzone = ZoneIDByItemID[UniqueIDList[i]];
 
 			    if (std::find(DisZones.begin(), DisZones.end(), testzone) == DisZones.end())
 			    {
@@ -285,7 +300,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 
 			if (isthereavalidslot == false)
 			{
-			    //CRE2SeedGeneratorDlg::AddToConsoleLog("VALID SLOT ERROR");
+			    //AddToConsoleLog("VALID SLOT ERROR");
 			}
 			*/
 		}
@@ -333,7 +348,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
 {
 
-	// CRE2SeedGeneratorDlg::AddToConsoleLog("FECK");
+	// AddToConsoleLog("FECK");
 
 	// std::mt19937 mt_rand(time(0) + threadCount);
 	srand(time(0) + threadCount);
@@ -344,7 +359,7 @@ std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
 	while (m_IsItemRandoValid == false)
 	{
 
-		if (CRE2SeedGeneratorDlg::m_HasFoundSeed == true) // a thread has already found the seed, abort
+		if (m_HasFoundSeed == true) // a thread has already found the seed, abort
 		{
 			m_FinalList.clear();
 			return m_FinalList;
@@ -357,7 +372,7 @@ std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
 			m_FinalList.clear();
 			return m_FinalList;
 			*/
-			// CRE2SeedGeneratorDlg::AddToConsoleLog(" .");
+			// AddToConsoleLog(" .");
 		}
 
 		ShuffleItems();
@@ -367,7 +382,7 @@ std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
 		counter++;
 	}
 
-	CRE2SeedGeneratorDlg::m_HasFoundSeed = true;
+	m_HasFoundSeed = true;
 	return m_FinalList;
 }
 
@@ -701,7 +716,7 @@ void RE2RRSeedShuffler::CheckItemValidity()
 	}
 
 	// now we check dependencies
-	for (int i = 0; i < CRE2SeedGeneratorDlg::m_ListLength; ++i)
+	for (int i = 0; i < m_ListLength; ++i)
 	{
 
 		if (CheckDependencies(i) == false)
@@ -720,9 +735,9 @@ bool RE2RRSeedShuffler::CheckDependencies(int itemID)
 
 	int ItemPos = std::find(m_FinalList.begin(), m_FinalList.end(), itemID) - m_FinalList.begin();
 
-	int NewItemZone = CRE2SeedGeneratorDlg::ZoneIDByItemID[ItemPos];
+	int NewItemZone = ZoneIDByItemID[ItemPos];
 
-	std::vector<int> ReqItems = CRE2SeedGeneratorDlg::ZoneRequiredItems[NewItemZone][0];
+	std::vector<int> ReqItems = ZoneRequiredItems[NewItemZone][0];
 
 	std::vector<std::vector<int>> OptionalSets;
 
@@ -731,13 +746,13 @@ bool RE2RRSeedShuffler::CheckDependencies(int itemID)
 	while (true)
 	{
 
-		if (CRE2SeedGeneratorDlg::ZoneRequiredItems[NewItemZone][i].empty())
+		if (ZoneRequiredItems[NewItemZone][i].empty())
 		{
 			break;
 		}
 		else
 		{
-			OptionalSets.push_back(CRE2SeedGeneratorDlg::ZoneRequiredItems[NewItemZone][i]);
+			OptionalSets.push_back(ZoneRequiredItems[NewItemZone][i]);
 		}
 
 		i++;
