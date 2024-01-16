@@ -264,7 +264,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 
 		bool isvalid = true;
 
-		for (int q = 0; q < DisZones.size(); ++q)
+		for (size_t q = 0; q < DisZones.size(); ++q)
 		{
 
 			if (DisZones[q] == NewItemZone)
@@ -761,10 +761,10 @@ bool RE2RRSeedShuffler::CheckDependencies(int itemID)
 	m_ForbiddenDependencies.push_back(itemID);
 
 	// all of these are mandatory
-	for (int q = 0; q < ReqItems.size(); ++q)
+	for (size_t q = 0; q < ReqItems.size(); ++q)
 	{
 
-		for (int z = 0; z < m_ForbiddenDependencies.size(); ++z)
+		for (size_t z = 0; z < m_ForbiddenDependencies.size(); ++z)
 		{
 
 			if (ReqItems[q] == m_ForbiddenDependencies[z])
@@ -808,10 +808,10 @@ bool RE2RRSeedShuffler::CheckDependencies(int itemID)
 
 bool RE2RRSeedShuffler::CheckOptionalDependency(std::vector<int> OptionalItems)
 {
-	for (int q = 0; q < OptionalItems.size(); ++q)
+	for (size_t q = 0; q < OptionalItems.size(); ++q)
 	{
 
-		for (int z = 0; z < m_ForbiddenDependencies.size(); ++z)
+		for (size_t z = 0; z < m_ForbiddenDependencies.size(); ++z)
 		{
 
 			if (OptionalItems[q] == m_ForbiddenDependencies[z])
