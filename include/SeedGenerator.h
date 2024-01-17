@@ -1,16 +1,16 @@
-#ifndef RE2RR_RE2RRSEEDGEN_H
-#define RE2RR_RE2RRSEEDGEN_H
+#ifndef RE2RR_SEEDGENERATOR_H
+#define RE2RR_SEEDGENERATOR_H
 
-#include "RE2RRTypes.h"
-
-#include "RE2RRSeedShuffler.h"
+#include "Logging.h"
+#include "SeedShuffler.h"
+#include "Types.h"
 #include <algorithm>
 #include <future>
 #include <map>
 #include <string>
 #include <vector>
 
-class RE2RRSeedGen
+class SeedGenerator
 {
 private:
 	bool m_HasFoundSeed;
@@ -31,13 +31,13 @@ private:
 	std::vector<int> GetSeed(void);
 	std::vector<std::string> GetCheatSheet(void);
 	void PrintCheatSheetItemToFile(FILE *, const int);
-	void MixWeapons(RE2RRCharacter, RE2RRScenario, RE2RRDifficulty);
-	void CreateCheatSheetVector(RE2RRCharacter, RE2RRScenario, RE2RRDifficulty, bool);
-	void WriteDataToFile(RE2RRCharacter, RE2RRScenario, RE2RRDifficulty, bool);
+	void MixWeapons(Character, Scenario, Difficulty);
+	void CreateCheatSheetVector(Character, Scenario, Difficulty, bool);
+	void WriteDataToFile(Character, Scenario, Difficulty, bool);
 
 protected:
 public:
-	void GenerateSeed(RE2RRCharacter, RE2RRScenario, RE2RRDifficulty, bool);
+	void GenerateSeed(Character, Scenario, Difficulty, bool);
 };
 
 #endif

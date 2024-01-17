@@ -18,6 +18,7 @@
 #include "Process.h"
 #include "Strings.h"
 #include <psapi.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <vector>

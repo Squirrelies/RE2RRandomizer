@@ -1,6 +1,6 @@
-#include "RE2RRUI.h"
+#include "UI.h"
 
-void __stdcall RE2RRUI::DrawMainUI(bool *open)
+void __stdcall UI::DrawMainUI(bool *open)
 {
 	if (!*open)
 		return;
@@ -80,7 +80,7 @@ void __stdcall RE2RRUI::DrawMainUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall RE2RRUI::DrawFileImportSeedUI(bool *open)
+void __stdcall UI::DrawFileImportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
@@ -96,7 +96,7 @@ void __stdcall RE2RRUI::DrawFileImportSeedUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall RE2RRUI::DrawFileExportSeedUI(bool *open)
+void __stdcall UI::DrawFileExportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
@@ -112,7 +112,7 @@ void __stdcall RE2RRUI::DrawFileExportSeedUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall RE2RRUI::DrawHelpAboutRE2RRUI(bool *open)
+void __stdcall UI::DrawHelpAboutRE2RRUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();

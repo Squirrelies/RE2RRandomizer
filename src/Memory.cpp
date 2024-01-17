@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-bool TryFindPatternOffset(TCHAR *moduleName, std::vector<char16_t> pattern, uint64_t *offset, uint64_t startOffset = 0ULL)
+bool TryFindPatternOffset(TCHAR *moduleName, std::vector<char16_t> pattern, uint64_t *offset, uint64_t startOffset)
 {
 	MODULEINFO moduleInfo;
 	if (!TryGetModuleInfo(moduleName, &moduleInfo))
@@ -25,7 +25,7 @@ bool TryFindPatternOffset(TCHAR *moduleName, std::vector<char16_t> pattern, uint
 	return false;
 }
 
-bool TryFindPatternAddress(TCHAR *moduleName, std::vector<char16_t> pattern, uintptr_t *address, uint64_t startOffset = 0ULL)
+bool TryFindPatternAddress(TCHAR *moduleName, std::vector<char16_t> pattern, uintptr_t *address, uint64_t startOffset)
 {
 	MODULEINFO moduleInfo;
 	if (!TryGetModuleInfo(moduleName, &moduleInfo))

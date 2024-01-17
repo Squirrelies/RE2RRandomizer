@@ -1,10 +1,10 @@
-#include "RE2RRandomizerHook.h"
+#include "DllHook.h"
 
 HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
 ImmediateLogger *logger;
-RE2RRUI *re2rrUI;
+UI *ui;
 bool allocedConsole = true;
 bool attachedConsole = true;
 void **vtableDXGISwapChain = nullptr;
@@ -106,7 +106,7 @@ bool Startup()
 #endif
 	    !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
 	    (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
-	    (re2rrUI = new RE2RRUI(logger)) != nullptr &&
+	    (ui = new UI(logger)) != nullptr &&
 	    MH_Initialize() == MH_OK;
 }
 
@@ -132,10 +132,10 @@ void Shutdown()
 	}
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
-	if (re2rrUI != nullptr)
+	if (ui != nullptr)
 	{
-		delete re2rrUI;
-		re2rrUI = nullptr;
+		delete ui;
+		ui = nullptr;
 	}
 	if (logger != nullptr)
 	{
@@ -280,7 +280,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	re2rrUI->DrawMainUI(&isUIOpen);
+	ui->DrawMainUI(&isUIOpen);
 	// ImGui::ShowDemoWindow();
 
 	ImGui::Render();

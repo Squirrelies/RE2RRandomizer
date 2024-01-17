@@ -1,5 +1,5 @@
-#ifndef RE2RR_RE2RRTYPES_H
-#define RE2RR_RE2RRTYPES_H
+#ifndef RE2RR_TYPES_H
+#define RE2RR_TYPES_H
 
 #ifdef __GNUC__
 #define UNUSED(x) UNUSED_##x __attribute__((__unused__))
@@ -13,19 +13,19 @@
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 
-enum RE2RRCharacter
+enum Character
 {
 	Leon = 0,
 	Claire = 1
 };
 
-enum RE2RRScenario
+enum Scenario
 {
 	A = 0,
 	B = 1
 };
 
-enum RE2RRDifficulty
+enum Difficulty
 {
 	Assisted = 0,
 	Standard = 1,

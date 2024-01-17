@@ -1,9 +1,9 @@
-#include "RE2RRSeedShuffler.h"
+#include "SeedShuffler.h"
 
-RE2RRSeedShuffler::RE2RRSeedShuffler(
-    RE2RRCharacter character,
-    RE2RRScenario scenario,
-    RE2RRDifficulty difficulty,
+SeedShuffler::SeedShuffler(
+    Character character,
+    Scenario scenario,
+    Difficulty difficulty,
     int listLength,
     bool &m_HasFoundSeed,
     std::vector<std::string> &ItemNames,
@@ -22,14 +22,14 @@ RE2RRSeedShuffler::RE2RRSeedShuffler(
 	this->ZoneRequiredItems = ZoneRequiredItems;
 }
 
-RE2RRSeedShuffler::~RE2RRSeedShuffler()
+SeedShuffler::~SeedShuffler()
 {
 	m_FinalList.clear();
 	m_ForbiddenDependencies.clear();
 	m_DebugInfo.clear();
 }
 
-void RE2RRSeedShuffler::ShuffleItems()
+void SeedShuffler::ShuffleItems()
 {
 
 	std::vector<int> UniqueIDList;
@@ -345,7 +345,7 @@ void RE2RRSeedShuffler::ShuffleItems()
 	// end debug test
 }
 
-std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
+std::vector<int> SeedShuffler::AsyncShuffle(int threadCount)
 {
 
 	// AddToConsoleLog("FECK");
@@ -386,7 +386,7 @@ std::vector<int> RE2RRSeedShuffler::AsyncShuffle(int threadCount)
 	return m_FinalList;
 }
 
-bool RE2RRSeedShuffler::CheckSpadeKeyInArea()
+bool SeedShuffler::CheckSpadeKeyInArea()
 {
 
 	bool spadeinzonetwo = false;
@@ -429,7 +429,7 @@ bool RE2RRSeedShuffler::CheckSpadeKeyInArea()
 	return spadeinzonetwo;
 }
 
-void RE2RRSeedShuffler::CheckItemValidity()
+void SeedShuffler::CheckItemValidity()
 {
 
 	// special situations first
@@ -730,7 +730,7 @@ void RE2RRSeedShuffler::CheckItemValidity()
 	m_IsItemRandoValid = true;
 }
 
-bool RE2RRSeedShuffler::CheckDependencies(int itemID)
+bool SeedShuffler::CheckDependencies(int itemID)
 {
 
 	int ItemPos = std::find(m_FinalList.begin(), m_FinalList.end(), itemID) - m_FinalList.begin();
@@ -806,7 +806,7 @@ bool RE2RRSeedShuffler::CheckDependencies(int itemID)
 	return true;
 }
 
-bool RE2RRSeedShuffler::CheckOptionalDependency(std::vector<int> OptionalItems)
+bool SeedShuffler::CheckOptionalDependency(std::vector<int> OptionalItems)
 {
 	for (size_t q = 0; q < OptionalItems.size(); ++q)
 	{

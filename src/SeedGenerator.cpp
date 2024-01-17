@@ -1,6 +1,6 @@
-#include "RE2RRSeedGen.h"
+#include "SeedGenerator.h"
 
-void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool mixWeapons)
+void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficulty difficulty, bool mixWeapons)
 {
 	if (scenario == A)
 	{
@@ -2819,13 +2819,13 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 		n = 1;
 	}
 
-	std::vector<RE2RRSeedShuffler *> shufflers;
+	std::vector<SeedShuffler *> shufflers;
 	shufflers.reserve(n);
 	for (unsigned int i = 0; i < n; ++i)
 	{
-		RE2RRSeedShuffler *newInstance = new RE2RRSeedShuffler(character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
+		SeedShuffler *newInstance = new SeedShuffler(character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
 		shufflers.push_back(newInstance);
-		m_Futures.push_back(std::async(&RE2RRSeedShuffler::AsyncShuffle, newInstance, i));
+		m_Futures.push_back(std::async(&SeedShuffler::AsyncShuffle, newInstance, i));
 	}
 
 	bool alldone = false;
@@ -2883,7 +2883,7 @@ void RE2RRSeedGen::GenerateSeed(RE2RRCharacter character, RE2RRScenario scenario
 	// WriteDataToFile(character, scenario, difficulty, mixWeapons);
 }
 
-void RE2RRSeedGen::MixWeapons(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty UNUSED(difficulty))
+void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficulty UNUSED(difficulty))
 {
 
 	printf("Shuffling Weapons/Ammo/Powders...");
@@ -3181,7 +3181,7 @@ void RE2RRSeedGen::MixWeapons(RE2RRCharacter character, RE2RRScenario scenario, 
 	printf("done!\n");
 }
 
-std::unique_ptr<char[]> RE2RRSeedGen::FormatCharArray(const char *format, ...)
+std::unique_ptr<char[]> SeedGenerator::FormatCharArray(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -3191,7 +3191,7 @@ std::unique_ptr<char[]> RE2RRSeedGen::FormatCharArray(const char *format, ...)
 	return returnValue;
 }
 
-std::unique_ptr<std::string> RE2RRSeedGen::FormatString(const char *format, ...)
+std::unique_ptr<std::string> SeedGenerator::FormatString(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -3201,7 +3201,7 @@ std::unique_ptr<std::string> RE2RRSeedGen::FormatString(const char *format, ...)
 	return returnValue;
 }
 
-FILE *RE2RRSeedGen::OpenFile(const char *filename, const char *mode)
+FILE *SeedGenerator::OpenFile(const char *filename, const char *mode)
 {
 	FILE *file;
 	errno_t err;
@@ -3212,29 +3212,29 @@ FILE *RE2RRSeedGen::OpenFile(const char *filename, const char *mode)
 	return file;
 }
 
-// void RE2RRSeedGen::PrintCheatSheetItemToFile(FILE *file, const int itemId)
+// void SeedGenerator::PrintCheatSheetItemToFile(FILE *file, const int itemId)
 // {
 // 	fprintf(file, "\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
 // }
 
-std::unique_ptr<std::string> RE2RRSeedGen::CheatSheetItemToString(const int itemId)
+std::unique_ptr<std::string> SeedGenerator::CheatSheetItemToString(const int itemId)
 {
 	return FormatString("\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
 }
 
-std::vector<int> RE2RRSeedGen::GetSeed(void)
+std::vector<int> SeedGenerator::GetSeed(void)
 {
 	return finalList;
 }
 
-std::vector<std::string> RE2RRSeedGen::GetCheatSheet(void)
+std::vector<std::string> SeedGenerator::GetCheatSheet(void)
 {
 	return finalCheatSheet;
 }
 
 // ***FINDME***
 
-void RE2RRSeedGen::CreateCheatSheetVector(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool mixWeapons)
+void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenario, Difficulty difficulty, bool mixWeapons)
 {
 	finalCheatSheet.clear();
 
@@ -3844,7 +3844,7 @@ void RE2RRSeedGen::CreateCheatSheetVector(RE2RRCharacter character, RE2RRScenari
 	}
 }
 
-void RE2RRSeedGen::WriteDataToFile(RE2RRCharacter character, RE2RRScenario scenario, RE2RRDifficulty difficulty, bool UNUSED(mixWeapons))
+void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Difficulty difficulty, bool UNUSED(mixWeapons))
 {
 	// ItemList
 	{

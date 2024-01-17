@@ -1,8 +1,7 @@
-#ifndef RE2RR_RE2RRSEEDSHUFFLER_H
-#define RE2RR_RE2RRSEEDSHUFFLER_H
+#ifndef RE2RR_SEEDSHUFFLER_H
+#define RE2RR_SEEDSHUFFLER_H
 
-#include "RE2RRTypes.h"
-
+#include "Types.h"
 #include <algorithm>
 #include <ctime>
 #include <map>
@@ -10,7 +9,7 @@
 #include <string>
 #include <vector>
 
-class RE2RRSeedShuffler
+class SeedShuffler
 {
 private:
 	int m_ListLength;
@@ -19,9 +18,9 @@ private:
 	std::vector<int> m_ForbiddenDependencies;
 	std::map<int, int> m_DebugInfo;
 	std::mt19937 m_Twister;
-	RE2RRCharacter character;
-	RE2RRScenario scenario;
-	RE2RRDifficulty difficulty;
+	Character character;
+	Scenario scenario;
+	Difficulty difficulty;
 
 	bool m_HasFoundSeed;
 	std::vector<std::string> ItemNames;
@@ -38,17 +37,17 @@ private:
 
 protected:
 public:
-	RE2RRSeedShuffler(
-	    RE2RRCharacter character,
-	    RE2RRScenario scenario,
-	    RE2RRDifficulty difficulty,
+	SeedShuffler(
+	    Character character,
+	    Scenario scenario,
+	    Difficulty difficulty,
 	    int listLength,
 	    bool &m_HasFoundSeed,
 	    std::vector<std::string> &ItemNames,
 	    std::map<int, std::vector<int>> &DisallowedZoneMap,
 	    std::vector<int> &ZoneIDByItemID,
 	    std::map<int, std::map<int, std::vector<int>>> &ZoneRequiredItems);
-	~RE2RRSeedShuffler(void);
+	~SeedShuffler(void);
 	std::vector<int> AsyncShuffle(int threadCount);
 };
 

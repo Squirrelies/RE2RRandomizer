@@ -1,5 +1,5 @@
-#ifndef RE2RR_RE2RRANDOMIZERHOOK_H
-#define RE2RR_RE2RRANDOMIZERHOOK_H
+#ifndef RE2RR_DLLHOOK_H
+#define RE2RR_DLLHOOK_H
 
 // The DirectX version we're targeting. (TODO: Add detection and support for both so this isn't needed.)
 #define DXVERSION 11
@@ -31,8 +31,8 @@
 
 #include "Hooking.h"
 #include "Logging.h"
-#include "RE2RRTypes.h"
-#include "RE2RRUI.h"
+#include "Types.h"
+#include "UI.h"
 #include <MinHook.h>
 #include <d3d11.h>
 #include <dinput.h>

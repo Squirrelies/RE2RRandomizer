@@ -52,10 +52,11 @@ include_directories(include)
 
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED
-src/${PROJECT_NAME}Hook.cpp
-src/RE2RRUI.cpp
-src/RE2RRSeedGen.cpp
-src/RE2RRSeedShuffler.cpp
+src/DllHook.cpp
+src/UI.cpp
+src/SeedGenerator.cpp
+src/SeedShuffler.cpp
+src/Randomizer.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
@@ -64,7 +65,7 @@ add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}
 
 ### Executable
 add_executable(${PROJECT_NAME}
-src/${PROJECT_NAME}.cpp
+src/ExeInjector.cpp
 src/Strings.cpp
 src/Process.cpp
 )
