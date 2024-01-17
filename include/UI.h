@@ -20,11 +20,6 @@ public:
 	}
 	~UI()
 	{
-		if (logger != nullptr)
-		{
-			delete logger;
-			logger = nullptr;
-		}
 	}
 
 	void __stdcall DrawMainUI(bool *);
