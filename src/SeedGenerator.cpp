@@ -2810,7 +2810,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 
 	unsigned int n = std::thread::hardware_concurrency();
 
-	printf("Generating seed using %d threads, application may be unresponsive while generating seed...", n);
+	logger->LogMessage("Generating seed using %d threads, application may be unresponsive while generating seed...", n);
 
 	// n = 1; //I use this for debugging
 
@@ -2844,7 +2844,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 
 			if (status == std::future_status::timeout)
 			{
-				printf(" .");
+				logger->LogMessage(" .");
 			}
 			else if (status == std::future_status::ready)
 			{
@@ -2853,11 +2853,11 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 
 				if (result.empty())
 				{
-					// printf("Thread closed!\n");
+					// logger->LogMessage("Thread closed!\n");
 				}
 				else
 				{
-					printf("Seed generated!\n");
+					logger->LogMessage("Seed generated!\n");
 					finalList = result;
 					CreateCheatSheetVector(character, scenario, difficulty, mixWeapons);
 					alldone = true;
@@ -2877,16 +2877,16 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 		delete shufflers[i];
 	shufflers.clear();
 
-	printf("All Finished!\n");
+	logger->LogMessage("All Finished!\n");
 
-	// printf("done after %d attempts!\n", total);
+	// logger->LogMessage("done after %d attempts!\n", total);
 	// WriteDataToFile(character, scenario, difficulty, mixWeapons);
 }
 
 void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficulty UNUSED(difficulty))
 {
 
-	printf("Shuffling Weapons/Ammo/Powders...");
+	logger->LogMessage("Shuffling Weapons/Ammo/Powders...");
 
 	std::vector<int> weaponsandupgrades;
 
@@ -3174,11 +3174,11 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 		else
 		{
 			// really shouldn't get here
-			printf("ERROR ITEMS RAN OUT!\n");
+			logger->LogMessage("ERROR ITEMS RAN OUT!\n");
 		}
 	}
 
-	printf("done!\n");
+	logger->LogMessage("done!\n");
 }
 
 std::unique_ptr<char[]> SeedGenerator::FormatCharArray(const char *format, ...)
@@ -3231,8 +3231,6 @@ std::vector<std::string> SeedGenerator::GetCheatSheet(void)
 {
 	return finalCheatSheet;
 }
-
-// ***FINDME***
 
 void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenario, Difficulty difficulty, bool mixWeapons)
 {
@@ -3850,27 +3848,27 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 	{
 		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", character, scenario, difficulty);
 
-		printf("Writing to %s . . .", itemListFileName.get());
+		logger->LogMessage("Writing to %s . . .", itemListFileName.get());
 		FILE *itemListFile = OpenFile(itemListFileName.get(), "w");
 		for (int i = 0; i < m_ListLength; ++i)
 			fprintf(itemListFile, "%d\n", finalList[i]);
 		fflush(itemListFile);
 		fclose(itemListFile);
-		printf("done!\n");
+		logger->LogMessage("done!\n");
 	}
 
 	// CheatSheet
 	{
 		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", character, scenario, difficulty);
 
-		printf("Writing to %s . . .", cheatSheetFileName.get());
+		logger->LogMessage("Writing to %s . . .", cheatSheetFileName.get());
 		FILE *cheatSheetFile = OpenFile(cheatSheetFileName.get(), "w");
 		for (size_t i = 0; i < finalCheatSheet.size(); ++i)
 			fprintf(cheatSheetFile, "%s\n", finalCheatSheet[i].c_str());
 		fflush(cheatSheetFile);
 		fclose(cheatSheetFile);
-		printf("done!\n");
+		logger->LogMessage("done!\n");
 	}
 
-	printf("done!\n");
+	logger->LogMessage("done!\n");
 }
