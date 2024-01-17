@@ -13,6 +13,7 @@
 class SeedGenerator
 {
 private:
+	ImmediateLogger *logger;
 	bool m_HasFoundSeed;
 	int m_ListLength;
 	std::vector<int> finalList;
@@ -37,6 +38,16 @@ private:
 
 protected:
 public:
+	SeedGenerator(ImmediateLogger *logger)
+	{
+		this->logger = logger;
+	}
+
+	~SeedGenerator()
+	{
+		this->logger = nullptr;
+	}
+
 	void GenerateSeed(Character, Scenario, Difficulty, bool);
 };
 

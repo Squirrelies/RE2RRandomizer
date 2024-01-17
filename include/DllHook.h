@@ -5,7 +5,7 @@
 #define DXVERSION 11
 
 // Whether to show a debug console window on attach or not. Info is still logged to file either way.
-#define RE2RRDEBUGWINDOW 0
+#define RE2RRDEBUGWINDOW 1
 
 // Version. This is defined at compile time so this is just a placeholder.
 #define RE2RR_VERSION "1.0.0"
@@ -31,6 +31,8 @@
 
 #include "Hooking.h"
 #include "Logging.h"
+#include "Randomizer.h"
+#include "SeedGenerator.h"
 #include "Types.h"
 #include "UI.h"
 #include <MinHook.h>

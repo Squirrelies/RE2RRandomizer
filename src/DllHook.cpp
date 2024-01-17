@@ -5,6 +5,8 @@ HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
 ImmediateLogger *logger;
 UI *ui;
+Randomizer *randomizer;
+SeedGenerator *seedGenerator;
 bool allocedConsole = true;
 bool attachedConsole = true;
 void **vtableDXGISwapChain = nullptr;
@@ -107,6 +109,8 @@ bool Startup()
 	    !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
 	    (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
 	    (ui = new UI(logger)) != nullptr &&
+	    (randomizer = new Randomizer(logger)) != nullptr &&
+	    (seedGenerator = new SeedGenerator(logger)) != nullptr &&
 	    MH_Initialize() == MH_OK;
 }
 
@@ -132,6 +136,16 @@ void Shutdown()
 	}
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
+	if (randomizer != nullptr)
+	{
+		delete randomizer;
+		randomizer = nullptr;
+	}
+	if (seedGenerator != nullptr)
+	{
+		delete seedGenerator;
+		seedGenerator = nullptr;
+	}
 	if (ui != nullptr)
 	{
 		delete ui;
@@ -158,14 +172,14 @@ __stdcall void *HookItemPickup(uint8_t *param1, uint8_t *param2, uint8_t *param3
 {
 	uint32_t *itemId = (uint32_t *)(param3 + 0x70);   // R8
 	uint8_t *idlocation = (uint8_t *)(param4 + 0x30); // R9
-	logger->LogMessage("[RE2R-R] HookItemPickup called: %d (0x%x): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", *itemId, *itemId, idlocation[0], idlocation[1], idlocation[2], idlocation[3], idlocation[4], idlocation[5]);
+	randomizer->ItemPickup(itemId, idlocation);
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
 __stdcall void HookItemPutDownKeep(uint8_t *param1, uint8_t *param2, uint8_t *param3)
 {
 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI
-	logger->LogMessage("[RE2R-R] HookItemPutDownKeep called: %d (0x%x)\n", *itemId, *itemId);
+	randomizer->ItemPutdown(itemId);
 	itemPutDownKeepFunc(param1, param2, param3);
 }
 
