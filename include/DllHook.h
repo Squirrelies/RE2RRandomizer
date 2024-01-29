@@ -37,10 +37,12 @@
 #include "UI.h"
 #include <MinHook.h>
 #include <d3d11.h>
+#include <d3d12.h>
 #include <dinput.h>
 #include <dxgi.h>
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
+#include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #include <memory>
 

@@ -170,9 +170,10 @@ void Shutdown()
 
 __stdcall void *HookItemPickup(uint8_t *param1, uint8_t *param2, uint8_t *param3, uint8_t *param4)
 {
-	uint32_t *itemId = (uint32_t *)(param3 + 0x70);   // R8
-	uint8_t *idlocation = (uint8_t *)(param4 + 0x30); // R9
-	randomizer->ItemPickup(itemId, idlocation);
+	uint32_t *itemId = (uint32_t *)(param3 + 0x70);     // R8
+	uint8_t *itemLocation = (uint8_t *)(param4 + 0x30); // R9
+	randomizer->ItemPickup(itemId, itemLocation);
+	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%d, %d) called: 0x%x, 0x%x\n", *itemId, *itemLocation, *itemId, *itemLocation);
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
@@ -180,12 +181,12 @@ __stdcall void HookItemPutDownKeep(uint8_t *param1, uint8_t *param2, uint8_t *pa
 {
 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI
 	randomizer->ItemPutdown(itemId);
+	logger->LogMessage("[RE2R-R] Randomizer::ItemPutdown(%d) called: 0x%x\n", *itemId, *itemId);
 	itemPutDownKeepFunc(param1, param2, param3);
 }
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {
-	// device->GetImmediateContext(&deviceContext);
 	ID3D11Texture2D *backBuffer;
 	swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&backBuffer);
 	device->CreateRenderTargetView(backBuffer, nullptr, &mainRenderTargetView);
@@ -277,10 +278,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 	}
 
 	ImGuiIO &io = ImGui::GetIO();
-	if (io.AppFocusLost)
-		io.MouseDrawCursor = false;
-	else
+	if (isUIOpen)
 		io.MouseDrawCursor = true;
+	else
+		io.MouseDrawCursor = false;
 
 	if (resizeWidth != 0 && resizeHeight != 0)
 	{

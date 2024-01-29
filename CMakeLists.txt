@@ -9,6 +9,7 @@ find_package(imgui CONFIG REQUIRED)
 
 # Required libraries we'll link for ImGUI.
 find_library(D3D11_LIBRARY d3d11 REQUIRED)
+find_library(D3D12_LIBRARY d3d12 REQUIRED)
 find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED)
 find_library(GDI32_LIBRARY Gdi32 REQUIRED)
 find_library(DWMAPI_LIBRARY dwmapi REQUIRED)
@@ -20,6 +21,7 @@ find_library(DINPUT8_LIBRARY dinput8 REQUIRED)
 include(CMakePrintHelpers)
 cmake_print_variables(
     D3D11_LIBRARY,
+    D3D12_LIBRARY,
     DXGUID_LIBRARY
     DINPUT8_LIBRARY,
     D3DCOMPILER_LIBRARY,
@@ -47,7 +49,7 @@ add_link_options(
     -municode -static-libgcc -static-libstdc++ -static
 )
 
-target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY})
+target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY})
 include_directories(include)
 
 ### Library
