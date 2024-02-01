@@ -16,6 +16,7 @@ private:
 	Character *character;
 
 	std::vector<uint8_t> GetItemByID(uint32_t pos);
+	void SetItemByID(uint32_t pos);
 
 protected:
 public:
