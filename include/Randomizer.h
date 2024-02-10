@@ -3,6 +3,7 @@
 
 #include "Logging.h"
 #include "Types.h"
+#include <stdexcept>
 #include <stdint.h>
 #include <vector>
 
@@ -15,8 +16,8 @@ private:
 	Scenario *scenario;
 	Character *character;
 
-	std::vector<uint8_t> GetItemByID(uint32_t pos);
-	void SetItemByID(uint32_t pos);
+	std::vector<uint8_t> GetItemByType(uint32_t *);
+	void SetItemByGUID(GUID *);
 
 protected:
 public:
@@ -38,8 +39,9 @@ public:
 	}
 
 	void ResetSeed(std::vector<int> *, Difficulty *, Scenario *, Character *);
-	void ItemPickup(uint32_t *, uint8_t *);
-	void ItemPutdown(uint32_t *);
+	void ItemPickup(uint32_t *, GUID *);
 };
+
+std::string GUIDToString(GUID *);
 
 #endif

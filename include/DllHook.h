@@ -49,17 +49,17 @@
 #if DXVERSION == 11
 // DX11-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
-constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
+// constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
 #elif DXVERSION == 12
 // DX12-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
-constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
+// constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
 #endif
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
-typedef void *(__stdcall *ItemPickup)(uint8_t *, uint8_t *, uint8_t *, uint8_t *);
-typedef void(__stdcall *ItemPutDownKeep)(uint8_t *, uint8_t *, uint8_t *);
+typedef uintptr_t(__stdcall *ItemPickup)(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+// typedef void(__stdcall *ItemPutDownKeep)(uintptr_t, uintptr_t, uintptr_t);
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
@@ -69,8 +69,8 @@ DWORD WINAPI MainThread(LPVOID);
 DWORD WINAPI ShutdownThread(LPVOID);
 bool Startup(void);
 void Shutdown(void);
-__stdcall void *HookItemPickup(uint8_t *, uint8_t *, uint8_t *, uint8_t *);
-__stdcall void HookItemPutDownKeep(uint8_t *, uint8_t *, uint8_t *);
+__stdcall uintptr_t HookItemPickup(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+//__stdcall void HookItemPutDownKeep(uintptr_t, uintptr_t, uintptr_t);
 void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);

@@ -31,7 +31,7 @@ cmake_print_variables(
 
 add_compile_options(
     -Wall -Wextra -Wpedantic
-    -m64
+    -m64 -masm=intel
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>,$<CONFIG:RELWITHDEBINFO>>:-O3> # Optimize.
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:-s> # Debug symbol stripping.
     $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-ggdb3> # Set symbol type. (GDB format)

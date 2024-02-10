@@ -32,8 +32,8 @@ UINT resizeWidth = 0U;
 UINT resizeHeight = 0U;
 ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
 ItemPickup itemPickupFunc = nullptr;
-ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
-ItemPutDownKeep itemPutDownKeepFunc = nullptr;
+// ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
+// ItemPutDownKeep itemPutDownKeepFunc = nullptr;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -56,6 +56,9 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	return TRUE;
 }
 
+Difficulty *difficultyTest;
+Scenario *scenarioTest;
+Character *characterTest;
 DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 {
 	logger->LogMessage("[RE2R-R] Menu called.\n");
@@ -73,14 +76,20 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");
 
 	logger->LogMessage("[RE2R-R] Usage:\n");
 	logger->LogMessage("\t(F7): Toggle UI)\n");
 	logger->LogMessage("\t(F8): Exit)\n");
+
+	difficultyTest = new Difficulty(Difficulty::Standard);
+	scenarioTest = new Scenario(Scenario::B);
+	characterTest = new Character(Character::Claire);
+	randomizer->ResetSeed(nullptr, difficultyTest, scenarioTest, characterTest);
+
 	return TRUE;
 }
 
@@ -168,22 +177,31 @@ void Shutdown()
 	TerminateThread(mainThreadHandle, 0);
 }
 
-__stdcall void *HookItemPickup(uint8_t *param1, uint8_t *param2, uint8_t *param3, uint8_t *param4)
+// Hooking System.Boolean app.ropeway.gui.GUIMaster.openInventoryGetItemMode(???, ???, app.ropeway.gamemastering.InventoryManager.StockItem (R8), app.ropeway.gimmick.action.SetItem.SetItemSaveData (R9));
+// param1 (RCX) = ???
+// param2 (RDX) = this * (app.ropeway.gui.GUIMaster *)
+// param3 (R8) = app.ropeway.gamemastering.InventoryManager.StockItem *
+// param3 + 0x60 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem
+// param3 + 0x70 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem->ItemId (app.ropeway.gamemastering.Item.ID)
+// param4 (R9) = app.ropeway.gimmick.action.SetItem.SetItemSaveData *
+__stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
 {
-	uint32_t *itemId = (uint32_t *)(param3 + 0x70);     // R8
-	uint8_t *itemLocation = (uint8_t *)(param4 + 0x30); // R9
-	randomizer->ItemPickup(itemId, itemLocation);
-	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%d, %d) called: 0x%x, 0x%x\n", *itemId, *itemLocation, *itemId, *itemLocation);
+	// logger->LogMessage("[RE2R-R] HookItemPickup(%p, %p, %p, %p) called.\n", param1, param2, param3, param4);
+
+	uint32_t *type = (uint32_t *)(param3 + 0x70);
+	GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
+
+	randomizer->ItemPickup(type, itemPositionGuid);
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
-__stdcall void HookItemPutDownKeep(uint8_t *param1, uint8_t *param2, uint8_t *param3)
-{
-	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI
-	randomizer->ItemPutdown(itemId);
-	logger->LogMessage("[RE2R-R] Randomizer::ItemPutdown(%d) called: 0x%x\n", *itemId, *itemId);
-	itemPutDownKeepFunc(param1, param2, param3);
-}
+// __stdcall void HookItemPutDownKeep(uintptr_t param1, uintptr_t param2, uintptr_t param3)
+// {
+// 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI + 0x14 (uniqueID)
+
+// 	randomizer->ItemPutdown(itemId);
+// 	itemPutDownKeepFunc(param1, param2, param3);
+// }
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {
