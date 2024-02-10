@@ -177,12 +177,12 @@ void Shutdown()
 	TerminateThread(mainThreadHandle, 0);
 }
 
-// Hooking System.Boolean app.ropeway.gui.GUIMaster.openInventoryGetItemMode(???, ???, app.ropeway.gamemastering.InventoryManager.StockItem (R8), app.ropeway.gimmick.action.SetItem.SetItemSaveData (R9));
+// Hooking System.Boolean app.ropeway.gui.GUIMaster.openInventoryGetItemMode(RCX, RDX, R8, R9);
 // param1 (RCX) = ???
 // param2 (RDX) = this * (app.ropeway.gui.GUIMaster *)
 // param3 (R8) = app.ropeway.gamemastering.InventoryManager.StockItem *
-// param3 + 0x60 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem
-// param3 + 0x70 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem->ItemId (app.ropeway.gamemastering.Item.ID)
+// param3 (R8) + 0x60 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem
+// param3 (R8) + 0x70 = app.ropeway.gamemastering.InventoryManager.PrimitiveItem->ItemId (app.ropeway.gamemastering.Item.ID)
 // param4 (R9) = app.ropeway.gimmick.action.SetItem.SetItemSaveData *
 __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
 {
