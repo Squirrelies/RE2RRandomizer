@@ -1,6 +1,6 @@
 #include "Randomizer.h"
 
-void Randomizer::ResetSeed(std::vector<int> *seed, Difficulty *difficulty, Scenario *scenario, Character *character)
+void Randomizer::ResetSeed(std::vector<uint32_t> *seed, Difficulty *difficulty, Scenario *scenario, Character *character)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::ResetSeed(%p, %d, %d, %d) called.\n",
 	                   (void *)seed,
@@ -18,15 +18,19 @@ void Randomizer::ItemPickup(uint32_t *type, GUID *itemPositionGuid)
 	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(*type: %ld (0x%lX), itemPositionGuid: %s) called.\n", *type, *type, GUIDToString(itemPositionGuid).c_str());
 
 	uint32_t debugType = 4;
-	std::vector<uint8_t> itemData = GetItemByType(&debugType);
-	// std::vector<uint8_t> itemData = GetItemByType(type);
-	for (size_t i = 0; i < itemData.size(); ++i)
-		logger->LogMessage("[RE2R-R] Randomizer::ItemPickup() writing %x to %p...\n", itemData[i], (void *)((uint8_t *)type + i));
-	memcpy((void *)type, (void *)itemData.data(), itemData.size());
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem = GetItemByType(&debugType); // GetItemByType(type)
+	RandomizeItem((app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)type, &newItem);
+}
+
+void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *newItem)
+{
+	for (size_t i = 0; i < sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem); ++i)
+		logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem() writing %02X to %p...\n", *((uint8_t *)newItem + i), (void *)((uint8_t *)currentItem + i));
+	memcpy((void *)currentItem, (void *)newItem, sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem));
 }
 
 // Returns a vector of uint8_t representing the app.ropeway.gamemastering.InventoryManager.PrimitiveItem structure 0x10-0x24 (0x14).
-std::vector<uint8_t> Randomizer::GetItemByType(uint32_t *type)
+app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByType(uint32_t *type)
 {
 	if (*type == 0 || *type == 3 || *type == 5 || *type == 7 || *type == 8 || *type == 12 || *type == 16 || *type == 19 || *type == 26 || *type == 27 || *type == 39 || *type == 46 || *type == 51 || *type == 56 || *type == 59 || *type == 69 || *type == 79 || *type == 83 || *type == 92 || *type == 107 || *type == 111 || *type == 113 || *type == 118 || *type == 137 || *type == 143 || *type == 146 || *type == 147 || *type == 148 || *type == 153 || *type == 162 || *type == 182 || *type == 188 || *type == 193 || *type == 220 || *type == 229 || *type == 231 || *type == 237 || *type == 238 || *type == 243 || *type == 245 || *type == 256 || *type == 260 || *type == 264)
 	{
@@ -1102,18 +1106,19 @@ std::vector<uint8_t> Randomizer::GetItemByType(uint32_t *type)
 		return {0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x07, 0x00};
 	}
 
-	return {};
+	// return {};
+	return {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 }
 
-void Randomizer::SetItemByGUID(GUID *UNUSED(type))
+void Randomizer::SetItemByGUID(uint32_t *type, GUID *itemPositionGuid)
 {
-	// uint8_t *uniqueID = (uint8_t *)type;
+	// uint8_t *uniqueID = (uint8_t *)itemPositionGuid;
 
 	// if (uniqueID[0] == 0x00)
 	// {
 	// 	if (uniqueID[1] == 0x7D)
 	// 	{
-	// 		setItemByID(lines[145]);
+	// 		setItemByID(*seed[145]);
 	// 		//--claire's flame rounds outside break room, b scenario
 	// 	}
 	// }
@@ -1122,12 +1127,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x3A)
 	// 	{
-	// 		setItemByID(lines[39]);
+	// 		setItemByID(*seed[39]);
 	// 		// flash grenade, east office
 	// 	}
 	// 	if (uniqueID[1] == 0xBD)
 	// 	{
-	// 		setItemByID(lines[196]);
+	// 		setItemByID(*seed[196]);
 	// 		// large gunpowder, kitchen
 	// 	}
 	// }
@@ -1136,29 +1141,29 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5C)
 	// 	{
-	// 		setItemByID(lines[244]);
+	// 		setItemByID(*seed[244]);
 	// 		// ACP ammo, pump room, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x80)
 	// 	{
-	// 		setItemByID(lines[183]);
+	// 		setItemByID(*seed[183]);
 	// 		// ACP Ammo, Workroom, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x8A)
 	// 	{
-	// 		setItemByID(lines[79]);
+	// 		setItemByID(*seed[79]);
 	// 		// flame rounds, east storage room. claire
 	// 	}
 	// 	if (uniqueID[1] == 0xF4)
 	// 	{
-	// 		setItemByID(lines[203]);
+	// 		setItemByID(*seed[203]);
 	// 		// gunpowder, Lobby
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x03)
 	// {
-	// 	setItemByID(lines[157]);
+	// 	setItemByID(*seed[157]);
 	// 	// large gunpowder, water injection chamber
 	// }
 
@@ -1166,17 +1171,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x28)
 	// 	{
-	// 		setItemByID(lines[146]);
+	// 		setItemByID(*seed[146]);
 	// 		// hand grenade, sewer entrance
 	// 	}
 	// 	if (uniqueID[1] == 0x33)
 	// 	{
-	// 		setItemByID(lines[74]);
+	// 		setItemByID(*seed[74]);
 	// 		// large gunpowder, racoon area west
 	// 	}
 	// 	if (uniqueID[1] == 0x81)
 	// 	{
-	// 		setItemByID(lines[155]);
+	// 		setItemByID(*seed[155]);
 	// 		// mag ammo, rpd access room
 	// 	}
 	// }
@@ -1190,14 +1195,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0xF7)
 	// 	{
-	// 		setItemByID(lines[248]);
+	// 		setItemByID(*seed[248]);
 	// 		// extra flamethrower fuel, hiding place press room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x07)
 	// {
-	// 	setItemByID(lines[33]);
+	// 	setItemByID(*seed[33]);
 	// 	// flash grenade, detonator room
 	// }
 
@@ -1205,17 +1210,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x80)
 	// 	{
-	// 		setItemByID(lines[44]);
+	// 		setItemByID(*seed[44]);
 	// 		// courtyard key, guard room, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x0E)
 	// 	{
-	// 		setItemByID(lines[220]);
+	// 		setItemByID(*seed[220]);
 	// 		// yellow gunpowder, modulator room
 	// 	}
 	// 	if (uniqueID[1] == 0x30)
 	// 	{
-	// 		setItemByID(lines[206]);
+	// 		setItemByID(*seed[206]);
 	// 		// flash grenade, greenhouse control room
 	// 	}
 	// }
@@ -1224,12 +1229,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x4F)
 	// 	{
-	// 		setItemByID(lines[197]);
+	// 		setItemByID(*seed[197]);
 	// 		// knife, kitchen
 	// 	}
 	// 	if (uniqueID[1] == 0xF8)
 	// 	{
-	// 		setItemByID(lines[27]);
+	// 		setItemByID(*seed[27]);
 	// 		// handgun bullets, press room
 	// 	}
 	// }
@@ -1238,12 +1243,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x7A)
 	// 	{
-	// 		setItemByID(lines[195]);
+	// 		setItemByID(*seed[195]);
 	// 		// flamethrower fuel, cafeteria
 	// 	}
 	// 	if (uniqueID[1] == 0xB6)
 	// 	{
-	// 		setItemByID(lines[159]);
+	// 		setItemByID(*seed[159]);
 	// 		// yellow gunpowder, lower waterway
 	// 	}
 	// }
@@ -1252,7 +1257,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x43)
 	// 	{
-	// 		setItemByID(lines[135]);
+	// 		setItemByID(*seed[135]);
 	// 		// SLS rounds, office
 	// 	}
 	// }
@@ -1261,7 +1266,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x72)
 	// 	{
-	// 		setItemByID(lines[150]);
+	// 		setItemByID(*seed[150]);
 	// 		// SLS rounds, upper walkway
 	// 	}
 	// }
@@ -1270,12 +1275,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9C)
 	// 	{
-	// 		setItemByID(lines[257]);
+	// 		setItemByID(*seed[257]);
 	// 		// ACP Ammo, Stars Office, B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x6D)
 	// 	{
-	// 		setItemByID(lines[232]);
+	// 		setItemByID(*seed[232]);
 	// 		// ACP Ammo (Bottom Left), Bioreactor's Room, B scenario
 	// 	}
 	// }
@@ -1284,19 +1289,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x82)
 	// 	{
-	// 		setItemByID(lines[38]);
+	// 		setItemByID(*seed[38]);
 	// 		// ink ribbon x2, east office, hardcore
 	// 	}
 	// 	if (uniqueID[1] == 0x86)
 	// 	{
-	// 		setItemByID(lines[175]);
+	// 		setItemByID(*seed[175]);
 	// 		// submachinegun ammo, bottom waterway, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x12)
 	// {
-	// 	setItemByID(lines[12]);
+	// 	setItemByID(*seed[12]);
 	// 	// gunpowder, west office
 	// }
 
@@ -1304,12 +1309,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x13)
 	// 	{
-	// 		setItemByID(lines[54]);
+	// 		setItemByID(*seed[54]);
 	// 		// spade key, western area 3F
 	// 	}
 	// 	if (uniqueID[1] == 0x83)
 	// 	{
-	// 		setItemByID(lines[115]);
+	// 		setItemByID(*seed[115]);
 	// 		// gunpowder (up ladder), machinery room
 	// 	}
 	// }
@@ -1318,17 +1323,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xC0)
 	// 	{
-	// 		setItemByID(lines[26]);
+	// 		setItemByID(*seed[26]);
 	// 		// Shotgun Shells (shotgun cupboard), safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0xDD)
 	// 	{
-	// 		setItemByID(lines[5]);
+	// 		setItemByID(*seed[5]);
 	// 		// Quickdraw army, guardroom B scenario Claire
 	// 	}
 	// 	if (uniqueID[1] == 0xF1)
 	// 	{
-	// 		setItemByID(lines[88]);
+	// 		setItemByID(*seed[88]);
 	// 		// ink ribbon x1, boiler room, Leon Hardcore
 	// 	}
 	// }
@@ -1337,7 +1342,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xE7andscenario == "B")
 	// 	{
-	// 		setItemByID(lines[165]);
+	// 		setItemByID(*seed[165]);
 	// 		// knight plug, b scenario
 	// 	}
 	// 	else if (uniqueID[1] == 0xE7)
@@ -1347,22 +1352,22 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x2C)
 	// 	{
-	// 		setItemByID(lines[187]);
+	// 		setItemByID(*seed[187]);
 	// 		// red herb, main power room
 	// 	}
 	// 	if (uniqueID[1] == 0x55)
 	// 	{
-	// 		setItemByID(lines[217]);
+	// 		setItemByID(*seed[217]);
 	// 		// yellow gunpowder, server room
 	// 	}
 	// 	if (uniqueID[1] == 0x94)
 	// 	{
-	// 		setItemByID(lines[148]);
+	// 		setItemByID(*seed[148]);
 	// 		// handgun bullets second, sewer entrance
 	// 	}
 	// 	if (uniqueID[1] == 0xDC)
 	// 	{
-	// 		setItemByID(lines[186]);
+	// 		setItemByID(*seed[186]);
 	// 		// green herb, outside garbage room
 	// 	}
 	// }
@@ -1371,24 +1376,24 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x15)
 	// 	{
-	// 		setItemByID(lines[1]);
+	// 		setItemByID(*seed[1]);
 	// 		// handgun bullets, main hall
 	// 	}
 	// 	if (uniqueID[1] == 0x1A)
 	// 	{
-	// 		setItemByID(lines[37]);
+	// 		setItemByID(*seed[37]);
 	// 		// mechanic jack handle, records room
 	// 	}
 	// 	if (uniqueID[1] == 0xD8)
 	// 	{
-	// 		setItemByID(lines[214]);
+	// 		setItemByID(*seed[214]);
 	// 		// Trophy, Low Temp Testing Lab, B scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x19)
 	// {
-	// 	setItemByID(lines[172]);
+	// 	setItemByID(*seed[172]);
 	// 	// green herb, bottom waterway overpass
 	// }
 
@@ -1396,12 +1401,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x66)
 	// 	{
-	// 		setItemByID(lines[129]);
+	// 		setItemByID(*seed[129]);
 	// 		// firing range, flame rounds, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xC3)
 	// 	{
-	// 		setItemByID(lines[147]);
+	// 		setItemByID(*seed[147]);
 	// 		// handgun bullets first, sewer entrance
 	// 	}
 	// }
@@ -1410,7 +1415,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9D)
 	// 	{
-	// 		setItemByID(lines[235]);
+	// 		setItemByID(*seed[235]);
 	// 		// needles, bioreactors room
 	// 	}
 	// }
@@ -1419,12 +1424,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x49)
 	// 	{
-	// 		setItemByID(lines[68]);
+	// 		setItemByID(*seed[68]);
 	// 		// statue's left arm, art room
 	// 	}
 	// 	if (uniqueID[1] == 0xF1)
 	// 	{
-	// 		setItemByID(lines[264]);
+	// 		setItemByID(*seed[264]);
 	// 		// white gunpowder, break room b scenario claire
 	// 	}
 	// }
@@ -1433,22 +1438,22 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x33)
 	// 	{
-	// 		setItemByID(lines[228]);
+	// 		setItemByID(*seed[228]);
 	// 		// white gunpowder, p-4 level testing lab, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x3C)
 	// 	{
-	// 		setItemByID(lines[226]);
+	// 		setItemByID(*seed[226]);
 	// 		// yellow gunpowder, biotesting lab
 	// 	}
 	// 	if (uniqueID[1] == 0x94)
 	// 	{
-	// 		setItemByID(lines[235]);
+	// 		setItemByID(*seed[235]);
 	// 		// flamethrower fuel, bioreactors room
 	// 	}
 	// 	if (uniqueID[1] == 0xB5)
 	// 	{
-	// 		setItemByID(lines[120]);
+	// 		setItemByID(*seed[120]);
 	// 		// square crank, jail
 	// 	}
 	// }
@@ -1457,22 +1462,22 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x03)
 	// 	{
-	// 		setItemByID(lines[25]);
+	// 		setItemByID(*seed[25]);
 	// 		// grenade launcher, weapons locker, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x4D)
 	// 	{
-	// 		setItemByID(lines[247]);
+	// 		setItemByID(*seed[247]);
 	// 		// joint plug, Escape Shaft
 	// 	}
 	// 	if (uniqueID[1] == 0xEF)
 	// 	{
-	// 		setItemByID(lines[93]);
+	// 		setItemByID(*seed[93]);
 	// 		// handgun bullets, interrogation room
 	// 	}
 	// 	if (uniqueID[1] == 0xFE)
 	// 	{
-	// 		setItemByID(lines[125]);
+	// 		setItemByID(*seed[125]);
 	// 		// red herb, morgue
 	// 	}
 	// }
@@ -1481,12 +1486,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x46)
 	// 	{
-	// 		setItemByID(lines[251]);
+	// 		setItemByID(*seed[251]);
 	// 		// flame rounds, STARS office, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xA8)
 	// 	{
-	// 		setItemByID(lines[134]);
+	// 		setItemByID(*seed[134]);
 	// 		// green herb, basketball court
 	// 	}
 	// }
@@ -1495,12 +1500,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x17)
 	// 	{
-	// 		setItemByID(lines[194]);
+	// 		setItemByID(*seed[194]);
 	// 		// ACP Ammo, Cafeteria, B Scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x7A)
 	// 	{
-	// 		setItemByID(lines[158]);
+	// 		setItemByID(*seed[158]);
 	// 		// yellow gunpowder, water injection chamber
 	// 	}
 	// }
@@ -1509,14 +1514,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x7F)
 	// 	{
-	// 		setItemByID(lines[92]);
+	// 		setItemByID(*seed[92]);
 	// 		// portable safe, observation room, b scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x23)
 	// {
-	// 	setItemByID(lines[119]);
+	// 	setItemByID(*seed[119]);
 	// 	// handgun bullets, jail entrance
 	// }
 
@@ -1524,22 +1529,22 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x04)
 	// 	{
-	// 		setItemByID(lines[98]);
+	// 		setItemByID(*seed[98]);
 	// 		// flash grenade, STARS office
 	// 	}
 	// 	if (uniqueID[1] == 0x9C)
 	// 	{
-	// 		setItemByID(lines[72]);
+	// 		setItemByID(*seed[72]);
 	// 		// bolt cutters, outside fire escape, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x97)
 	// 	{
-	// 		setItemByID(lines[140]);
+	// 		setItemByID(*seed[140]);
 	// 		// relief, private collection room
 	// 	}
 	// 	if (uniqueID[1] == 0xF0)
 	// 	{
-	// 		setItemByID(lines[100]);
+	// 		setItemByID(*seed[100]);
 	// 		// white gunpowder, STARS office, claire
 	// 	}
 	// }
@@ -1548,12 +1553,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x36)
 	// 	{
-	// 		setItemByID(lines[174]);
+	// 		setItemByID(*seed[174]);
 	// 		// green herb, bottom waterway
 	// 	}
 	// 	if (uniqueID[1] == 0xF0)
 	// 	{
-	// 		setItemByID(lines[85]);
+	// 		setItemByID(*seed[85]);
 	// 		// red herb, roof area
 	// 	}
 	// }
@@ -1562,7 +1567,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x27)
 	// 	{
-	// 		setItemByID(lines[155]);
+	// 		setItemByID(*seed[155]);
 	// 		// sls ammo, RPD access room, claire
 	// 	}
 	// }
@@ -1571,7 +1576,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x8C)
 	// 	{
-	// 		setItemByID(lines[47]);
+	// 		setItemByID(*seed[47]);
 	// 		// ACP ammo, western area 2F, b scenario
 	// 	}
 	// }
@@ -1580,42 +1585,42 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x0C)
 	// 	{
-	// 		setItemByID(lines[251]);
+	// 		setItemByID(*seed[251]);
 	// 		// shotgun shells, stars office
 	// 	}
 	// 	if (uniqueID[1] == 0x89)
 	// 	{
-	// 		setItemByID(lines[150]);
+	// 		setItemByID(*seed[150]);
 	// 		// shotgun shells, upper walkway
 	// 	}
 	// 	if (uniqueID[1] == 0x94)
 	// 	{
-	// 		setItemByID(lines[50]);
+	// 		setItemByID(*seed[50]);
 	// 		// flame rounds, valve room, not in locker, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x2A)
 	// {
-	// 	setItemByID(lines[81]);
+	// 	setItemByID(*seed[81]);
 	// 	// flash grenade, east area 3F
 	// }
 
 	// if (uniqueID[0] == 0x2B)
 	// {
-	// 	setItemByID(lines[215]);
+	// 	setItemByID(*seed[215]);
 	// 	// green herb, Lounge
 	// }
 
 	// if (uniqueID[0] == 0x2C)
 	// {
-	// 	setItemByID(lines[42]);
+	// 	setItemByID(*seed[42]);
 	// 	// valve, east office
 	// }
 
 	// if (uniqueID[0] == 0x2D)
 	// {
-	// 	setItemByID(lines[97]);
+	// 	setItemByID(*seed[97]);
 	// 	// red herb, STARS office
 	// }
 
@@ -1623,7 +1628,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x00)
 	// 	{
-	// 		setItemByID(lines[92]);
+	// 		setItemByID(*seed[92]);
 	// 		// portable safe claire b scenario interrogation room
 	// 	}
 	// }
@@ -1632,12 +1637,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x26)
 	// 	{
-	// 		setItemByID(lines[24]);
+	// 		setItemByID(*seed[24]);
 	// 		// shotgun shells (locker), safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0x30)
 	// 	{
-	// 		setItemByID(lines[233]);
+	// 		setItemByID(*seed[233]);
 	// 		// mag ammo, bioreactors room
 	// 	}
 	// }
@@ -1646,24 +1651,24 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x1F)
 	// 	{
-	// 		setItemByID(lines[55]);
+	// 		setItemByID(*seed[55]);
 	// 		// gunpowder, west storage room
 	// 	}
 	// 	if (uniqueID[1] == 0xC9)
 	// 	{
-	// 		setItemByID(lines[21]);
+	// 		setItemByID(*seed[21]);
 	// 		// combat knife, safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0xFE)
 	// 	{
-	// 		setItemByID(lines[230]);
+	// 		setItemByID(*seed[230]);
 	// 		// handgun bullets (top left), bioreactor's room, B scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x31)
 	// {
-	// 	setItemByID(lines[171]);
+	// 	setItemByID(*seed[171]);
 	// 	// sewer key, bottom way overpass
 	// }
 
@@ -1671,7 +1676,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x15)
 	// 	{
-	// 		setItemByID(lines[6]);
+	// 		setItemByID(*seed[6]);
 	// 		// ACP ammo, reception, B scenario
 	// 	}
 	// }
@@ -1680,7 +1685,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xBF)
 	// 	{
-	// 		setItemByID(lines[188]);
+	// 		setItemByID(*seed[188]);
 	// 		// submachinegun ammo, g2 fight, claire
 	// 	}
 	// }
@@ -1689,19 +1694,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xDC)
 	// 	{
-	// 		setItemByID(lines[246]);
+	// 		setItemByID(*seed[246]);
 	// 		// submachinegun ammo, orphanage, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xFD)
 	// 	{
-	// 		setItemByID(lines[18]);
+	// 		setItemByID(*seed[18]);
 	// 		// red herb, dark room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x36)
 	// {
-	// 	setItemByID(lines[245]);
+	// 	setItemByID(*seed[245]);
 	// 	// red herb, escape shaft
 	// }
 
@@ -1709,17 +1714,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x15)
 	// 	{
-	// 		setItemByID(lines[48]);
+	// 		setItemByID(*seed[48]);
 	// 		// red herb, western area 2F
 	// 	}
 	// 	if (uniqueID[1] == 0x92)
 	// 	{
-	// 		setItemByID(lines[86]);
+	// 		setItemByID(*seed[86]);
 	// 		// green herb (left), roof area
 	// 	}
 	// 	if (uniqueID[1] == 0xE0)
 	// 	{
-	// 		setItemByID(lines[161]);
+	// 		setItemByID(*seed[161]);
 	// 		// flame rounds, control room, claire
 	// 	}
 	// }
@@ -1728,12 +1733,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x64)
 	// 	{
-	// 		setItemByID(lines[161]);
+	// 		setItemByID(*seed[161]);
 	// 		// shotgun shells, control room
 	// 	}
 	// 	if (uniqueID[1] == 0xA4)
 	// 	{
-	// 		setItemByID(lines[82]);
+	// 		setItemByID(*seed[82]);
 	// 		// wooden boards, east area 3F
 	// 	}
 	// }
@@ -1742,27 +1747,27 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x22)
 	// 	{
-	// 		setItemByID(lines[179]);
+	// 		setItemByID(*seed[179]);
 	// 		// King Plug, supplies storage room
 	// 	}
 	// 	if (uniqueID[1] == 0x3C)
 	// 	{
-	// 		setItemByID(lines[229]);
+	// 		setItemByID(*seed[229]);
 	// 		// Red Herb, P-4 Level Testing Lab
 	// 	}
 	// 	if (uniqueID[1] == 0x84)
 	// 	{
-	// 		setItemByID(lines[17]);
+	// 		setItemByID(*seed[17]);
 	// 		// Handgun Bullets, dark room
 	// 	}
 	// 	if (uniqueID[1] == 0x8D)
 	// 	{
-	// 		setItemByID(lines[90]);
+	// 		setItemByID(*seed[90]);
 	// 		// white gunpowder, outside observation room, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x98)
 	// 	{
-	// 		setItemByID(lines[61]);
+	// 		setItemByID(*seed[61]);
 	// 		// Knife, Library
 	// 	}
 	// }
@@ -1771,12 +1776,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x1B)
 	// 	{
-	// 		setItemByID(lines[208]);
+	// 		setItemByID(*seed[208]);
 	// 		// blue herb, greenhouse
 	// 	}
 	// 	if (uniqueID[1] == 0x5D)
 	// 	{
-	// 		setItemByID(lines[31]);
+	// 		setItemByID(*seed[31]);
 	// 		// detonator (no battery), detonator room
 	// 	}
 	// }
@@ -1785,17 +1790,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x8C)
 	// 	{
-	// 		setItemByID(lines[77]);
+	// 		setItemByID(*seed[77]);
 	// 		// blue herb, east storage room
 	// 	}
 	// 	if (uniqueID[1] == 0xB5)
 	// 	{
-	// 		setItemByID(lines[129]);
+	// 		setItemByID(*seed[129]);
 	// 		// shotgun shells, firing range
 	// 	}
 	// 	if (uniqueID[1] == 0xF7)
 	// 	{
-	// 		setItemByID(lines[233]);
+	// 		setItemByID(*seed[233]);
 	// 		// sls rounds, bioreactor's room, claire
 	// 	}
 	// }
@@ -1804,12 +1809,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x60)
 	// 	{
-	// 		setItemByID(lines[126]);
+	// 		setItemByID(*seed[126]);
 	// 		// flash grenade, morgue
 	// 	}
 	// 	if (uniqueID[1] == 0x6F)
 	// 	{
-	// 		setItemByID(lines[180]);
+	// 		setItemByID(*seed[180]);
 	// 		// spark shot, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x6B)
@@ -1819,12 +1824,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x82)
 	// 	{
-	// 		setItemByID(lines[185]);
+	// 		setItemByID(*seed[185]);
 	// 		// blue herb, outside garbage room
 	// 	}
 	// 	if (uniqueID[1] == 0x85)
 	// 	{
-	// 		setItemByID(lines[123]);
+	// 		setItemByID(*seed[123]);
 	// 		// blue herb, outside kennel
 	// 	}
 	// }
@@ -1833,25 +1838,25 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x4E)
 	// 	{
-	// 		setItemByID(lines[106]);
+	// 		setItemByID(*seed[106]);
 	// 		// Hand Grenade, underground stairs
 	// 	}
 	// 	if (uniqueID[1] == 0x9D)
 	// 	{
-	// 		setItemByID(lines[76]);
+	// 		setItemByID(*seed[76]);
 	// 		// boxed electronic part, Clock Tower
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x45)
 	// {
-	// 	setItemByID(lines[63]);
+	// 	setItemByID(*seed[63]);
 	// 	// gunpowder, lounge
 	// }
 
 	// if (uniqueID[0] == 0x46)
 	// {
-	// 	setItemByID(lines[165]);
+	// 	setItemByID(*seed[165]);
 	// 	// Knight piece, monitor room
 	// }
 
@@ -1859,12 +1864,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xB4)
 	// 	{
-	// 		setItemByID(lines[192]);
+	// 		setItemByID(*seed[192]);
 	// 		// flame rounds, security room, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xF4)
 	// 	{
-	// 		setItemByID(lines[144]);
+	// 		setItemByID(*seed[144]);
 	// 		// handgun bullets, gun shop
 	// 	}
 	// }
@@ -1873,12 +1878,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x20)
 	// 	{
-	// 		setItemByID(lines[108]);
+	// 		setItemByID(*seed[108]);
 	// 		// Handgun Bullets (Top Left), Machinery Room
 	// 	}
 	// 	if (uniqueID[1] == 0x50)
 	// 	{
-	// 		setItemByID(lines[222]);
+	// 		setItemByID(*seed[222]);
 	// 		// Signal Modulator, Modulator Room
 	// 	}
 	// }
@@ -1887,7 +1892,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xD6)
 	// 	{
-	// 		setItemByID(lines[162]);
+	// 		setItemByID(*seed[162]);
 	// 		// submachinegun ammo, control room, claire
 	// 	}
 	// }
@@ -1896,7 +1901,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xCB)
 	// 	{
-	// 		setItemByID(lines[120]);
+	// 		setItemByID(*seed[120]);
 	// 		// turntable minigun, claire
 	// 	}
 	// }
@@ -1905,12 +1910,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x13)
 	// 	{
-	// 		setItemByID(lines[28]);
+	// 		setItemByID(*seed[28]);
 	// 		// handgun bullets, east closet ambush
 	// 	}
 	// 	if (uniqueID[1] == 0x33)
 	// 	{
-	// 		setItemByID(lines[241]);
+	// 		setItemByID(*seed[241]);
 	// 		// combat knife, monitor room
 	// 	}
 	// }
@@ -1919,27 +1924,27 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x10)
 	// 	{
-	// 		setItemByID(lines[191]);
+	// 		setItemByID(*seed[191]);
 	// 		// knife, g2 fight room
 	// 	}
 	// 	if (uniqueID[1] == 0x28)
 	// 	{
-	// 		setItemByID(lines[111]);
+	// 		setItemByID(*seed[111]);
 	// 		// red herb, machinery room
 	// 	}
 	// 	if (uniqueID[1] == 0x2B)
 	// 	{
-	// 		setItemByID(lines[136]);
+	// 		setItemByID(*seed[136]);
 	// 		// knife, heart room east storage, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x75)
 	// 	{
-	// 		setItemByID(lines[22]);
+	// 		setItemByID(*seed[22]);
 	// 		// gunpowder, safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0x79)
 	// 	{
-	// 		setItemByID(lines[200]);
+	// 		setItemByID(*seed[200]);
 	// 		// upgrade chip (general staff), nap room
 	// 	}
 	// }
@@ -1948,25 +1953,25 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xB4)
 	// 	{
-	// 		setItemByID(lines[223]);
+	// 		setItemByID(*seed[223]);
 	// 		// lab digital video cassette, biotesting lab
 	// 	}
 	// 	if (uniqueID[1] == 0xF5)
 	// 	{
-	// 		setItemByID(lines[134]);
+	// 		setItemByID(*seed[134]);
 	// 		// gunpowder, generator room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x52)
 	// {
-	// 	setItemByID(lines[80]);
+	// 	setItemByID(*seed[80]);
 	// 	// handgun bullets, east area 3F
 	// }
 
 	// if (uniqueID[0] == 0x54)
 	// {
-	// 	setItemByID(lines[20]);
+	// 	setItemByID(*seed[20]);
 	// 	// handgun bullets, safety deposit room
 	// }
 
@@ -1974,7 +1979,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x6C)
 	// 	{
-	// 		setItemByID(lines[259]);
+	// 		setItemByID(*seed[259]);
 	// 		// blue herb, outside fire escape, b scenario
 	// 	}
 	// }
@@ -1988,20 +1993,20 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x40)
 	// 	{
-	// 		setItemByID(lines[170]);
+	// 		setItemByID(*seed[170]);
 	// 		// shotgun stock (w-870)
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x59)
 	// {
-	// 	setItemByID(lines[35]);
+	// 	setItemByID(*seed[35]);
 	// 	// hand grenade, records room
 	// }
 
 	// if (uniqueID[0] == 0x5A)
 	// {
-	// 	setItemByID(lines[153]);
+	// 	setItemByID(*seed[153]);
 	// 	// gunpowder, worker's break room
 	// }
 
@@ -2009,19 +2014,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xB4)
 	// 	{
-	// 		setItemByID(lines[159]);
+	// 		setItemByID(*seed[159]);
 	// 		// white gunpowder, lower waterway
 	// 	}
 	// 	if (uniqueID[1] == 0xE1)
 	// 	{
-	// 		setItemByID(lines[204]);
+	// 		setItemByID(*seed[204]);
 	// 		// white gunpowder, first plant room, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x5C)
 	// {
-	// 	setItemByID(lines[160]);
+	// 	setItemByID(*seed[160]);
 	// 	// blue herb, lower waterway
 	// }
 
@@ -2029,17 +2034,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x36)
 	// 	{
-	// 		setItemByID(lines[164]);
+	// 		setItemByID(*seed[164]);
 	// 		// bishop piece, monitor room
 	// 	}
 	// 	if (uniqueID[1] == 0xB5)
 	// 	{
-	// 		setItemByID(lines[14]);
+	// 		setItemByID(*seed[14]);
 	// 		// hip pouch, west office
 	// 	}
 	// 	if (uniqueID[1] == 0xFD)
 	// 	{
-	// 		setItemByID(lines[99]);
+	// 		setItemByID(*seed[99]);
 	// 		// fas, stars office
 	// 	}
 	// }
@@ -2048,17 +2053,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x3F)
 	// 	{
-	// 		setItemByID(lines[1]);
+	// 		setItemByID(*seed[1]);
 	// 		// acp ammo, main hall B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x8B)
 	// 	{
-	// 		setItemByID(lines[113]);
+	// 		setItemByID(*seed[113]);
 	// 		// green herb(bottom right), machinery room
 	// 	}
 	// 	if (uniqueID[1] == 0xA6)
 	// 	{
-	// 		setItemByID(lines[254]);
+	// 		setItemByID(*seed[254]);
 	// 		// ink ribbon x2, interrogation room hardcore
 	// 	}
 	// }
@@ -2069,12 +2074,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	{
 	// 		if (playingas == "claire")
 	// 		{
-	// 			setItemByID(lines[262]);
+	// 			setItemByID(*seed[262]);
 	// 			// knife, outside break room
 	// 		}
 	// 		else
 	// 		{
-	// 			setItemByID(lines[136]);
+	// 			setItemByID(*seed[136]);
 	// 			// knife, outside break room
 	// 		}
 	// 	}
@@ -2084,12 +2089,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xAB)
 	// 	{
-	// 		setItemByID(lines[231]);
+	// 		setItemByID(*seed[231]);
 	// 		// fas, bioreactor's room
 	// 	}
 	// 	if (uniqueID[1] == 0xD4)
 	// 	{
-	// 		setItemByID(lines[58]);
+	// 		setItemByID(*seed[58]);
 	// 		// hip pouch, main hall, b scenario
 	// 	}
 	// }
@@ -2098,12 +2103,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x7E)
 	// 	{
-	// 		setItemByID(lines[49]);
+	// 		setItemByID(*seed[49]);
 	// 		// flame rounds in locker in valve room claire
 	// 	}
 	// 	if (uniqueID[1] == 0xD2)
 	// 	{
-	// 		setItemByID(lines[92]);
+	// 		setItemByID(*seed[92]);
 	// 		// bejeweled box, interrogation room, claire
 	// 	}
 	// }
@@ -2112,17 +2117,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x05)
 	// 	{
-	// 		setItemByID(lines[247]);
+	// 		setItemByID(*seed[247]);
 	// 		// turntable joint plug, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x25)
 	// 	{
-	// 		setItemByID(lines[109]);
+	// 		setItemByID(*seed[109]);
 	// 		// hand grenade, machinery room
 	// 	}
 	// 	if (uniqueID[1] == 0xD1)
 	// 	{
-	// 		setItemByID(lines[7]);
+	// 		setItemByID(*seed[7]);
 	// 		// green herb, reception
 	// 	}
 	// }
@@ -2131,12 +2136,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x04)
 	// 	{
-	// 		setItemByID(lines[202]);
+	// 		setItemByID(*seed[202]);
 	// 		// green herb, lobby
 	// 	}
 	// 	if (uniqueID[1] == 0xC3)
 	// 	{
-	// 		setItemByID(lines[252]);
+	// 		setItemByID(*seed[252]);
 	// 		// Ink Ribbon x1, Lab Reception, Hardcore
 	// 	}
 	// }
@@ -2145,12 +2150,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5A)
 	// 	{
-	// 		setItemByID(lines[226]);
+	// 		setItemByID(*seed[226]);
 	// 		// white gunpowder, biotesting lab, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xA6)
 	// 	{
-	// 		setItemByID(lines[89]);
+	// 		setItemByID(*seed[89]);
 	// 		// shoulder stock (GM 79), elevator controls room, claire
 	// 	}
 	// }
@@ -2164,17 +2169,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0xCF)
 	// 	{
-	// 		setItemByID(lines[245]);
+	// 		setItemByID(*seed[245]);
 	// 		// turntable red herb, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xEC)
 	// 	{
-	// 		setItemByID(lines[204]);
+	// 		setItemByID(*seed[204]);
 	// 		// yellow gunpowder, first plant room
 	// 	}
 	// 	if (uniqueID[1] == 0xFD)
 	// 	{
-	// 		setItemByID(lines[8]);
+	// 		setItemByID(*seed[8]);
 	// 		// handgun bullets, operations room
 	// 	}
 	// }
@@ -2183,19 +2188,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x01)
 	// 	{
-	// 		setItemByID(lines[149]);
+	// 		setItemByID(*seed[149]);
 	// 		// ACP Ammo, Upper Walkway, B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x5B)
 	// 	{
-	// 		setItemByID(lines[199]);
+	// 		setItemByID(*seed[199]);
 	// 		// regulator (flamethrower), nap room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x6C)
 	// {
-	// 	setItemByID(lines[29]);
+	// 	setItemByID(*seed[29]);
 	// 	// wooden boards, east closet ambush
 	// }
 
@@ -2203,7 +2208,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xFE)
 	// 	{
-	// 		setItemByID(lines[258]);
+	// 		setItemByID(*seed[258]);
 	// 		// Red Herb, Outside Fire Escape, B Scenario
 	// 	}
 	// }
@@ -2212,17 +2217,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x99)
 	// 	{
-	// 		setItemByID(lines[105]);
+	// 		setItemByID(*seed[105]);
 	// 		// flame rounds, secret room, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x2D)
 	// 	{
-	// 		setItemByID(lines[137]);
+	// 		setItemByID(*seed[137]);
 	// 		// blue herb, outside bus, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xDA)
 	// 	{
-	// 		setItemByID(lines[243]);
+	// 		setItemByID(*seed[243]);
 	// 		// green herb, pump room
 	// 	}
 	// }
@@ -2231,7 +2236,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xB8)
 	// 	{
-	// 		setItemByID(lines[114]);
+	// 		setItemByID(*seed[114]);
 	// 		// ACP ammo (bottom right), machinery room, b scenario
 	// 	}
 	// }
@@ -2240,19 +2245,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x53)
 	// 	{
-	// 		setItemByID(lines[23]);
+	// 		setItemByID(*seed[23]);
 	// 		// hip pouch, safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0x9F)
 	// 	{
-	// 		setItemByID(lines[239]);
+	// 		setItemByID(*seed[239]);
 	// 		// ACP ammo, bottom right, right, bioreactor's room, b scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x71)
 	// {
-	// 	setItemByID(lines[205]);
+	// 	setItemByID(*seed[205]);
 	// 	// dispersal cartridge (empty), greenhouse control room
 	// }
 
@@ -2260,17 +2265,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xC6)
 	// 	{
-	// 		setItemByID(lines[192]);
+	// 		setItemByID(*seed[192]);
 	// 		// shotgun that spawns at lab if you don't pick it up
 	// 	}
 	// 	if (uniqueID[1] == 0x5E)
 	// 	{
-	// 		setItemByID(lines[131]);
+	// 		setItemByID(*seed[131]);
 	// 		// red herb, firing range lockers
 	// 	}
 	// 	if (uniqueID[1] == 0x93)
 	// 	{
-	// 		setItemByID(lines[53]);
+	// 		setItemByID(*seed[53]);
 	// 		// mag ammo, western area 3F
 	// 	}
 	// }
@@ -2279,12 +2284,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x30)
 	// 	{
-	// 		setItemByID(lines[211]);
+	// 		setItemByID(*seed[211]);
 	// 		// hand grenade, drug testing lab
 	// 	}
 	// 	if (uniqueID[1] == 0x44)
 	// 	{
-	// 		setItemByID(lines[23]);
+	// 		setItemByID(*seed[23]);
 	// 		// hip pouch, safety deposit room
 	// 	}
 	// }
@@ -2293,31 +2298,31 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x24)
 	// 	{
-	// 		setItemByID(lines[234]);
+	// 		setItemByID(*seed[234]);
 	// 		// flash grenade (bottom left), bioreactor's room
 	// 	}
 	// 	if (uniqueID[1] == 0x40)
 	// 	{
-	// 		setItemByID(lines[104]);
+	// 		setItemByID(*seed[104]);
 	// 		// ink ribbon, secret room hardcore
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x75)
 	// {
-	// 	setItemByID(lines[149]);
+	// 	setItemByID(*seed[149]);
 	// 	// handgun bullets, upper walkway
 	// }
 
 	// if (uniqueID[0] == 0x76)
 	// {
-	// 	setItemByID(lines[118]);
+	// 	setItemByID(*seed[118]);
 	// 	// gun stock (matilda), parking garage
 	// }
 
 	// if (uniqueID[0] == 0x78)
 	// {
-	// 	setItemByID(lines[214]);
+	// 	setItemByID(*seed[214]);
 	// 	// trophy, lounge
 	// }
 
@@ -2325,27 +2330,27 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x2C)
 	// 	{
-	// 		setItemByID(lines[116]);
+	// 		setItemByID(*seed[116]);
 	// 		// green herb (up ladder), machinery room
 	// 	}
 	// 	if (uniqueID[1] == 0xC1)
 	// 	{
-	// 		setItemByID(lines[19]);
+	// 		setItemByID(*seed[19]);
 	// 		// film commemorative, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x77)
 	// 	{
-	// 		setItemByID(lines[246]);
+	// 		setItemByID(*seed[246]);
 	// 		// handgun bullets, escape shaft
 	// 	}
 	// 	if (uniqueID[1] == 0xAD)
 	// 	{
-	// 		setItemByID(lines[188]);
+	// 		setItemByID(*seed[188]);
 	// 		// mag ammo, G2 fight room
 	// 	}
 	// 	if (uniqueID[1] == 0xD3)
 	// 	{
-	// 		setItemByID(lines[182]);
+	// 		setItemByID(*seed[182]);
 	// 		// film - hiding place, workroom
 	// 	}
 	// }
@@ -2354,12 +2359,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x02)
 	// 	{
-	// 		setItemByID(lines[225]);
+	// 		setItemByID(*seed[225]);
 	// 		// blue herb, biotesting lab
 	// 	}
 	// 	if (uniqueID[1] == 0x58)
 	// 	{
-	// 		setItemByID(lines[87]);
+	// 		setItemByID(*seed[87]);
 	// 		// green herb(right), roof area
 	// 	}
 	// }
@@ -2368,12 +2373,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x00)
 	// 	{
-	// 		setItemByID(lines[53]);
+	// 		setItemByID(*seed[53]);
 	// 		// submachinegun ammo, western area 3F
 	// 	}
 	// 	if (uniqueID[1] == 0x8E)
 	// 	{
-	// 		setItemByID(lines[88]);
+	// 		setItemByID(*seed[88]);
 	// 		// blue herb, elevator controls room, claire
 	// 	}
 	// }
@@ -2382,12 +2387,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x24)
 	// 	{
-	// 		setItemByID(lines[41]);
+	// 		setItemByID(*seed[41]);
 	// 		// gunpowder, east office
 	// 	}
 	// 	if (uniqueID[1] == 0xB9)
 	// 	{
-	// 		setItemByID(lines[141]);
+	// 		setItemByID(*seed[141]);
 	// 		// white gunpowder, private collection room, claire
 	// 	}
 	// }
@@ -2396,17 +2401,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x09)
 	// 	{
-	// 		setItemByID(lines[143]);
+	// 		setItemByID(*seed[143]);
 	// 		// hand grenade, gun shop
 	// 	}
 	// 	if (uniqueID[1] == 0x9C)
 	// 	{
-	// 		setItemByID(lines[93]);
+	// 		setItemByID(*seed[93]);
 	// 		// ACP ammo, interrogation room, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xB3)
 	// 	{
-	// 		setItemByID(lines[32]);
+	// 		setItemByID(*seed[32]);
 	// 		// green herb, detonator room
 	// 	}
 	// }
@@ -2415,12 +2420,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x0B)
 	// 	{
-	// 		setItemByID(lines[180]);
+	// 		setItemByID(*seed[180]);
 	// 		// flamethrower, supplies storage room
 	// 	}
 	// 	if (uniqueID[1] == 0x8F)
 	// 	{
-	// 		setItemByID(lines[45]);
+	// 		setItemByID(*seed[45]);
 	// 		// green herb, waiting room
 	// 	}
 	// }
@@ -2429,36 +2434,36 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x7F)
 	// 	{
-	// 		setItemByID(lines[105]);
+	// 		setItemByID(*seed[105]);
 	// 		// shotgun shells, secret room
 	// 	}
 	// 	if (uniqueID[1] == 0xCC)
 	// 	{
-	// 		setItemByID(lines[13]);
+	// 		setItemByID(*seed[13]);
 	// 		// handgun bullets, west office
 	// 	}
 	// 	if (uniqueID[1] == 0xF4)
 	// 	{
-	// 		setItemByID(lines[43]);
+	// 		setItemByID(*seed[43]);
 	// 		// white gunpowder, east office, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x81)
 	// {
-	// 	setItemByID(lines[232]);
+	// 	setItemByID(*seed[232]);
 	// 	// handgun bullets (bottom left), bioreactors room
 	// }
 
 	// if (uniqueID[0] == 0x83)
 	// {
-	// 	setItemByID(lines[114]);
+	// 	setItemByID(*seed[114]);
 	// 	// handgun bullets (bottom right), machinery room
 	// }
 
 	// if (uniqueID[0] == 0x84)
 	// {
-	// 	setItemByID(lines[168]);
+	// 	setItemByID(*seed[168]);
 	// 	// t-bar valve, treatment pool room
 	// }
 
@@ -2472,14 +2477,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0xF8)
 	// 	{
-	// 		setItemByID(lines[177]);
+	// 		setItemByID(*seed[177]);
 	// 		// blue herb, supplies storage room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x86)
 	// {
-	// 	setItemByID(lines[34]);
+	// 	setItemByID(*seed[34]);
 	// 	// wooden boards, detonator room
 	// }
 
@@ -2487,12 +2492,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x90)
 	// 	{
-	// 		setItemByID(lines[30]);
+	// 		setItemByID(*seed[30]);
 	// 		// fas, bathroom
 	// 	}
 	// 	if (uniqueID[1] == 0xB9)
 	// 	{
-	// 		setItemByID(lines[121]);
+	// 		setItemByID(*seed[121]);
 	// 		// parking garage key card, jail
 	// 	}
 	// }
@@ -2501,17 +2506,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5A)
 	// 	{
-	// 		setItemByID(lines[244]);
+	// 		setItemByID(*seed[244]);
 	// 		// handgun bullets, pump room
 	// 	}
 	// 	if (uniqueID[1] == 0x82)
 	// 	{
-	// 		setItemByID(lines[44]);
+	// 		setItemByID(*seed[44]);
 	// 		// fuse (main hall), east office
 	// 	}
 	// 	if (uniqueID[1] == 0xC9)
 	// 	{
-	// 		setItemByID(lines[213]);
+	// 		setItemByID(*seed[213]);
 	// 		// flame rounds, lounge, claire
 	// 	}
 	// }
@@ -2520,7 +2525,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xEF)
 	// 	{
-	// 		setItemByID(lines[24]);
+	// 		setItemByID(*seed[24]);
 	// 		// flame rounds in locker 208
 	// 	}
 	// }
@@ -2529,14 +2534,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xAF)
 	// 	{
-	// 		setItemByID(lines[237]);
+	// 		setItemByID(*seed[237]);
 	// 		// flash grenade (top right), bioreactors room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0x8C)
 	// {
-	// 	setItemByID(lines[66]);
+	// 	setItemByID(*seed[66]);
 	// 	// green herb, chopper crash area
 	// }
 
@@ -2544,12 +2549,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x74)
 	// 	{
-	// 		setItemByID(lines[249]);
+	// 		setItemByID(*seed[249]);
 	// 		// wooden box, stars office, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x8B)
 	// 	{
-	// 		setItemByID(lines[60]);
+	// 		setItemByID(*seed[60]);
 	// 		// handgun bullets, library
 	// 	}
 	// }
@@ -2558,12 +2563,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x1C)
 	// 	{
-	// 		setItemByID(lines[216]);
+	// 		setItemByID(*seed[216]);
 	// 		// flame rounds, server room, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xF6)
 	// 	{
-	// 		setItemByID(lines[148]);
+	// 		setItemByID(*seed[148]);
 	// 		// ACP Ammo (second), Sewer Entrance, Leon B Scenario
 	// 	}
 	// }
@@ -2574,28 +2579,28 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	{
 	// 		if (playingas == "claire")
 	// 		{
-	// 			setItemByID(lines[263]);
+	// 			setItemByID(*seed[263]);
 	// 			// blue herb, break room claire b scenario
 	// 		}
 	// 		else
 	// 		{
-	// 			setItemByID(lines[137]);
+	// 			setItemByID(*seed[137]);
 	// 			// blue herb, break room
 	// 		}
 	// 	}
 	// 	if (uniqueID[1] == 0xB4)
 	// 	{
-	// 		setItemByID(lines[57]);
+	// 		setItemByID(*seed[57]);
 	// 		// handgun bullets, west storage room
 	// 	}
 	// 	if (uniqueID[1] == 0xED)
 	// 	{
-	// 		setItemByID(lines[130]);
+	// 		setItemByID(*seed[130]);
 	// 		// film 3F locker, firing range lockers
 	// 	}
 	// 	if (uniqueID[1] == 0xFF)
 	// 	{
-	// 		setItemByID(lines[107]);
+	// 		setItemByID(*seed[107]);
 	// 		// suppressor, underground stairs, claire
 	// 	}
 	// }
@@ -2604,12 +2609,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x81)
 	// 	{
-	// 		setItemByID(lines[162]);
+	// 		setItemByID(*seed[162]);
 	// 		// mag ammo, control room
 	// 	}
 	// 	if (uniqueID[1] == 0x9B)
 	// 	{
-	// 		setItemByID(lines[176]);
+	// 		setItemByID(*seed[176]);
 	// 		// red herb, supplies storage room
 	// 	}
 	// }
@@ -2624,17 +2629,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x87)
 	// 	{
-	// 		setItemByID(lines[154]);
+	// 		setItemByID(*seed[154]);
 	// 		// handgun bullets
 	// 	}
 	// 	if (uniqueID[1] == 0xC1)
 	// 	{
-	// 		setItemByID(lines[57]);
+	// 		setItemByID(*seed[57]);
 	// 		// acp ammo, west storage room, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xF6)
 	// 	{
-	// 		setItemByID(lines[75]);
+	// 		setItemByID(*seed[75]);
 	// 		// small gear
 	// 	}
 	// }
@@ -2643,7 +2648,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x58)
 	// 	{
-	// 		setItemByID(lines[21]);
+	// 		setItemByID(*seed[21]);
 	// 		// combat knife, locker 103, claire
 	// 	}
 	// }
@@ -2652,17 +2657,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x0C)
 	// 	{
-	// 		setItemByID(lines[183]);
+	// 		setItemByID(*seed[183]);
 	// 		// handgun bullets, workroom
 	// 	}
 	// 	if (uniqueID[1] == 0x67)
 	// 	{
-	// 		setItemByID(lines[63]);
+	// 		setItemByID(*seed[63]);
 	// 		// lion statue film, lounge, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x85)
 	// 	{
-	// 		setItemByID(lines[60]);
+	// 		setItemByID(*seed[60]);
 	// 		// ACP ammo, library, b scenario
 	// 	}
 	// }
@@ -2671,7 +2676,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9F)
 	// 	{
-	// 		setItemByID(lines[5]);
+	// 		setItemByID(*seed[5]);
 	// 		// M19, guard room, b scenario
 	// 	}
 	// }
@@ -2680,12 +2685,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x2A)
 	// 	{
-	// 		setItemByID(lines[89]);
+	// 		setItemByID(*seed[89]);
 	// 		// club key, boiler room
 	// 	}
 	// 	if (uniqueID[1] == 0x61)
 	// 	{
-	// 		setItemByID(lines[193]);
+	// 		setItemByID(*seed[193]);
 	// 		// hand grenade, cafeteria
 	// 	}
 	// }
@@ -2699,7 +2704,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0xDE)
 	// 	{
-	// 		setItemByID(lines[103]);
+	// 		setItemByID(*seed[103]);
 	// 		// gunpowder, linen room
 	// 	}
 	// }
@@ -2709,12 +2714,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	if (uniqueID[1] == 0x69)
 	// 	{
 	// 		// nice
-	// 		setItemByID(lines[20]);
+	// 		setItemByID(*seed[20]);
 	// 		// ACP Ammo, Safety deposit room, B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x8E)
 	// 	{
-	// 		setItemByID(lines[239]);
+	// 		setItemByID(*seed[239]);
 	// 		// handgun bullets (bottom right, right), bioreactors room
 	// 	}
 	// }
@@ -2723,12 +2728,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5A)
 	// 	{
-	// 		setItemByID(lines[70]);
+	// 		setItemByID(*seed[70]);
 	// 		// ACP ammo, fire escape, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x5F)
 	// 	{
-	// 		setItemByID(lines[210]);
+	// 		setItemByID(*seed[210]);
 	// 		// large gunpowder, drug testing lab
 	// 	}
 	// }
@@ -2737,27 +2742,27 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x15)
 	// 	{
-	// 		setItemByID(lines[69]);
+	// 		setItemByID(*seed[69]);
 	// 		// scepter, art room
 	// 	}
 	// 	if (uniqueID[1] == 0x4D)
 	// 	{
-	// 		setItemByID(lines[15]);
+	// 		setItemByID(*seed[15]);
 	// 		// speed loader for claire
 	// 	}
 	// 	if (uniqueID[1] == 0x7A)
 	// 	{
-	// 		setItemByID(lines[65]);
+	// 		setItemByID(*seed[65]);
 	// 		// wooden boards, chopper crash area
 	// 	}
 	// 	if (uniqueID[1] == 0x86)
 	// 	{
-	// 		setItemByID(lines[198]);
+	// 		setItemByID(*seed[198]);
 	// 		// flame rounds, nap room, claire
 	// 	}
 	// 	if (uniqueID[1] == 0x93)
 	// 	{
-	// 		setItemByID(lines[91]);
+	// 		setItemByID(*seed[91]);
 	// 		// gunpowder, observation room
 	// 	}
 	// }
@@ -2766,17 +2771,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x09)
 	// 	{
-	// 		setItemByID(lines[67]);
+	// 		setItemByID(*seed[67]);
 	// 		// weapons locker key, art room
 	// 	}
 	// 	if (uniqueID[1] == 0x14)
 	// 	{
-	// 		setItemByID(lines[169]);
+	// 		setItemByID(*seed[169]);
 	// 		// blue herb, treatment pool room
 	// 	}
 	// 	if (uniqueID[1] == 0x61)
 	// 	{
-	// 		setItemByID(lines[110]);
+	// 		setItemByID(*seed[110]);
 	// 		// green herb (top left), machinery room
 	// 	}
 	// }
@@ -2785,22 +2790,22 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x13)
 	// 	{
-	// 		setItemByID(lines[94]);
+	// 		setItemByID(*seed[94]);
 	// 		// gunpowder, outside stars office
 	// 	}
 	// 	if (uniqueID[1] == 0x24)
 	// 	{
-	// 		setItemByID(lines[209]);
+	// 		setItemByID(*seed[209]);
 	// 		// upgrade chip (senior staff), greenhouse
 	// 	}
 	// 	if (uniqueID[1] == 0x95)
 	// 	{
-	// 		setItemByID(lines[145]);
+	// 		setItemByID(*seed[145]);
 	// 		// long barrel (w-870), gun shop
 	// 	}
 	// 	if (uniqueID[1] == 0xA6)
 	// 	{
-	// 		setItemByID(lines[195]);
+	// 		setItemByID(*seed[195]);
 	// 		// needle cartridges, cafeteria, claire
 	// 	}
 	// }
@@ -2809,7 +2814,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x65)
 	// 	{
-	// 		setItemByID(lines[40]);
+	// 		setItemByID(*seed[40]);
 	// 		// east office, acp ammo, b scenario
 	// 	}
 	// }
@@ -2818,7 +2823,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x31)
 	// 	{
-	// 		setItemByID(lines[118]);
+	// 		setItemByID(*seed[118]);
 	// 		// JMB Hp3 car boot, claire
 	// 	}
 	// }
@@ -2827,12 +2832,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x85)
 	// 	{
-	// 		setItemByID(lines[144]);
+	// 		setItemByID(*seed[144]);
 	// 		// ACP Ammo, Gun Shop, Leon B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xC7)
 	// 	{
-	// 		setItemByID(lines[28]);
+	// 		setItemByID(*seed[28]);
 	// 		// ACP Ammo, east closet ambush b scenario
 	// 	}
 	// }
@@ -2841,7 +2846,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x0F)
 	// 	{
-	// 		setItemByID(lines[224]);
+	// 		setItemByID(*seed[224]);
 	// 		// hand grenade, biotesting lab
 	// 	}
 	// }
@@ -2850,25 +2855,25 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x17)
 	// 	{
-	// 		setItemByID(lines[107]);
+	// 		setItemByID(*seed[107]);
 	// 		// long barrel (lightning hawk), underground stairs
 	// 	}
 	// 	if (uniqueID[1] == 0x8E)
 	// 	{
-	// 		setItemByID(lines[4]);
+	// 		setItemByID(*seed[4]);
 	// 		// ACP ammo upstairs main hall b scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xA3)
 	// {
-	// 	setItemByID(lines[104]);
+	// 	setItemByID(*seed[104]);
 	// 	// gunpowder, secret room
 	// }
 
 	// if (uniqueID[0] == 0xA4)
 	// {
-	// 	setItemByID(lines[194]);
+	// 	setItemByID(*seed[194]);
 	// 	// handgun bullets, cafeteria
 	// }
 
@@ -2876,7 +2881,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x8D)
 	// 	{
-	// 		setItemByID(lines[58]);
+	// 		setItemByID(*seed[58]);
 	// 		// hip pouch, west storage room
 	// 	}
 	// 	if (uniqueID[1] == 0xD3)
@@ -2899,20 +2904,20 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x8C)
 	// 	{
-	// 		setItemByID(lines[52]);
+	// 		setItemByID(*seed[52]);
 	// 		// ACP ammo, western area 3F, b scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xA8)
 	// {
-	// 	setItemByID(lines[151]);
+	// 	setItemByID(*seed[151]);
 	// 	// uss digital video cassette, rook bridge area
 	// }
 
 	// if (uniqueID[0] == 0xA9)
 	// {
-	// 	setItemByID(lines[135]);
+	// 	setItemByID(*seed[135]);
 	// 	// shotgun shells, outside break room
 	// }
 
@@ -2920,17 +2925,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5B)
 	// 	{
-	// 		setItemByID(lines[78]);
+	// 		setItemByID(*seed[78]);
 	// 		// large gear, east storage room
 	// 	}
 	// 	if (uniqueID[1] == 0x81)
 	// 	{
-	// 		setItemByID(lines[163]);
+	// 		setItemByID(*seed[163]);
 	// 		// ACP Ammo, monitor room, B Scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x87)
 	// 	{
-	// 		setItemByID(lines[1]);
+	// 		setItemByID(*seed[1]);
 	// 		// ink ribbon in main hall hardcore
 	// 	}
 	// }
@@ -2939,12 +2944,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xA7)
 	// 	{
-	// 		setItemByID(lines[240]);
+	// 		setItemByID(*seed[240]);
 	// 		// fas, monitor room
 	// 	}
 	// 	if (uniqueID[1] == 0xB6)
 	// 	{
-	// 		setItemByID(lines[49]);
+	// 		setItemByID(*seed[49]);
 	// 		// shotgun shells, western area 2F
 	// 	}
 	// }
@@ -2953,12 +2958,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x74)
 	// 	{
-	// 		setItemByID(lines[238]);
+	// 		setItemByID(*seed[238]);
 	// 		// handgun bullets (bottom right, left), bioreactors room
 	// 	}
 	// 	if (uniqueID[1] == 0x3E)
 	// 	{
-	// 		setItemByID(lines[184]);
+	// 		setItemByID(*seed[184]);
 	// 		// SLS ammo, workroom lift, claire
 	// 	}
 	// }
@@ -2967,24 +2972,24 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x54)
 	// 	{
-	// 		setItemByID(lines[167]);
+	// 		setItemByID(*seed[167]);
 	// 		// red herb, treatment pool room
 	// 	}
 	// 	if (uniqueID[1] == 0x9F)
 	// 	{
-	// 		setItemByID(lines[83]);
+	// 		setItemByID(*seed[83]);
 	// 		// blue herb, balcony
 	// 	}
 	// 	if (uniqueID[1] == 0xEC)
 	// 	{
-	// 		setItemByID(lines[119]);
+	// 		setItemByID(*seed[119]);
 	// 		// ACP Ammo, Jail Entrance, B scenario Leon
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xAF)
 	// {
-	// 	setItemByID(lines[175]);
+	// 	setItemByID(*seed[175]);
 	// 	// mag ammo, bottom waterway
 	// }
 
@@ -2992,7 +2997,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xC8)
 	// 	{
-	// 		setItemByID(lines[256]);
+	// 		setItemByID(*seed[256]);
 	// 		// office ink ribbon after sherry, hardcore
 	// 	}
 	// }
@@ -3001,7 +3006,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x35)
 	// 	{
-	// 		setItemByID(lines[158]);
+	// 		setItemByID(*seed[158]);
 	// 		// white gunpowder, water injection chamber, claire
 	// 	}
 	// }
@@ -3010,12 +3015,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xC1)
 	// 	{
-	// 		setItemByID(lines[227]);
+	// 		setItemByID(*seed[227]);
 	// 		// large gunpowder, p4 level testing lab
 	// 	}
 	// 	if (uniqueID[1] == 0xE3)
 	// 	{
-	// 		setItemByID(lines[181]);
+	// 		setItemByID(*seed[181]);
 	// 		// hip pouch, workroom
 	// 	}
 	// }
@@ -3024,12 +3029,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x71)
 	// 	{
-	// 		setItemByID(lines[8]);
+	// 		setItemByID(*seed[8]);
 	// 		// ACP ammo, operations room B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xCA)
 	// 	{
-	// 		setItemByID(lines[236]);
+	// 		setItemByID(*seed[236]);
 	// 		// hand grenade, bioreactor's room
 	// 	}
 	// }
@@ -3038,14 +3043,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xD3)
 	// 	{
-	// 		setItemByID(lines[139]);
+	// 		setItemByID(*seed[139]);
 	// 		// submachinegun ammo, basketball court, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xB6)
 	// {
-	// 	setItemByID(lines[47]);
+	// 	setItemByID(*seed[47]);
 	// 	// handgun bullets, western area 2F
 	// }
 
@@ -3053,12 +3058,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xBF)
 	// 	{
-	// 		setItemByID(lines[222]);
+	// 		setItemByID(*seed[222]);
 	// 		// signal modulator, lab main shaft, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xD0)
 	// 	{
-	// 		setItemByID(lines[133]);
+	// 		setItemByID(*seed[133]);
 	// 		// boxed electronic part, east storage, claire only
 	// 	}
 	// }
@@ -3073,19 +3078,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x6F)
 	// 	{
-	// 		setItemByID(lines[124]);
+	// 		setItemByID(*seed[124]);
 	// 		// yellow gunpowder, kennel
 	// 	}
 	// 	if (uniqueID[1] == 0x82)
 	// 	{
-	// 		setItemByID(lines[108]);
+	// 		setItemByID(*seed[108]);
 	// 		// ACP ammo (top left), machinery room, b scenario
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xBC)
 	// {
-	// 	setItemByID(lines[43]);
+	// 	setItemByID(*seed[43]);
 	// 	// yellow gunpowder, east office
 	// }
 
@@ -3093,7 +3098,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x16)
 	// 	{
-	// 		setItemByID(lines[147]);
+	// 		setItemByID(*seed[147]);
 	// 		// ACP Ammo (first), Sewer Entrance, b scenario Leon
 	// 	}
 	// }
@@ -3102,7 +3107,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x51)
 	// 	{
-	// 		setItemByID(lines[26]);
+	// 		setItemByID(*seed[26]);
 	// 		// flame rounds in weapons locker, claire
 	// 	}
 	// }
@@ -3111,19 +3116,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x38)
 	// 	{
-	// 		setItemByID(lines[56]);
+	// 		setItemByID(*seed[56]);
 	// 		// wooden boards, west storage room
 	// 	}
 	// 	if (uniqueID[1] == 0xE4)
 	// 	{
-	// 		setItemByID(lines[4]);
+	// 		setItemByID(*seed[4]);
 	// 		// handgun bullets (upstairs), main hall
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xC1)
 	// {
-	// 	setItemByID(lines[19]);
+	// 	setItemByID(*seed[19]);
 	// 	// film: commemorative, safety deposit room
 	// }
 
@@ -3131,12 +3136,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5E)
 	// 	{
-	// 		setItemByID(lines[3]);
+	// 		setItemByID(*seed[3]);
 	// 		// lion medal, main hall
 	// 	}
 	// 	if (uniqueID[1] == 0xFB)
 	// 	{
-	// 		setItemByID(lines[148]);
+	// 		setItemByID(*seed[148]);
 	// 		// ink ribbon x2
 	// 	}
 	// }
@@ -3145,17 +3150,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x80)
 	// 	{
-	// 		setItemByID(lines[70]);
+	// 		setItemByID(*seed[70]);
 	// 		// handgun bullets, fire escape
 	// 	}
 	// 	if (uniqueID[1] == 0xC0)
 	// 	{
-	// 		setItemByID(lines[166]);
+	// 		setItemByID(*seed[166]);
 	// 		// pawn piece, monitor room
 	// 	}
 	// 	if (uniqueID[1] == 0xCD)
 	// 	{
-	// 		setItemByID(lines[22]);
+	// 		setItemByID(*seed[22]);
 	// 		// gunpowder in 102 locker, claire
 	// 	}
 	// }
@@ -3164,7 +3169,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xAC)
 	// 	{
-	// 		setItemByID(lines[158]);
+	// 		setItemByID(*seed[158]);
 	// 		// Ink ribbon x2, water injection chamber, hardcore
 	// 	}
 	// }
@@ -3173,27 +3178,27 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x19)
 	// 	{
-	// 		setItemByID(lines[189]);
+	// 		setItemByID(*seed[189]);
 	// 		// ACP Ammo, G2 Fight Room, B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x1D)
 	// 	{
-	// 		setItemByID(lines[84]);
+	// 		setItemByID(*seed[84]);
 	// 		// ACP Ammo, Roof Area, B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xA4)
 	// 	{
-	// 		setItemByID(lines[112]);
+	// 		setItemByID(*seed[112]);
 	// 		// handgun bullets (bottom left), machinery room
 	// 	}
 	// 	if (uniqueID[1] == 0xBC)
 	// 	{
-	// 		setItemByID(lines[249]);
+	// 		setItemByID(*seed[249]);
 	// 		// wooden box, stars office
 	// 	}
 	// 	if (uniqueID[1] == 0xCB)
 	// 	{
-	// 		setItemByID(lines[173]);
+	// 		setItemByID(*seed[173]);
 	// 		// hand grenade, bottom waterway overpass
 	// 	}
 	// }
@@ -3202,12 +3207,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x7D)
 	// 	{
-	// 		setItemByID(lines[219]);
+	// 		setItemByID(*seed[219]);
 	// 		// gunpowder, low-temp testing lab
 	// 	}
 	// 	if (uniqueID[1] == 0xF4)
 	// 	{
-	// 		setItemByID(lines[141]);
+	// 		setItemByID(*seed[141]);
 	// 		// yellow gunpowder, break room
 	// 	}
 	// }
@@ -3216,12 +3221,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x1A)
 	// 	{
-	// 		setItemByID(lines[51]);
+	// 		setItemByID(*seed[51]);
 	// 		// portable safe, western area 2F
 	// 	}
 	// 	if (uniqueID[1] == 0xE5)
 	// 	{
-	// 		setItemByID(lines[95]);
+	// 		setItemByID(*seed[95]);
 	// 		// flame rounds outside stars office, claire
 	// 	}
 	// }
@@ -3230,7 +3235,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xBE)
 	// 	{
-	// 		setItemByID(lines[199]);
+	// 		setItemByID(*seed[199]);
 	// 		// high voltage condenser, nap room, claire
 	// 	}
 	// }
@@ -3239,7 +3244,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x96)
 	// 	{
-	// 		setItemByID(lines[124]);
+	// 		setItemByID(*seed[124]);
 	// 		// white gunpowder, kennel, claire
 	// 	}
 	// }
@@ -3248,14 +3253,14 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xEE)
 	// 	{
-	// 		setItemByID(lines[132]);
+	// 		setItemByID(*seed[132]);
 	// 		// green herb, path to chief's office, claire
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xCD)
 	// {
-	// 	setItemByID(lines[95]);
+	// 	setItemByID(*seed[95]);
 	// 	// shotgun shells, outside stars office
 	// }
 
@@ -3263,7 +3268,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x56)
 	// 	{
-	// 		setItemByID(lines[101]);
+	// 		setItemByID(*seed[101]);
 	// 		// mq11, stars office, claire
 	// 	}
 	// }
@@ -3272,12 +3277,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x29)
 	// 	{
-	// 		setItemByID(lines[190]);
+	// 		setItemByID(*seed[190]);
 	// 		// flash grenade, g2 fight room
 	// 	}
 	// 	if (uniqueID[1] == 0x68)
 	// 	{
-	// 		setItemByID(lines[141]);
+	// 		setItemByID(*seed[141]);
 	// 		// Ink ribbon x1, private collection room hardcore claire
 	// 	}
 	// 	if (uniqueID[1] == 0x8E)
@@ -3287,25 +3292,25 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x9E)
 	// 	{
-	// 		setItemByID(lines[132]);
+	// 		setItemByID(*seed[132]);
 	// 		// green herb, generator room
 	// 	}
 	// 	if (uniqueID[1] == 0xB0)
 	// 	{
-	// 		setItemByID(lines[64]);
+	// 		setItemByID(*seed[64]);
 	// 		// unicorn medallion, lounge
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xD1)
 	// {
-	// 	setItemByID(lines[59]);
+	// 	setItemByID(*seed[59]);
 	// 	// maiden medallion
 	// }
 
 	// if (uniqueID[0] == 0xD3)
 	// {
-	// 	setItemByID(lines[122]);
+	// 	setItemByID(*seed[122]);
 	// 	// fas, jail
 	// }
 
@@ -3313,47 +3318,47 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x24)
 	// 	{
-	// 		setItemByID(lines[6]);
+	// 		setItemByID(*seed[6]);
 	// 		// handgun bullets, reception
 	// 	}
 	// 	if (uniqueID[1] == 0x27)
 	// 	{
-	// 		setItemByID(lines[184]);
+	// 		setItemByID(*seed[184]);
 	// 		// shotgun shells, workroom lift
 	// 	}
 	// 	if (uniqueID[1] == 0x46)
 	// 	{
-	// 		setItemByID(lines[117]);
+	// 		setItemByID(*seed[117]);
 	// 		// hip pouch, operators room
 	// 	}
 	// 	if (uniqueID[1] == 0x98)
 	// 	{
-	// 		setItemByID(lines[25]);
+	// 		setItemByID(*seed[25]);
 	// 		// shotgun, safety deposit room
 	// 	}
 	// 	if (uniqueID[1] == 0xC3)
 	// 	{
 	// 		if (playingas == "claire")
 	// 		{
-	// 			setItemByID(lines[265]);
+	// 			setItemByID(*seed[265]);
 	// 			// acp ammo, break room claire B
 	// 		}
 	// 		else
 	// 		{
-	// 			setItemByID(lines[138]);
+	// 			setItemByID(*seed[138]);
 	// 			// handgun bullets, break room
 	// 		}
 	// 	}
 	// 	if (uniqueID[1] == 0xEE)
 	// 	{
-	// 		setItemByID(lines[72]);
+	// 		setItemByID(*seed[72]);
 	// 		// bolt cutters, fire escape
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xD5)
 	// {
-	// 	setItemByID(lines[50]);
+	// 	setItemByID(*seed[50]);
 	// 	// shotgun shells, western area 2F
 	// }
 
@@ -3361,12 +3366,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9A)
 	// 	{
-	// 		setItemByID(lines[112]);
+	// 		setItemByID(*seed[112]);
 	// 		// ACP ammo (bottom left), machinery room, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xBB)
 	// 	{
-	// 		setItemByID(lines[119]);
+	// 		setItemByID(*seed[119]);
 	// 		// white gunpowder, elevator controls room, claire
 	// 	}
 	// }
@@ -3375,7 +3380,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x98)
 	// 	{
-	// 		setItemByID(lines[96]);
+	// 		setItemByID(*seed[96]);
 	// 		// battery, stars office
 	// 	}
 	// 	// 7A is Ada ink ribbon hardcore
@@ -3383,7 +3388,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 
 	// if (uniqueID[0] == 0xD8)
 	// {
-	// 	setItemByID(lines[102]);
+	// 	setItemByID(*seed[102]);
 	// 	// portable safe, linen room
 	// }
 
@@ -3391,12 +3396,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x88)
 	// 	{
-	// 		setItemByID(lines[198]);
+	// 		setItemByID(*seed[198]);
 	// 		// shotgun shells, nap room
 	// 	}
 	// 	if (uniqueID[1] == 0xE2)
 	// 	{
-	// 		setItemByID(lines[220]);
+	// 		setItemByID(*seed[220]);
 	// 		// white gunpowder, modulator room, claire
 	// 	}
 	// }
@@ -3405,13 +3410,13 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x11)
 	// 	{
-	// 		setItemByID(lines[238]);
+	// 		setItemByID(*seed[238]);
 	// 		// ACP ammo (bottom right, left), Bioreactor's room, b scenario
 	// 	}
 	// 	else
 	// 	{
 	// 		// gotta check this isn't 0x11 at some point
-	// 		setItemByID(lines[250]);
+	// 		setItemByID(*seed[250]);
 	// 		// rising rookie film, stars office hiding place
 	// 	}
 	// }
@@ -3420,12 +3425,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x39)
 	// 	{
-	// 		setItemByID(lines[15]);
+	// 		setItemByID(*seed[15]);
 	// 		// high capacity mag (matilda), west office
 	// 	}
 	// 	if (uniqueID[1] == 0xA0)
 	// 	{
-	// 		setItemByID(lines[79]);
+	// 		setItemByID(*seed[79]);
 	// 		// shotgun shells, east storage room
 	// 	}
 	// }
@@ -3434,12 +3439,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x05)
 	// 	{
-	// 		setItemByID(lines[38]);
+	// 		setItemByID(*seed[38]);
 	// 		// green herb, east office
 	// 	}
 	// 	if (uniqueID[1] == 0xCC)
 	// 	{
-	// 		setItemByID(lines[207]);
+	// 		setItemByID(*seed[207]);
 	// 		// red herb, greenhouse
 	// 	}
 	// }
@@ -3454,7 +3459,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x34)
 	// 	{
-	// 		setItemByID(lines[40]);
+	// 		setItemByID(*seed[40]);
 	// 		// handgun bullets, east office
 	// 	}
 	// }
@@ -3463,19 +3468,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x34)
 	// 	{
-	// 		setItemByID(lines[202]);
+	// 		setItemByID(*seed[202]);
 	// 		// Ink Ribbon x2, Lobby hardcore
 	// 	}
 	// 	if (uniqueID[1] == 0xC4)
 	// 	{
 	// 		if (playingas == "claire")
 	// 		{
-	// 			setItemByID(lines[266]);
+	// 			setItemByID(*seed[266]);
 	// 			// fuse (break room hallway) claire b scenario
 	// 		}
 	// 		else
 	// 		{
-	// 			setItemByID(lines[140]);
+	// 			setItemByID(*seed[140]);
 	// 			// fuse (break room hallway)
 	// 		}
 	// 	}
@@ -3485,12 +3490,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x80)
 	// 	{
-	// 		setItemByID(lines[213]);
+	// 		setItemByID(*seed[213]);
 	// 		// shotgun shells, lounge
 	// 	}
 	// 	if (uniqueID[1] == 0xE9)
 	// 	{
-	// 		setItemByID(lines[221]);
+	// 		setItemByID(*seed[221]);
 	// 		// handgun bullets, modulator room
 	// 	}
 	// }
@@ -3499,12 +3504,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x22)
 	// 	{
-	// 		setItemByID(lines[11]);
+	// 		setItemByID(*seed[11]);
 	// 		// wooden boards, western area 1F
 	// 	}
 	// 	if (uniqueID[1] == 0x76)
 	// 	{
-	// 		setItemByID(lines[228]);
+	// 		setItemByID(*seed[228]);
 	// 		// yellow gunpowder, p-4 level testing lab
 	// 	}
 	// }
@@ -3513,12 +3518,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x43)
 	// 	{
-	// 		setItemByID(lines[146]);
+	// 		setItemByID(*seed[146]);
 	// 		// submachine gun ammo, break room, claire b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xF9)
 	// 	{
-	// 		setItemByID(lines[261]);
+	// 		setItemByID(*seed[261]);
 	// 		// ACP ammo, guardroom, b scenario
 	// 	}
 	// }
@@ -3527,12 +3532,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x92)
 	// 	{
-	// 		setItemByID(lines[260]);
+	// 		setItemByID(*seed[260]);
 	// 		// hand grenade, guardroom, b scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xDB)
 	// 	{
-	// 		setItemByID(lines[27]);
+	// 		setItemByID(*seed[27]);
 	// 		// ACP Ammo, Press Room B scenario
 	// 	}
 	// }
@@ -3541,17 +3546,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x5D)
 	// 	{
-	// 		setItemByID(lines[242]);
+	// 		setItemByID(*seed[242]);
 	// 		// blue herb, pump room
 	// 	}
 	// 	if (uniqueID[1] == 0xB2)
 	// 	{
-	// 		setItemByID(lines[16]);
+	// 		setItemByID(*seed[16]);
 	// 		// gunpowder, dark room
 	// 	}
 	// 	if (uniqueID[1] == 0xFA)
 	// 	{
-	// 		setItemByID(lines[144]);
+	// 		setItemByID(*seed[144]);
 	// 		// submachinegun ammo, outside office, claire
 	// 	}
 	// }
@@ -3560,12 +3565,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xBA)
 	// 	{
-	// 		setItemByID(lines[143]);
+	// 		setItemByID(*seed[143]);
 	// 		// hand grenade, bus, claire only
 	// 	}
 	// 	if (uniqueID[1] == 0xF0)
 	// 	{
-	// 		setItemByID(lines[163]);
+	// 		setItemByID(*seed[163]);
 	// 		// handgun bullets, monitor room
 	// 	}
 	// }
@@ -3574,12 +3579,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x6C)
 	// 	{
-	// 		setItemByID(lines[138]);
+	// 		setItemByID(*seed[138]);
 	// 		// submachine ammo, chief's office, claire
 	// 	}
 	// 	if (uniqueID[1] == 0xEF)
 	// 	{
-	// 		setItemByID(lines[122]);
+	// 		setItemByID(*seed[122]);
 	// 		// FAS, orphanage
 	// 	}
 	// }
@@ -3588,12 +3593,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xA2)
 	// 	{
-	// 		setItemByID(lines[128]);
+	// 		setItemByID(*seed[128]);
 	// 		// car key, firing range
 	// 	}
 	// 	if (uniqueID[1] == 0xAA)
 	// 	{
-	// 		setItemByID(lines[36]);
+	// 		setItemByID(*seed[36]);
 	// 		// ink ribbon x2, records room hardcore
 	// 	}
 	// }
@@ -3602,17 +3607,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x3B)
 	// 	{
-	// 		setItemByID(lines[253]);
+	// 		setItemByID(*seed[253]);
 	// 		// ink ribbon x1, escape area *typewriter hardcore
 	// 	}
 	// 	if (uniqueID[1] == 0x4E)
 	// 	{
-	// 		setItemByID(lines[152]);
+	// 		setItemByID(*seed[152]);
 	// 		// rook piece, rook bridge area
 	// 	}
 	// 	if (uniqueID[1] == 0xC9)
 	// 	{
-	// 		setItemByID(lines[229]);
+	// 		setItemByID(*seed[229]);
 	// 		// Ink ribbon x1, p-4 level testing lab hardcore
 	// 	}
 	// }
@@ -3621,12 +3626,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x30)
 	// 	{
-	// 		setItemByID(lines[71]);
+	// 		setItemByID(*seed[71]);
 	// 		// wooden boards, fire escape
 	// 	}
 	// 	if (uniqueID[1] == 0xE5)
 	// 	{
-	// 		setItemByID(lines[100]);
+	// 		setItemByID(*seed[100]);
 	// 		// yellow gunpowsder, stars office
 	// 	}
 	// }
@@ -3635,17 +3640,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x1F)
 	// 	{
-	// 		setItemByID(lines[255]);
+	// 		setItemByID(*seed[255]);
 	// 		// Ink Ribbon x1, Sherry hardcore
 	// 	}
 	// 	if (uniqueID[1] == 0x2A)
 	// 	{
-	// 		setItemByID(lines[88]);
+	// 		setItemByID(*seed[88]);
 	// 		// gunpowder, boiler room
 	// 	}
 	// 	if (uniqueID[1] == 0x8B)
 	// 	{
-	// 		setItemByID(lines[216]);
+	// 		setItemByID(*seed[216]);
 	// 		// flamethrower fuel, server room
 	// 	}
 	// }
@@ -3654,12 +3659,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xAD)
 	// 	{
-	// 		setItemByID(lines[156]);
+	// 		setItemByID(*seed[156]);
 	// 		// Knife, lower waterway pre-slide
 	// 	}
 	// 	if (uniqueID[1] == 0xAE)
 	// 	{
-	// 		setItemByID(lines[230]);
+	// 		setItemByID(*seed[230]);
 	// 		// handgun bullets (top left), bioreactors room
 	// 	}
 	// }
@@ -3668,12 +3673,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x8E)
 	// 	{
-	// 		setItemByID(lines[46]);
+	// 		setItemByID(*seed[46]);
 	// 		// muzzle brake (matilda), waiting room
 	// 	}
 	// 	if (uniqueID[1] == 0x90)
 	// 	{
-	// 		setItemByID(lines[217]);
+	// 		setItemByID(*seed[217]);
 	// 		// white gunpowder, server room, claire
 	// 	}
 	// }
@@ -3682,7 +3687,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xE0)
 	// 	{
-	// 		setItemByID(lines[20]);
+	// 		setItemByID(*seed[20]);
 	// 		// handgun bullets in locker, claire
 	// 	}
 	// }
@@ -3692,7 +3697,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	// 01 is bishop repickup in sewer, only work in B scenario
 	// 	if (uniqueID[1] == 0x01andscenario == "B")
 	// 	{
-	// 		setItemByID(lines[164]);
+	// 		setItemByID(*seed[164]);
 	// 		// bishop, B scenario only plz
 	// 	}
 	// 	if (uniqueID[1] == 0x69)
@@ -3702,17 +3707,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0x04)
 	// 	{
-	// 		setItemByID(lines[192]);
+	// 		setItemByID(*seed[192]);
 	// 		// shotgun shells, security room
 	// 	}
 	// 	if (uniqueID[1] == 0x31)
 	// 	{
-	// 		setItemByID(lines[10]);
+	// 		setItemByID(*seed[10]);
 	// 		// green herb, western area 1F
 	// 	}
 	// 	if (uniqueID[1] == 0x98)
 	// 	{
-	// 		setItemByID(lines[142]);
+	// 		setItemByID(*seed[142]);
 	// 		// green herb, outside RPD
 	// 	}
 	// }
@@ -3721,24 +3726,24 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x66)
 	// 	{
-	// 		setItemByID(lines[212]);
+	// 		setItemByID(*seed[212]);
 	// 		// large gunpowder, underneath greenhouse
 	// 	}
 	// 	if (uniqueID[1] == 0xB5)
 	// 	{
-	// 		setItemByID(lines[127]);
+	// 		setItemByID(*seed[127]);
 	// 		// diamond key, morgue
 	// 	}
 	// 	if (uniqueID[1] == 0xE3)
 	// 	{
-	// 		setItemByID(lines[73]);
+	// 		setItemByID(*seed[73]);
 	// 		// green herb, main hall 3F
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xF5)
 	// {
-	// 	setItemByID(lines[101]);
+	// 	setItemByID(*seed[101]);
 	// 	// lightning hawk, stars office
 	// }
 
@@ -3746,19 +3751,19 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0xE5)
 	// 	{
-	// 		setItemByID(lines[163]);
+	// 		setItemByID(*seed[163]);
 	// 		// Ink ribbon x2, monitor room hardcore
 	// 	}
 	// 	if (uniqueID[1] == 0xF2)
 	// 	{
-	// 		setItemByID(lines[139]);
+	// 		setItemByID(*seed[139]);
 	// 		// mag ammo, break room
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xF7)
 	// {
-	// 	setItemByID(lines[36]);
+	// 	setItemByID(*seed[36]);
 	// 	// gunpowder, records room
 	// }
 
@@ -3766,17 +3771,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x34)
 	// 	{
-	// 		setItemByID(lines[133]);
+	// 		setItemByID(*seed[133]);
 	// 		// boxed electronic part, generator room
 	// 	}
 	// 	if (uniqueID[1] == 0x3F)
 	// 	{
-	// 		setItemByID(lines[84]);
+	// 		setItemByID(*seed[84]);
 	// 		// handgun bullets, roof area
 	// 	}
 	// 	if (uniqueID[1] == 0x72)
 	// 	{
-	// 		setItemByID(lines[201]);
+	// 		setItemByID(*seed[201]);
 	// 		// hip pouch, nap room
 	// 	}
 	// 	if (uniqueID[1] == 0x79)
@@ -3786,7 +3791,7 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// 	}
 	// 	if (uniqueID[1] == 0xAB)
 	// 	{
-	// 		setItemByID(lines[51]);
+	// 		setItemByID(*seed[51]);
 	// 		// Bejeweled Box, western area 2F, b scenario
 	// 	}
 	// }
@@ -3795,24 +3800,24 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x08)
 	// 	{
-	// 		setItemByID(lines[2]);
+	// 		setItemByID(*seed[2]);
 	// 		// fas, main hall
 	// 	}
 	// 	if (uniqueID[1] == 0x55)
 	// 	{
-	// 		setItemByID(lines[178]);
+	// 		setItemByID(*seed[178]);
 	// 		// queen plug, supplies storage room
 	// 	}
 	// 	if (uniqueID[1] == 0x6D)
 	// 	{
-	// 		setItemByID(lines[52]);
+	// 		setItemByID(*seed[52]);
 	// 		// handgun bullets, western area 3F
 	// 	}
 	// }
 
 	// if (uniqueID[0] == 0xFA)
 	// {
-	// 	setItemByID(lines[90]);
+	// 	setItemByID(*seed[90]);
 	// 	// yellow gunpowder, outside observation room
 	// }
 
@@ -3820,12 +3825,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x67)
 	// 	{
-	// 		setItemByID(lines[189]);
+	// 		setItemByID(*seed[189]);
 	// 		// handgun bullets, g2 fight room
 	// 	}
 	// 	if (uniqueID[1] == 0xBC)
 	// 	{
-	// 		setItemByID(lines[9]);
+	// 		setItemByID(*seed[9]);
 	// 		// handgun bullets, western area 1F
 	// 	}
 	// }
@@ -3834,17 +3839,17 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9B)
 	// 	{
-	// 		setItemByID(lines[5]);
+	// 		setItemByID(*seed[5]);
 	// 		// knife (marvin), main hall
 	// 	}
 	// 	if (uniqueID[1] == 0xCB)
 	// 	{
-	// 		setItemByID(lines[9]);
+	// 		setItemByID(*seed[9]);
 	// 		// ACP ammo, western area 1F B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xF0)
 	// 	{
-	// 		setItemByID(lines[218]);
+	// 		setItemByID(*seed[218]);
 	// 		// knife, server room
 	// 	}
 	// }
@@ -3853,12 +3858,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x29)
 	// 	{
-	// 		setItemByID(lines[20]);
+	// 		setItemByID(*seed[20]);
 	// 		// acp ammo, locker room claire B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0x94)
 	// 	{
-	// 		setItemByID(lines[62]);
+	// 		setItemByID(*seed[62]);
 	// 		// red book, library
 	// 	}
 	// }
@@ -3867,12 +3872,12 @@ void Randomizer::SetItemByGUID(GUID *UNUSED(type))
 	// {
 	// 	if (uniqueID[1] == 0x9B)
 	// 	{
-	// 		setItemByID(lines[246]);
+	// 		setItemByID(*seed[246]);
 	// 		// ACP Ammo, Escape Shaft, Leon B scenario
 	// 	}
 	// 	if (uniqueID[1] == 0xEA)
 	// 	{
-	// 		setItemByID(lines[92]);
+	// 		setItemByID(*seed[92]);
 	// 		// bejeweled box, observation room
 	// 	}
 	// }

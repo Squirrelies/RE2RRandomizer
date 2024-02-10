@@ -27,8 +27,10 @@
 
 #include <windows.h>
 
+#include <array>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 enum Character
 {
@@ -57,6 +59,18 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	uint32_t WeaponParts; // 0x18-0x1B
 	uint32_t BulletId;    // 0x1C-0x1F
 	uint32_t Count;       // 0x20-0x23
+
+	template <typename... TInt>
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem(TInt &&...args)
+	{
+		static_assert(sizeof...(args) <= sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem), "Constructor requires less than or equal number of elements to the sizeof this struct.");
+
+		memset((void *)this, 0, sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem));
+
+		std::vector<uint8_t> argsArray = {static_cast<uint8_t>(args)...};
+		for (size_t i = 0; i < argsArray.size(); ++i)
+			*((uint8_t *)this + i) = argsArray[i];
+	}
 };
 
 #endif
