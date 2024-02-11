@@ -189,10 +189,10 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 {
 	// logger->LogMessage("[RE2R-R] HookItemPickup(%p, %p, %p, %p) called.\n", param1, param2, param3, param4);
 
-	uint32_t *type = (uint32_t *)(param3 + 0x70);
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70);
 	GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
 
-	randomizer->ItemPickup(type, itemPositionGuid);
+	randomizer->ItemPickup(currentItem, itemPositionGuid);
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 

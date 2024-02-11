@@ -13,20 +13,19 @@ void Randomizer::ResetSeed(std::vector<uint32_t> *seed, Difficulty *difficulty, 
 	this->character = character;
 }
 
-void Randomizer::ItemPickup(uint32_t *type, GUID *itemPositionGuid)
+void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(*type: %ld (0x%lX), itemPositionGuid: %s) called.\n", *type, *type, GUIDToString(itemPositionGuid).c_str());
+	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(*currentItem: %s, itemPositionGuid: %s) called.\n", currentItem->ToString().c_str(), GUIDToString(itemPositionGuid).c_str());
 
 	uint32_t debugType = 4;
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem = GetItemByType(&debugType); // GetItemByType(type)
-	RandomizeItem((app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)type, &newItem);
+	RandomizeItem(currentItem, &newItem);
 }
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *newItem)
 {
-	for (size_t i = 0; i < sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem); ++i)
-		logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem() writing %02X to %p...\n", *((uint8_t *)newItem + i), (void *)((uint8_t *)currentItem + i));
-	memcpy((void *)currentItem, (void *)newItem, sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem));
+	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n", currentItem->ToString().c_str(), newItem->ToString().c_str());
+	*currentItem = *newItem;
 }
 
 // Returns a vector of uint8_t representing the app.ropeway.gamemastering.InventoryManager.PrimitiveItem structure 0x10-0x24 (0x14).

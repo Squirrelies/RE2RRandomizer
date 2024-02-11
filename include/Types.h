@@ -13,6 +13,8 @@
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 
+#define RE2RR_NAMEOF(name) #name
+
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -64,12 +66,35 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem(TInt &&...args)
 	{
 		static_assert(sizeof...(args) <= sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem), "Constructor requires less than or equal number of elements to the sizeof this struct.");
+		std::vector<uint8_t> argsArray = {static_cast<uint8_t>(args)...};
 
 		memset((void *)this, 0, sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem));
 
-		std::vector<uint8_t> argsArray = {static_cast<uint8_t>(args)...};
 		for (size_t i = 0; i < argsArray.size(); ++i)
 			*((uint8_t *)this + i) = argsArray[i];
+	}
+
+	std::string ToString()
+	{
+		const char *toStringFormat = "{ \"%s\": %d, \"%s\": %d, \"%s\": %d, \"%s\": %d, \"%s\": %d }";
+
+		int bufferSize = snprintf(NULL, 0, toStringFormat,
+		                          RE2RR_NAMEOF(ItemId), ItemId,
+		                          RE2RR_NAMEOF(WeaponId), WeaponId,
+		                          RE2RR_NAMEOF(WeaponParts), WeaponParts,
+		                          RE2RR_NAMEOF(BulletId), BulletId,
+		                          RE2RR_NAMEOF(Count), Count);
+		char *toString = (char *)malloc(bufferSize + 1);
+		snprintf(toString, bufferSize + 1, toStringFormat,
+		         RE2RR_NAMEOF(ItemId), ItemId,
+		         RE2RR_NAMEOF(WeaponId), WeaponId,
+		         RE2RR_NAMEOF(WeaponParts), WeaponParts,
+		         RE2RR_NAMEOF(BulletId), BulletId,
+		         RE2RR_NAMEOF(Count), Count);
+		std::string returnValue = std::string(toString);
+		free(toString);
+
+		return returnValue;
 	}
 };
 

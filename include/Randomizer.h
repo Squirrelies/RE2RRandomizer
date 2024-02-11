@@ -40,7 +40,7 @@ public:
 	}
 
 	void ResetSeed(std::vector<uint32_t> *, Difficulty *, Scenario *, Character *);
-	void ItemPickup(uint32_t *, GUID *);
+	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
 };
 
 std::string GUIDToString(GUID *);
