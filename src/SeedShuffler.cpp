@@ -7,9 +7,9 @@ SeedShuffler::SeedShuffler(
     int listLength,
     bool &m_HasFoundSeed,
     std::vector<std::string> &ItemNames,
-    std::map<int, std::vector<int>> &DisallowedZoneMap,
-    std::vector<int> &ZoneIDByItemID,
-    std::map<int, std::map<int, std::vector<int>>> &ZoneRequiredItems)
+    std::map<uint32_t, std::vector<uint32_t>> &DisallowedZoneMap,
+    std::vector<uint32_t> &ZoneIDByItemID,
+    std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> &ZoneRequiredItems)
 {
 	this->character = character;
 	this->scenario = scenario;
@@ -32,11 +32,11 @@ SeedShuffler::~SeedShuffler()
 void SeedShuffler::ShuffleItems()
 {
 
-	std::vector<int> UniqueIDList;
+	std::vector<uint32_t> UniqueIDList;
 
 	m_FinalList.clear();
 
-	int rookpos = 5000;
+	uint32_t rookpos = 5000;
 
 	if (character == Leon)
 	{
@@ -44,8 +44,8 @@ void SeedShuffler::ShuffleItems()
 	}
 
 	// tbar and sewer key
-	int tbarpos = 158 + (rand() % 15);
-	int sewerkeypos = 158 + (rand() % 15);
+	uint32_t tbarpos = 158 + (rand() % 15);
+	uint32_t sewerkeypos = 158 + (rand() % 15);
 
 	while (tbarpos == 170 || sewerkeypos == 170 || tbarpos == sewerkeypos)
 	{
@@ -54,10 +54,10 @@ void SeedShuffler::ShuffleItems()
 	}
 
 	// chip
-	int chippos = 195 + (rand() % 5);
+	uint32_t chippos = 195 + (rand() % 5);
 
 	// Unique Item IDs
-	for (int i = 0; i < m_ListLength; ++i)
+	for (uint32_t i = 0; i < m_ListLength; ++i)
 	{
 
 		bool exceptions;
@@ -75,7 +75,7 @@ void SeedShuffler::ShuffleItems()
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75 && i != 53); // spade key added for A scenario
 
-			for (int z = 256; z < 266; ++z)
+			for (uint32_t z = 256; z < 266; ++z)
 			{
 				exceptions = exceptions && (i != z); // all the b scenario extras
 			}
@@ -125,10 +125,10 @@ void SeedShuffler::ShuffleItems()
 
 	// doing this a new way fuck it
 
-	std::vector<int> KeyItems;
-	std::vector<int> NonKeyItems;
+	std::vector<uint32_t> KeyItems;
+	std::vector<uint32_t> NonKeyItems;
 
-	for (int i = 0; i < m_ListLength; ++i)
+	for (uint32_t i = 0; i < m_ListLength; ++i)
 	{
 
 		bool exceptions;
@@ -146,7 +146,7 @@ void SeedShuffler::ShuffleItems()
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75 && i != 53); // spade key added for A scenario
 
-			for (int z = 256; z < 266; ++z)
+			for (uint32_t z = 256; z < 266; ++z)
 			{
 				exceptions = exceptions && (i != z); // all the b scenario extras
 			}
@@ -176,7 +176,7 @@ void SeedShuffler::ShuffleItems()
 							if (ItemNames[i] != "UNUSED")
 							{
 
-								std::vector<int> DisZones = DisallowedZoneMap[i];
+								std::vector<uint32_t> DisZones = DisallowedZoneMap[i];
 
 								if (DisZones.size() > 0)
 								{
@@ -198,7 +198,7 @@ void SeedShuffler::ShuffleItems()
 							if (ItemNames[i] != "UNUSED")
 							{
 
-								std::vector<int> DisZones = DisallowedZoneMap[i];
+								std::vector<uint32_t> DisZones = DisallowedZoneMap[i];
 
 								if (DisZones.size() > 0)
 								{
@@ -238,14 +238,14 @@ void SeedShuffler::ShuffleItems()
 	if (scenario == A)
 	{
 
-		for (int i = 256; i < 266; ++i)
+		for (uint32_t i = 256; i < 266; ++i)
 		{
 			m_FinalList[i] = i;
 		}
 	}
 	else if (character == Leon)
 	{
-		for (int i = 261; i < 266; ++i)
+		for (uint32_t i = 261; i < 266; ++i)
 		{
 			m_FinalList[i] = i;
 		}
@@ -254,13 +254,13 @@ void SeedShuffler::ShuffleItems()
 	while (KeyItems.empty() == false)
 	{
 
-		int randomkeyitem = std::rand() % KeyItems.size();
+		uint32_t randomkeyitem = std::rand() % KeyItems.size();
 
-		int randomnumber = std::rand() % UniqueIDList.size();
+		uint32_t randomnumber = std::rand() % UniqueIDList.size();
 
-		int NewItemZone = ZoneIDByItemID[UniqueIDList[randomnumber]];
+		uint32_t NewItemZone = ZoneIDByItemID[UniqueIDList[randomnumber]];
 
-		std::vector<int> DisZones = DisallowedZoneMap[KeyItems[randomkeyitem]];
+		std::vector<uint32_t> DisZones = DisallowedZoneMap[KeyItems[randomkeyitem]];
 
 		bool isvalid = true;
 
@@ -286,10 +286,10 @@ void SeedShuffler::ShuffleItems()
 
 			bool isthereavalidslot = false;
 
-			for (int i = 0; i < UniqueIDList.size(); ++i)
+			for (uint32_t i = 0; i < UniqueIDList.size(); ++i)
 			{
 
-			    int testzone = ZoneIDByItemID[UniqueIDList[i]];
+			    uint32_t testzone = ZoneIDByItemID[UniqueIDList[i]];
 
 			    if (std::find(DisZones.begin(), DisZones.end(), testzone) == DisZones.end())
 			    {
@@ -309,9 +309,9 @@ void SeedShuffler::ShuffleItems()
 	while (NonKeyItems.empty() == false)
 	{
 
-		int randomitem = std::rand() % NonKeyItems.size();
+		uint32_t randomitem = std::rand() % NonKeyItems.size();
 
-		int randomnumber = std::rand() % UniqueIDList.size();
+		uint32_t randomnumber = std::rand() % UniqueIDList.size();
 
 		m_FinalList[UniqueIDList[randomnumber]] = NonKeyItems[randomitem];
 		NonKeyItems.erase(NonKeyItems.begin() + randomitem);
@@ -329,7 +329,7 @@ void SeedShuffler::ShuffleItems()
 
 	    string line;
 
-	    int counter = 0;
+	    uint32_t counter = 0;
 
 	    while (getline(debugtestfile, line))
 	    {
@@ -345,7 +345,7 @@ void SeedShuffler::ShuffleItems()
 	// end debug test
 }
 
-std::vector<int> SeedShuffler::AsyncShuffle(int threadCount)
+std::vector<uint32_t> SeedShuffler::AsyncShuffle(int threadCount)
 {
 
 	// AddToConsoleLog("FECK");
@@ -391,7 +391,7 @@ bool SeedShuffler::CheckSpadeKeyInArea()
 
 	bool spadeinzonetwo = false;
 
-	for (int i = 8; i < 20; ++i)
+	for (uint32_t i = 8; i < 20; ++i)
 	{
 
 		if (m_FinalList[i] == 53)
@@ -400,7 +400,7 @@ bool SeedShuffler::CheckSpadeKeyInArea()
 		}
 	}
 
-	for (int i = 46; i < 58; ++i)
+	for (uint32_t i = 46; i < 58; ++i)
 	{
 
 		if (scenario == B)
@@ -417,7 +417,7 @@ bool SeedShuffler::CheckSpadeKeyInArea()
 		}
 	}
 
-	for (int i = 59; i < 64; ++i)
+	for (uint32_t i = 59; i < 64; ++i)
 	{
 
 		if (m_FinalList[i] == 53)
@@ -441,7 +441,7 @@ void SeedShuffler::CheckItemValidity()
 		bool knifeinzoneone = false;
 		bool spadekeyinzoneone = false;
 
-		for (int i = 0; i < 5; ++i)
+		for (uint32_t i = 0; i < 5; ++i)
 		{
 			if (m_FinalList[i] == 4 || m_FinalList[i] == 20 || m_FinalList[i] == 60 || m_FinalList[i] == 135 || m_FinalList[i] == 155 || m_FinalList[i] == 190 || m_FinalList[i] == 196 || m_FinalList[i] == 217 || m_FinalList[i] == 240)
 			{
@@ -473,7 +473,7 @@ void SeedShuffler::CheckItemValidity()
 		bool medallionedgecase = false;
 
 		// check if there's a medallion in the east office to prevent black screen of doom in A scenario helicopter cutscene
-		for (int i = 37; i < 44; ++i)
+		for (uint32_t i = 37; i < 44; ++i)
 		{
 			if (m_FinalList[i] == 2 || m_FinalList[i] == 58 || m_FinalList[i] == 63)
 			{
@@ -491,9 +491,9 @@ void SeedShuffler::CheckItemValidity()
 
 		// If fuse is available to get to main hall then spade key MUST be in spade key zone.
 
-		std::vector<int> earlylocations;
+		std::vector<uint32_t> earlylocations;
 
-		for (int i = 64; i < 72; ++i)
+		for (uint32_t i = 64; i < 72; ++i)
 		{
 			earlylocations.push_back(i);
 		}
@@ -503,7 +503,7 @@ void SeedShuffler::CheckItemValidity()
 
 		if (character == Leon)
 		{
-			for (int i = 134; i < 141; ++i)
+			for (uint32_t i = 134; i < 141; ++i)
 			{
 				earlylocations.push_back(i);
 			}
@@ -513,7 +513,7 @@ void SeedShuffler::CheckItemValidity()
 			earlylocations.push_back(144);
 			earlylocations.push_back(145);
 
-			for (int i = 261; i < 266; ++i)
+			for (uint32_t i = 261; i < 266; ++i)
 			{
 				earlylocations.push_back(i);
 			}
@@ -621,7 +621,7 @@ void SeedShuffler::CheckItemValidity()
 		// can we use the rook plug or the t-bar valve to get out of the sewer access area TBAR REMOVED FROM HERE
 		bool isrookinzone = false;
 
-		for (int i = 148; i < 152; ++i)
+		for (uint32_t i = 148; i < 152; ++i)
 		{
 
 			if (m_FinalList[i] == 151)
@@ -641,7 +641,7 @@ void SeedShuffler::CheckItemValidity()
 	bool istbarinzone = false;
 
 	// can we find t-bar and sewer key to get out of the sewers?
-	for (int i = 158; i < 173; ++i)
+	for (uint32_t i = 158; i < 173; ++i)
 	{
 
 		if (i != 170) // skip this one
@@ -669,7 +669,7 @@ void SeedShuffler::CheckItemValidity()
 	// general chip
 	bool ischipinzone = false;
 
-	for (int i = 195; i < 200; ++i)
+	for (uint32_t i = 195; i < 200; ++i)
 	{
 
 		if (m_FinalList[i] == 199)
@@ -690,7 +690,7 @@ void SeedShuffler::CheckItemValidity()
 	if (character == Leon)
 	{
 
-		for (int i = 244; i < 247; ++i)
+		for (uint32_t i = 244; i < 247; ++i)
 		{
 
 			if (m_FinalList[i] == 246)
@@ -716,7 +716,7 @@ void SeedShuffler::CheckItemValidity()
 	}
 
 	// now we check dependencies
-	for (int i = 0; i < m_ListLength; ++i)
+	for (uint32_t i = 0; i < m_ListLength; ++i)
 	{
 
 		if (CheckDependencies(i) == false)
@@ -730,18 +730,18 @@ void SeedShuffler::CheckItemValidity()
 	m_IsItemRandoValid = true;
 }
 
-bool SeedShuffler::CheckDependencies(int itemID)
+bool SeedShuffler::CheckDependencies(uint32_t itemID)
 {
 
-	int ItemPos = std::find(m_FinalList.begin(), m_FinalList.end(), itemID) - m_FinalList.begin();
+	uint32_t ItemPos = std::find(m_FinalList.begin(), m_FinalList.end(), itemID) - m_FinalList.begin();
 
-	int NewItemZone = ZoneIDByItemID[ItemPos];
+	uint32_t NewItemZone = ZoneIDByItemID[ItemPos];
 
-	std::vector<int> ReqItems = ZoneRequiredItems[NewItemZone][0];
+	std::vector<uint32_t> ReqItems = ZoneRequiredItems[NewItemZone][0];
 
-	std::vector<std::vector<int>> OptionalSets;
+	std::vector<std::vector<uint32_t>> OptionalSets;
 
-	int i = 1;
+	uint32_t i = 1;
 
 	while (true)
 	{
@@ -806,7 +806,7 @@ bool SeedShuffler::CheckDependencies(int itemID)
 	return true;
 }
 
-bool SeedShuffler::CheckOptionalDependency(std::vector<int> OptionalItems)
+bool SeedShuffler::CheckOptionalDependency(std::vector<uint32_t> OptionalItems)
 {
 	for (size_t q = 0; q < OptionalItems.size(); ++q)
 	{

@@ -470,10 +470,10 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	// shotgun cabinet
 	ZoneRequiredItems[5][0].push_back(66); // weapons locker key
 
-	int fuseid = 139;
-	int heartid = 139;
-	int clubid = 88;
-	int squarecrankpos = 119;
+	uint32_t fuseid = 139;
+	uint32_t heartid = 139;
+	uint32_t clubid = 88;
+	uint32_t squarecrankpos = 119;
 
 	if (scenario == B && character == Claire)
 	{
@@ -914,7 +914,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	if (scenario == B)
 	{
 		// do everything in one go here
-		for (int i = 21; i < 29; i++)
+		for (uint32_t i = 21; i < 29; i++)
 		{
 			ZoneRequiredItems[21][0].push_back(43);     // courtyard key
 			ZoneRequiredItems[21][1].push_back(53);     // spade key
@@ -995,7 +995,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	ZoneRequiredItems[28][0].push_back(120); // parking key
 
 	// all of the sewer items need these items
-	for (int i = 29; i < 38; i++)
+	for (uint32_t i = 29; i < 38; i++)
 	{
 		ZoneRequiredItems[i] = ZoneRequiredItems[28];
 	}
@@ -1039,7 +1039,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	ZoneRequiredItems[38][0].push_back(165); // pawn plug
 
 	// all of the lab items need these items
-	for (int i = 39; i < 50; i++)
+	for (uint32_t i = 39; i < 50; i++)
 	{
 
 		if (i != 47) // not film hiding place
@@ -1111,7 +1111,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	// DISALLOWED ZONES
 
 	// medallions
-	for (int i = 21; i < 47; ++i)
+	for (uint32_t i = 21; i < 47; ++i)
 	{
 		DisallowedZoneMap[2].push_back(i);  // lion
 		DisallowedZoneMap[58].push_back(i); // maiden
@@ -1198,7 +1198,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 
 	// this below section is for getting out of the RPD basement, here I need to add logic that can allow the crank / keys to be in other places as long as the player can use those items to get the medallions.
 	// square crank
-	for (int i = 1; i < 38; i++)
+	for (uint32_t i = 1; i < 38; i++)
 	{
 		if (i != 23)
 		{
@@ -1251,7 +1251,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	{
 
 		// fuse break room hallway (139), not lab
-		for (int i = 1; i < 38; i++)
+		for (uint32_t i = 1; i < 38; i++)
 		{
 			if (i != 23 && i != 27)
 			{
@@ -1283,7 +1283,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	DisallowedZoneMap[167].push_back(52);
 
 	// also t-bar valve and sewer key as both are needed for RPD sewer back access
-	for (int i = 1; i < 34; ++i)
+	for (uint32_t i = 1; i < 34; ++i)
 	{
 		DisallowedZoneMap[167].push_back(i);
 		DisallowedZoneMap[170].push_back(i);
@@ -1306,7 +1306,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	// film - hiding place, doesn't matter atm
 
 	// do all the lab denials here
-	for (int i = 38; i < 50; ++i)
+	for (uint32_t i = 38; i < 50; ++i)
 	{
 		DisallowedZoneMap[2].push_back(i);  // lion
 		DisallowedZoneMap[58].push_back(i); // maiden
@@ -1390,7 +1390,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 
 	// first we deny rpd + sewers for all
 	// first we deny rpd + sewers for all
-	for (int i = 1; i < 39; i++)
+	for (uint32_t i = 1; i < 39; i++)
 	{
 
 		DisallowedZoneMap[199].push_back(i); // upgrade chip (general staff)
@@ -1444,7 +1444,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 	DisallowedZoneMap[221].push_back(52);
 
 	// joint plug
-	for (int i = 39; i < 49; i++)
+	for (uint32_t i = 39; i < 49; i++)
 	{
 		DisallowedZoneMap[246].push_back(i); // joint plug
 	}
@@ -2849,7 +2849,7 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 			else if (status == std::future_status::ready)
 			{
 
-				std::vector<int> result = e.get();
+				std::vector<uint32_t> result = e.get();
 
 				if (result.empty())
 				{
@@ -2888,7 +2888,7 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 
 	logger->LogMessage("Shuffling Weapons/Ammo/Powders...");
 
-	std::vector<int> weaponsandupgrades;
+	std::vector<uint32_t> weaponsandupgrades;
 
 	weaponsandupgrades.push_back(266); // shotgun
 	weaponsandupgrades.push_back(267); // lightning hawk
@@ -2927,7 +2927,7 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 
 	// all the other stuff
 
-	for (int i = 0; i < 40; ++i)
+	for (uint32_t i = 0; i < 40; ++i)
 	{
 
 		m_AmmoGunpowderList.push_back(292); // handgun ammo
@@ -3130,11 +3130,11 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 	namestoremove.push_back("Quickdraw Army");
 	namestoremove.push_back("M19");
 
-	std::vector<int> swaptargets;
+	std::vector<uint32_t> swaptargets;
 
 	srand(time(0));
 
-	for (int i = 0; i < m_ListLength; ++i)
+	for (uint32_t i = 0; i < m_ListLength; ++i)
 	{
 		// if we find something on the list
 		if (std::find(namestoremove.begin(), namestoremove.end(), ItemNames[finalList[i]]) != namestoremove.end())
@@ -3150,9 +3150,9 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 		if (weaponsandupgrades.empty() == false)
 		{
 
-			int randomweapon = std::rand() % weaponsandupgrades.size();
+			uint32_t randomweapon = std::rand() % weaponsandupgrades.size();
 
-			int randomlocation = std::rand() % swaptargets.size();
+			uint32_t randomlocation = std::rand() % swaptargets.size();
 
 			finalList[swaptargets[randomlocation]] = weaponsandupgrades[randomweapon];
 
@@ -3162,9 +3162,9 @@ void SeedGenerator::MixWeapons(Character character, Scenario scenario, Difficult
 		else if (m_AmmoGunpowderList.empty() == false)
 		{
 
-			int randomitem = std::rand() % m_AmmoGunpowderList.size();
+			uint32_t randomitem = std::rand() % m_AmmoGunpowderList.size();
 
-			int randomlocation = std::rand() % swaptargets.size();
+			uint32_t randomlocation = std::rand() % swaptargets.size();
 
 			finalList[swaptargets[randomlocation]] = m_AmmoGunpowderList[randomitem];
 
@@ -3185,8 +3185,9 @@ std::unique_ptr<char[]> SeedGenerator::FormatCharArray(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	std::unique_ptr<char[]> returnValue = std::unique_ptr<char[]>(new char[vsprintf(nullptr, format, args) + sizeof(char)]);
-	vsprintf(returnValue.get(), format, args);
+	int size = vsnprintf(nullptr, 0, format, args) + sizeof(char);
+	std::unique_ptr<char[]> returnValue = std::unique_ptr<char[]>(new char[size]);
+	vsnprintf(returnValue.get(), size, format, args);
 	va_end(args);
 	return returnValue;
 }
@@ -3195,8 +3196,9 @@ std::unique_ptr<std::string> SeedGenerator::FormatString(const char *format, ...
 {
 	va_list args;
 	va_start(args, format);
-	std::unique_ptr<std::string> returnValue = std::unique_ptr<std::string>(new std::string(vsprintf(nullptr, format, args) + sizeof(char), '\0'));
-	vsprintf(returnValue.get()->data(), format, args);
+	int size = vsnprintf(nullptr, 0, format, args) + sizeof(char);
+	std::unique_ptr<std::string> returnValue = std::unique_ptr<std::string>(new std::string(size, '\0'));
+	vsnprintf(returnValue.get()->data(), size, format, args);
 	va_end(args);
 	return returnValue;
 }
@@ -3207,7 +3209,12 @@ FILE *SeedGenerator::OpenFile(const char *filename, const char *mode)
 	errno_t err;
 
 	if (!(err = fopen_s(&file, filename, mode)))
-		throw new std::runtime_error(FormatCharArray("Unable to open file %s with mode %s: %d", filename, mode, err).get());
+	{
+		auto msg = FormatCharArray("Unable to open file %s with mode %s: %d", filename, mode, err).get();
+		logger->LogMessage(msg);
+		// throw new std::runtime_error(msg);
+		return nullptr;
+	}
 
 	return file;
 }
@@ -3217,14 +3224,9 @@ FILE *SeedGenerator::OpenFile(const char *filename, const char *mode)
 // 	fprintf(file, "\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
 // }
 
-std::unique_ptr<std::string> SeedGenerator::CheatSheetItemToString(const int itemId)
+std::unique_ptr<std::string> SeedGenerator::CheatSheetItemToString(const uint32_t itemId)
 {
 	return FormatString("\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
-}
-
-std::vector<int> SeedGenerator::GetSeed(void)
-{
-	return finalList;
 }
 
 std::vector<std::string> SeedGenerator::GetCheatSheet(void)
@@ -3243,7 +3245,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 		finalCheatSheet.push_back("Mixed Weapons / Ammo / Gunpowder Enabled, Items removed are at the bottom of the Cheat Sheet\n");
 	}
 
-	for (int i = 0; i < m_ListLength; ++i)
+	for (uint32_t i = 0; i < m_ListLength; ++i)
 	{
 		if (i == 0)
 		{
@@ -3846,11 +3848,11 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 {
 	// ItemList
 	{
-		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", character, scenario, difficulty);
+		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", magic_enum::enum_name(character), magic_enum::enum_name(scenario), magic_enum::enum_name(difficulty));
 
 		logger->LogMessage("Writing to %s . . .", itemListFileName.get());
 		FILE *itemListFile = OpenFile(itemListFileName.get(), "w");
-		for (int i = 0; i < m_ListLength; ++i)
+		for (size_t i = 0; i < finalList.size(); ++i)
 			fprintf(itemListFile, "%d\n", finalList[i]);
 		fflush(itemListFile);
 		fclose(itemListFile);
@@ -3859,7 +3861,7 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 
 	// CheatSheet
 	{
-		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", character, scenario, difficulty);
+		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", magic_enum::enum_name(character), magic_enum::enum_name(scenario), magic_enum::enum_name(difficulty));
 
 		logger->LogMessage("Writing to %s . . .", cheatSheetFileName.get());
 		FILE *cheatSheetFile = OpenFile(cheatSheetFileName.get(), "w");
@@ -3871,4 +3873,9 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 	}
 
 	logger->LogMessage("done!\n");
+}
+
+std::vector<uint32_t> SeedGenerator::GetSeed(void)
+{
+	return finalList;
 }

@@ -12,11 +12,11 @@
 class SeedShuffler
 {
 private:
-	int m_ListLength;
+	uint32_t m_ListLength;
 	bool m_IsItemRandoValid = false;
-	std::vector<int> m_FinalList;
-	std::vector<int> m_ForbiddenDependencies;
-	std::map<int, int> m_DebugInfo;
+	std::vector<uint32_t> m_FinalList;
+	std::vector<uint32_t> m_ForbiddenDependencies;
+	std::map<uint32_t, uint32_t> m_DebugInfo;
 	std::mt19937 m_Twister;
 	Character character;
 	Scenario scenario;
@@ -24,15 +24,15 @@ private:
 
 	bool m_HasFoundSeed;
 	std::vector<std::string> ItemNames;
-	std::map<int, std::vector<int>> DisallowedZoneMap;
-	std::vector<int> ZoneIDByItemID;
-	std::map<int, std::map<int, std::vector<int>>> ZoneRequiredItems;
+	std::map<uint32_t, std::vector<uint32_t>> DisallowedZoneMap;
+	std::vector<uint32_t> ZoneIDByItemID;
+	std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> ZoneRequiredItems;
 
 	void
 	CheckItemValidity(void);
 	void ShuffleItems(void);
-	bool CheckDependencies(int itemID);
-	bool CheckOptionalDependency(std::vector<int> OptionalItems);
+	bool CheckDependencies(uint32_t itemID);
+	bool CheckOptionalDependency(std::vector<uint32_t> OptionalItems);
 	bool CheckSpadeKeyInArea(void);
 
 protected:
@@ -44,11 +44,11 @@ public:
 	    int listLength,
 	    bool &m_HasFoundSeed,
 	    std::vector<std::string> &ItemNames,
-	    std::map<int, std::vector<int>> &DisallowedZoneMap,
-	    std::vector<int> &ZoneIDByItemID,
-	    std::map<int, std::map<int, std::vector<int>>> &ZoneRequiredItems);
+	    std::map<uint32_t, std::vector<uint32_t>> &DisallowedZoneMap,
+	    std::vector<uint32_t> &ZoneIDByItemID,
+	    std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> &ZoneRequiredItems);
 	~SeedShuffler(void);
-	std::vector<int> AsyncShuffle(int threadCount);
+	std::vector<uint32_t> AsyncShuffle(int threadCount);
 };
 
 #endif

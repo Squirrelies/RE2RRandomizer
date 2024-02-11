@@ -45,34 +45,39 @@ void __stdcall UI::DrawMainUI(bool *open)
 		ImGui::EndMenuBar();
 	}
 
-	static int character = 0;
 	ImGui::SeparatorText("Character");
-	ImGui::RadioButton("Leon", &character, 0);
+	ImGui::RadioButton("Leon", character, 0);
 	ImGui::SameLine();
-	ImGui::RadioButton("Claire", &character, 1);
+	ImGui::RadioButton("Claire", character, 1);
 	ImGui::Spacing();
 
-	static int scenario = 0;
 	ImGui::SeparatorText("Scenario");
-	ImGui::RadioButton("A", &scenario, 0);
+	ImGui::RadioButton("A", scenario, 0);
 	ImGui::SameLine();
-	ImGui::RadioButton("B", &scenario, 1);
+	ImGui::RadioButton("B", scenario, 1);
 	ImGui::Spacing();
 
-	static int difficulty = 0;
 	ImGui::SeparatorText("Difficulty");
-	ImGui::RadioButton("Assisted", &difficulty, 0);
+	ImGui::RadioButton("Assisted", difficulty, 0);
 	ImGui::SameLine();
-	ImGui::RadioButton("Normal", &difficulty, 1);
+	ImGui::RadioButton("Normal", difficulty, 1);
 	ImGui::SameLine();
-	ImGui::RadioButton("Hardcore", &difficulty, 2);
+	ImGui::RadioButton("Hardcore", difficulty, 2);
 	ImGui::Spacing();
 
 	ImGui::Spacing();
 	ImGui::Spacing();
 
 	if (ImGui::Button("Generate Seed"))
+	{
 		logger->LogMessage("Generate Seed clicked!\n");
+
+		SeedGenerator seedGenerator(logger);
+		seedGenerator.GenerateSeed((Character)*character, (Scenario)*scenario, (Difficulty)*difficulty, true);
+		if (randomizer != nullptr)
+			delete randomizer;
+		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (Difficulty *)difficulty, (Scenario *)scenario, (Character *)character);
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Enable Randomizer"))
 		logger->LogMessage("Enable Randomizer clicked!\n");
@@ -187,4 +192,9 @@ void __stdcall UI::DrawHelpAboutRE2RRUI(bool *open)
 	}
 
 	ImGui::End();
+}
+
+Randomizer *UI::GetRandomizer(void)
+{
+	return randomizer;
 }

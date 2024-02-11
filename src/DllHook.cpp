@@ -5,7 +5,6 @@ HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
 ImmediateLogger *logger;
 UI *ui;
-Randomizer *randomizer;
 SeedGenerator *seedGenerator;
 bool allocedConsole = true;
 bool attachedConsole = true;
@@ -85,11 +84,6 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	logger->LogMessage("\t(F7): Toggle UI)\n");
 	logger->LogMessage("\t(F8): Exit)\n");
 
-	difficultyTest = new Difficulty(Difficulty::Standard);
-	scenarioTest = new Scenario(Scenario::B);
-	characterTest = new Character(Character::Claire);
-	randomizer->ResetSeed(nullptr, difficultyTest, scenarioTest, characterTest);
-
 	return TRUE;
 }
 
@@ -118,7 +112,6 @@ bool Startup()
 	    !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
 	    (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
 	    (ui = new UI(logger)) != nullptr &&
-	    (randomizer = new Randomizer(logger)) != nullptr &&
 	    (seedGenerator = new SeedGenerator(logger)) != nullptr &&
 	    MH_Initialize() == MH_OK;
 }
@@ -145,11 +138,6 @@ void Shutdown()
 	}
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
-	if (randomizer != nullptr)
-	{
-		delete randomizer;
-		randomizer = nullptr;
-	}
 	if (seedGenerator != nullptr)
 	{
 		delete seedGenerator;
@@ -187,6 +175,10 @@ void Shutdown()
 // param4 (R9) + 0x30 = app.ropeway.gimmick.action.SetItem.SetItemSaveData.ItemPositionGuid (GUID *)
 __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
 {
+	Randomizer *randomizer = ui->GetRandomizer();
+	if (randomizer == nullptr)
+		return itemPickupFunc(param1, param2, param3, param4);
+
 	// logger->LogMessage("[RE2R-R] HookItemPickup(%p, %p, %p, %p) called.\n", param1, param2, param3, param4);
 
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70);
@@ -198,6 +190,9 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 
 // __stdcall void HookItemPutDownKeep(uintptr_t param1, uintptr_t param2, uintptr_t param3)
 // {
+// 	Randomizer *randomizer = ui->GetRandomizer();
+// 	if (randomizer == nullptr)
+// 		itemPutDownKeepFunc(param1, param2, param3);
 // 	uint32_t *itemId = (uint32_t *)(param2 + 0x14); // RDI + 0x14 (uniqueID)
 
 // 	randomizer->ItemPutdown(itemId);
