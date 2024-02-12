@@ -62,6 +62,15 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	uint32_t BulletId;    // 0x1C-0x1F
 	uint32_t Count;       // 0x20-0x23
 
+	// app_ropeway_gamemastering_InventoryManager_PrimitiveItem(uint32_t ItemId, uint32_t WeaponId, uint32_t WeaponParts, uint32_t BulletId, uint32_t Count)
+	// {
+	// 	this->ItemId = ItemId;
+	// 	this->WeaponId = WeaponId;
+	// 	this->WeaponParts = WeaponParts;
+	// 	this->BulletId = BulletId;
+	// 	this->Count = Count;
+	// }
+
 	template <typename... TInt>
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem(TInt &&...args)
 	{

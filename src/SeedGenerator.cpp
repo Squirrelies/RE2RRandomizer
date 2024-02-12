@@ -2806,77 +2806,84 @@ void SeedGenerator::GenerateSeed(Character character, Scenario scenario, Difficu
 		ItemNames.push_back("UNUSED");
 	}
 
-	m_ListLength = ItemNames.size();
-
-	unsigned int n = std::thread::hardware_concurrency();
-
-	logger->LogMessage("Generating seed using %d threads, application may be unresponsive while generating seed...", n);
-
-	// n = 1; //I use this for debugging
-
-	if (n == 0)
+	try
 	{
-		n = 1;
-	}
+		m_ListLength = ItemNames.size();
 
-	std::vector<SeedShuffler *> shufflers;
-	shufflers.reserve(n);
-	for (unsigned int i = 0; i < n; ++i)
-	{
-		SeedShuffler *newInstance = new SeedShuffler(character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
-		shufflers.push_back(newInstance);
-		m_Futures.push_back(std::async(&SeedShuffler::AsyncShuffle, newInstance, i));
-	}
+		unsigned int n = std::thread::hardware_concurrency();
 
-	bool alldone = false;
+		logger->LogMessage("Generating seed using %d threads, application may be unresponsive while generating seed...", n);
 
-	while (alldone == false)
-	{
+		n = 1; // I use this for debugging
 
-		for (auto &e : m_Futures)
+		if (n == 0)
+		{
+			n = 1;
+		}
+
+		std::vector<SeedShuffler *> shufflers;
+		shufflers.reserve(n);
+		for (unsigned int i = 0; i < n; ++i)
+		{
+			SeedShuffler *newInstance = new SeedShuffler(logger, character, scenario, difficulty, m_ListLength, m_HasFoundSeed, ItemNames, DisallowedZoneMap, ZoneIDByItemID, ZoneRequiredItems);
+			shufflers.push_back(newInstance);
+			m_Futures.push_back(std::async(&SeedShuffler::AsyncShuffle, newInstance, i));
+		}
+
+		bool alldone = false;
+
+		while (alldone == false)
 		{
 
-			std::future_status status;
-
-			status = e.wait_for(std::chrono::milliseconds(250));
-
-			// ProcessMessage();
-
-			if (status == std::future_status::timeout)
-			{
-				logger->LogMessage(" .");
-			}
-			else if (status == std::future_status::ready)
+			for (auto &e : m_Futures)
 			{
 
-				std::vector<uint32_t> result = e.get();
+				std::future_status status;
 
-				if (result.empty())
+				status = e.wait_for(std::chrono::milliseconds(250));
+
+				// ProcessMessage();
+
+				if (status == std::future_status::timeout)
 				{
-					// logger->LogMessage("Thread closed!\n");
+					logger->LogMessage(" .");
 				}
-				else
+				else if (status == std::future_status::ready)
 				{
-					logger->LogMessage("Seed generated!\n");
-					finalList = result;
-					CreateCheatSheetVector(character, scenario, difficulty, mixWeapons);
-					alldone = true;
 
-					if (mixWeapons)
+					std::vector<uint32_t> result = e.get();
+
+					if (result.empty())
 					{
-						MixWeapons(character, scenario, difficulty);
+						// logger->LogMessage("Thread closed!\n");
 					}
+					else
+					{
+						logger->LogMessage("Seed generated!\n");
+						finalList = result;
+						CreateCheatSheetVector(character, scenario, difficulty, mixWeapons);
+						alldone = true;
 
-					WriteDataToFile(character, scenario, difficulty, mixWeapons);
-					break;
+						if (mixWeapons)
+						{
+							MixWeapons(character, scenario, difficulty);
+						}
+
+						WriteDataToFile(character, scenario, difficulty, mixWeapons);
+						break;
+					}
 				}
 			}
 		}
-	}
-	for (unsigned int i = 0; i < n; ++i)
-		delete shufflers[i];
-	shufflers.clear();
 
+		for (unsigned int i = 0; i < n; ++i)
+			delete shufflers[i];
+		shufflers.clear();
+	}
+	catch (std::exception &ex)
+	{
+		logger->LogMessage("Exception thrown: %s\n", ex.what());
+	}
 	logger->LogMessage("All Finished!\n");
 
 	// logger->LogMessage("done after %d attempts!\n", total);
@@ -3208,9 +3215,9 @@ FILE *SeedGenerator::OpenFile(const char *filename, const char *mode)
 	FILE *file;
 	errno_t err;
 
-	if (!(err = fopen_s(&file, filename, mode)))
+	if ((err = fopen_s(&file, filename, mode)))
 	{
-		auto msg = FormatCharArray("Unable to open file %s with mode %s: %d", filename, mode, err).get();
+		auto msg = FormatCharArray("Unable to open file %s with mode %s: %d\n", filename, mode, err).get();
 		logger->LogMessage(msg);
 		// throw new std::runtime_error(msg);
 		return nullptr;
@@ -3846,11 +3853,13 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Difficulty difficulty, bool UNUSED(mixWeapons))
 {
+	logger->LogMessage("SeedGenerator::WriteDataToFile(%s: %s, %s: %s, %s: %s); called.\n", RE2RR_NAMEOF(character), magic_enum::enum_name(character).data(), RE2RR_NAMEOF(scenario), magic_enum::enum_name(scenario).data(), RE2RR_NAMEOF(difficulty), magic_enum::enum_name(difficulty).data());
+
 	// ItemList
 	{
-		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", magic_enum::enum_name(character), magic_enum::enum_name(scenario), magic_enum::enum_name(difficulty));
+		std::unique_ptr<char[]> itemListFileName = FormatCharArray("ItemList%s%s%s.txt", magic_enum::enum_name(character).data(), magic_enum::enum_name(scenario).data(), magic_enum::enum_name(difficulty).data());
 
-		logger->LogMessage("Writing to %s . . .", itemListFileName.get());
+		logger->LogMessage("Writing to %s . . . ", itemListFileName.get());
 		FILE *itemListFile = OpenFile(itemListFileName.get(), "w");
 		for (size_t i = 0; i < finalList.size(); ++i)
 			fprintf(itemListFile, "%d\n", finalList[i]);
@@ -3861,9 +3870,9 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 
 	// CheatSheet
 	{
-		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", magic_enum::enum_name(character), magic_enum::enum_name(scenario), magic_enum::enum_name(difficulty));
+		std::unique_ptr<char[]> cheatSheetFileName = FormatCharArray("CheatSheet%s%s%s.txt", magic_enum::enum_name(character).data(), magic_enum::enum_name(scenario).data(), magic_enum::enum_name(difficulty).data());
 
-		logger->LogMessage("Writing to %s . . .", cheatSheetFileName.get());
+		logger->LogMessage("Writing to %s . . . ", cheatSheetFileName.get());
 		FILE *cheatSheetFile = OpenFile(cheatSheetFileName.get(), "w");
 		for (size_t i = 0; i < finalCheatSheet.size(); ++i)
 			fprintf(cheatSheetFile, "%s\n", finalCheatSheet[i].c_str());
@@ -3871,8 +3880,6 @@ void SeedGenerator::WriteDataToFile(Character character, Scenario scenario, Diff
 		fclose(cheatSheetFile);
 		logger->LogMessage("done!\n");
 	}
-
-	logger->LogMessage("done!\n");
 }
 
 std::vector<uint32_t> SeedGenerator::GetSeed(void)

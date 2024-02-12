@@ -60,7 +60,7 @@ void __stdcall UI::DrawMainUI(bool *open)
 	ImGui::SeparatorText("Difficulty");
 	ImGui::RadioButton("Assisted", difficulty, 0);
 	ImGui::SameLine();
-	ImGui::RadioButton("Normal", difficulty, 1);
+	ImGui::RadioButton("Standard", difficulty, 1);
 	ImGui::SameLine();
 	ImGui::RadioButton("Hardcore", difficulty, 2);
 	ImGui::Spacing();

@@ -1,6 +1,7 @@
 #ifndef RE2RR_SEEDSHUFFLER_H
 #define RE2RR_SEEDSHUFFLER_H
 
+#include "Logging.h"
 #include "Types.h"
 #include <algorithm>
 #include <ctime>
@@ -12,6 +13,7 @@
 class SeedShuffler
 {
 private:
+	ImmediateLogger *logger;
 	uint32_t m_ListLength;
 	bool m_IsItemRandoValid = false;
 	std::vector<uint32_t> m_FinalList;
@@ -38,6 +40,7 @@ private:
 protected:
 public:
 	SeedShuffler(
+	    ImmediateLogger *logger,
 	    Character character,
 	    Scenario scenario,
 	    Difficulty difficulty,

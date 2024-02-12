@@ -1,6 +1,7 @@
 #include "SeedShuffler.h"
 
 SeedShuffler::SeedShuffler(
+    ImmediateLogger *logger,
     Character character,
     Scenario scenario,
     Difficulty difficulty,
@@ -11,6 +12,7 @@ SeedShuffler::SeedShuffler(
     std::vector<uint32_t> &ZoneIDByItemID,
     std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> &ZoneRequiredItems)
 {
+	this->logger = logger;
 	this->character = character;
 	this->scenario = scenario;
 	this->difficulty = difficulty;
@@ -27,11 +29,11 @@ SeedShuffler::~SeedShuffler()
 	m_FinalList.clear();
 	m_ForbiddenDependencies.clear();
 	m_DebugInfo.clear();
+	this->logger = nullptr;
 }
 
 void SeedShuffler::ShuffleItems()
 {
-
 	std::vector<uint32_t> UniqueIDList;
 
 	m_FinalList.clear();
@@ -347,42 +349,50 @@ void SeedShuffler::ShuffleItems()
 
 std::vector<uint32_t> SeedShuffler::AsyncShuffle(int threadCount)
 {
-
-	// AddToConsoleLog("FECK");
-
-	// std::mt19937 mt_rand(time(0) + threadCount);
-	srand(time(0) + threadCount);
-
-	int counter = 0;
-
-	// vanilla shuffle
-	while (m_IsItemRandoValid == false)
+	try
 	{
+		// AddToConsoleLog("FECK");
 
-		if (m_HasFoundSeed == true) // a thread has already found the seed, abort
+		// std::mt19937 mt_rand(time(0) + threadCount);
+		srand(time(0) + threadCount);
+
+		int counter = 0;
+
+		// vanilla shuffle
+		while (m_IsItemRandoValid == false)
 		{
-			m_FinalList.clear();
-			return m_FinalList;
+
+			if (m_HasFoundSeed == true) // a thread has already found the seed, abort
+			{
+				m_FinalList.clear();
+				return m_FinalList;
+			}
+
+			if (counter > 1000)
+			{
+				counter = 0;
+				/*
+				m_FinalList.clear();
+				return m_FinalList;
+				*/
+				// AddToConsoleLog(" .");
+			}
+
+			ShuffleItems();
+
+			CheckItemValidity();
+
+			counter++;
 		}
 
-		if (counter > 1000)
-		{
-			counter = 0;
-			/*
-			m_FinalList.clear();
-			return m_FinalList;
-			*/
-			// AddToConsoleLog(" .");
-		}
-
-		ShuffleItems();
-
-		CheckItemValidity();
-
-		counter++;
+		m_HasFoundSeed = true;
+	}
+	catch (std::exception &ex)
+	{
+		logger->LogMessage("Exception thrown: %s\n", ex.what());
+		m_FinalList.clear();
 	}
 
-	m_HasFoundSeed = true;
 	return m_FinalList;
 }
 

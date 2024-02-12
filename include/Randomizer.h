@@ -3,6 +3,7 @@
 
 #include "Logging.h"
 #include "Types.h"
+#include <magic_enum.hpp>
 #include <stdexcept>
 #include <stdint.h>
 #include <vector>
@@ -30,12 +31,12 @@ public:
 		this->scenario = scenario;
 		this->character = character;
 
-		logger->LogMessage("[RE2R-R] Randomizer::ctor(%p, %p, %d, %d, %d) called.\n",
-		                   (void *)logger,
-		                   (void *)&seed,
-		                   *difficulty,
-		                   *scenario,
-		                   *character);
+		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s, %s: %s) called.\n",
+		                   RE2RR_NAMEOF(logger), (void *)logger,
+		                   RE2RR_NAMEOF(seed), (void *)&seed,
+		                   RE2RR_NAMEOF(difficulty), magic_enum::enum_name(*difficulty).data(),
+		                   RE2RR_NAMEOF(scenario), magic_enum::enum_name(*scenario).data(),
+		                   RE2RR_NAMEOF(character), magic_enum::enum_name(*character).data());
 	}
 	~Randomizer()
 	{
