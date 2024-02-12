@@ -3233,7 +3233,7 @@ FILE *SeedGenerator::OpenFile(const char *filename, const char *mode)
 
 std::unique_ptr<std::string> SeedGenerator::CheatSheetItemToString(const uint32_t itemId)
 {
-	return FormatString("\t%s is replaced with %s\n", ItemNames[itemId], ItemNames[finalList[itemId]]);
+	return FormatString("\t%s is replaced with %s\n", ItemNames[itemId].c_str(), ItemNames[finalList[itemId]].c_str());
 }
 
 std::vector<std::string> SeedGenerator::GetCheatSheet(void)
@@ -3261,18 +3261,18 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			if (scenario == B)
 			{
 				finalCheatSheet.push_back("B SCENARIO ENTRANCE\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(257).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(258).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(71).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(257).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(258).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(71).get()->c_str());
 
 				finalCheatSheet.push_back("GUARD ROOM\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(4).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(259).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(260).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(43).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(4).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(259).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(260).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(43).get()->c_str());
 
 				finalCheatSheet.push_back("MAIN HALL\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(57).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(57).get()->c_str());
 			}
 			else
 			{
@@ -3417,7 +3417,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 			if (difficulty == Hardcore)
 			{
-				finalCheatSheet.push_back(*CheatSheetItemToString(253).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(253).get()->c_str());
 			}
 		}
 		else if (i == 93)
@@ -3427,7 +3427,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 		else if (i == 95)
 		{
 			finalCheatSheet.push_back("STARS OFFICE\n");
-			finalCheatSheet.push_back(*CheatSheetItemToString(250).get()); // shotgun shells mistake override
+			finalCheatSheet.push_back(CheatSheetItemToString(250).get()->c_str()); // shotgun shells mistake override
 		}
 		else if (i == 101)
 		{
@@ -3498,14 +3498,14 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 				if (scenario == B)
 				{
 					finalCheatSheet.push_back("GENERATOR ROOM\n");
-					finalCheatSheet.push_back(*CheatSheetItemToString(146).get());
-					finalCheatSheet.push_back(*CheatSheetItemToString(147).get());
+					finalCheatSheet.push_back(CheatSheetItemToString(146).get()->c_str());
+					finalCheatSheet.push_back(CheatSheetItemToString(147).get()->c_str());
 				}
 
 				finalCheatSheet.push_back("ELEVATOR CONTROLS ROOM\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(87).get()); // claire item sequence break
-				finalCheatSheet.push_back(*CheatSheetItemToString(88).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(118).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(87).get()->c_str()); // claire item sequence break
+				finalCheatSheet.push_back(CheatSheetItemToString(88).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(118).get()->c_str());
 			}
 		}
 		else if (i == 134)
@@ -3513,15 +3513,15 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			if (character == Claire && scenario == B)
 			{
 				finalCheatSheet.push_back("OUTSIDE BREAK ROOM\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(261).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(144).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(261).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(144).get()->c_str());
 
 				finalCheatSheet.push_back("BREAK ROOM\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(262).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(263).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(264).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(145).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(265).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(262).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(263).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(264).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(145).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(265).get()->c_str());
 			}
 			if (character == Leon)
 			{
@@ -3530,10 +3530,10 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("PATH TO CHIEF'S OFFICE\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(131).get()); // claire item sequence break
+				finalCheatSheet.push_back(CheatSheetItemToString(131).get()->c_str()); // claire item sequence break
 
 				finalCheatSheet.push_back("CHIEF'S OFFICE\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(137).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(137).get()->c_str());
 			}
 		}
 		else if (i == 135)
@@ -3545,8 +3545,8 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("HEART ROOM EAST STORAGE\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(135).get()); // claire item sequence break
-				finalCheatSheet.push_back(*CheatSheetItemToString(132).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(135).get()->c_str()); // claire item sequence break
+				finalCheatSheet.push_back(CheatSheetItemToString(132).get()->c_str());
 			}
 		}
 		else if (i == 136)
@@ -3558,9 +3558,9 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("PRIVATE COLLECTION ROOM\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(120).get()); // claire item sequence break
-				finalCheatSheet.push_back(*CheatSheetItemToString(140).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(139).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(120).get()->c_str()); // claire item sequence break
+				finalCheatSheet.push_back(CheatSheetItemToString(140).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(139).get()->c_str());
 			}
 		}
 		else if (i == 141)
@@ -3576,8 +3576,8 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("BASKETBALL COURT\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(133).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(138).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(133).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(138).get()->c_str());
 			}
 		}
 		else if (i == 145)
@@ -3589,28 +3589,28 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("OUTSIDE BUS\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(136).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(136).get()->c_str());
 
 				finalCheatSheet.push_back("BUS\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(142).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(142).get()->c_str());
 
 				if (difficulty == Hardcore)
 				{
 					finalCheatSheet.push_back("ORPHANAGE\n");
-					finalCheatSheet.push_back(*CheatSheetItemToString(254).get());
+					finalCheatSheet.push_back(CheatSheetItemToString(254).get()->c_str());
 				}
 
 				finalCheatSheet.push_back("ORPHANAGE UPSTAIRS\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(121).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(245).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(121).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(245).get()->c_str());
 
 				finalCheatSheet.push_back("OFFICE AREA (AFTER SHERRY / MR X CHASE)\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(134).get());
-				finalCheatSheet.push_back(*CheatSheetItemToString(143).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(134).get()->c_str());
+				finalCheatSheet.push_back(CheatSheetItemToString(143).get()->c_str());
 
 				if (difficulty == Hardcore)
 				{
-					finalCheatSheet.push_back(*CheatSheetItemToString(255).get());
+					finalCheatSheet.push_back(CheatSheetItemToString(255).get()->c_str());
 				}
 			}
 		}
@@ -3693,7 +3693,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			if (difficulty == Hardcore)
 			{
 				finalCheatSheet.push_back("RECEPTION\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(251).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(251).get()->c_str());
 			}
 
 			finalCheatSheet.push_back("SECURITY ROOM\n");
@@ -3775,7 +3775,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 			if (difficulty == Hardcore)
 			{
-				finalCheatSheet.push_back(*CheatSheetItemToString(252).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(252).get()->c_str());
 			}
 
 			if (character == Leon)
@@ -3785,7 +3785,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 			else
 			{
 				finalCheatSheet.push_back("TURNTABLE\n");
-				finalCheatSheet.push_back(*CheatSheetItemToString(119).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(119).get()->c_str());
 			}
 		}
 		else if (i == 247)
@@ -3815,7 +3815,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 			if (condition)
 			{
-				finalCheatSheet.push_back(*CheatSheetItemToString(i).get());
+				finalCheatSheet.push_back(CheatSheetItemToString(i).get()->c_str());
 			}
 		}
 		else
@@ -3833,7 +3833,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 				if (condition)
 				{
-					finalCheatSheet.push_back(*CheatSheetItemToString(i).get());
+					finalCheatSheet.push_back(CheatSheetItemToString(i).get()->c_str());
 				}
 			}
 		}
@@ -3845,7 +3845,7 @@ void SeedGenerator::CreateCheatSheetVector(Character character, Scenario scenari
 
 		while (m_AmmoGunpowderList.empty() == false)
 		{
-			finalCheatSheet.push_back(*FormatString("%s\n", ItemNames[m_AmmoGunpowderList.back()]).get());
+			finalCheatSheet.push_back(FormatString("%s\n", ItemNames[m_AmmoGunpowderList.back()]).get()->c_str());
 			m_AmmoGunpowderList.pop_back();
 		}
 	}
