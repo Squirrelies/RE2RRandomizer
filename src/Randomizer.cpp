@@ -8,7 +8,7 @@ void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_Primitive
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n", currentItem->ToString().c_str(), newItem.ToString().c_str());
+	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n\t%s -> %s\n", currentItem->ToString().c_str(), newItem.ToString().c_str(), CREnums::EnumToString(currentItem->ItemId).c_str(), CREnums::EnumToString(newItem.ItemId).c_str());
 	*currentItem = newItem;
 }
 
@@ -17,7 +17,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 {
 	if (type == 0 || type == 3 || type == 5 || type == 7 || type == 8 || type == 12 || type == 16 || type == 19 || type == 26 || type == 27 || type == 39 || type == 46 || type == 51 || type == 56 || type == 59 || type == 69 || type == 79 || type == 83 || type == 92 || type == 107 || type == 111 || type == 113 || type == 118 || type == 137 || type == 143 || type == 146 || type == 147 || type == 148 || type == 153 || type == 162 || type == 182 || type == 188 || type == 193 || type == 220 || type == 229 || type == 231 || type == 237 || type == 238 || type == 243 || type == 245 || type == 256 || type == 260 || type == 264)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			if (type == 16)
 			{
@@ -28,18 +28,18 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 				return {0x20, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 			}
 		}
-		else if (*scenario == B)
+		else if (*scenario == Scenario::B)
 		{
 			if (type == 16 || type == 0)
 			{
 				return {0x1A, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
 			}
 		}
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
-			if (*scenario == A)
+			if (*scenario == Scenario::A)
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x0F, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 				}
@@ -50,7 +50,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 			}
 			else
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x1A, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 				}
@@ -76,7 +76,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 			}
 			else if (type == 143 || type == 137 || type == 245)
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x11, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00};
 				}
@@ -87,9 +87,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 			}
 			else
 			{
-				if (*scenario == A)
+				if (*scenario == Scenario::A)
 				{
-					if (*difficulty == Hardcore)
+					if (*difficulty == Difficulty::Hardcore)
 					{
 						return {0x0F, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 					}
@@ -100,7 +100,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 				}
 				else
 				{
-					if (*difficulty == Hardcore)
+					if (*difficulty == Difficulty::Hardcore)
 					{
 						return {0x1A, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 					}
@@ -125,9 +125,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 4 || type == 20 || type == 60 || type == 135 || type == 155 || type == 190 || type == 196 || type == 217 || type == 240 || type == 261)
 	{
-		if (*scenario == B && type == 4)
+		if (*scenario == Scenario::B && type == 4)
 		{
-			if (*character == Leon)
+			if (*character == Character::Leon)
 			{
 				return {0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x07, 0x00};
 			}
@@ -144,14 +144,14 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 6 || type == 9 || type == 31 || type == 37 || type == 44 || type == 65 || type == 72 || type == 85 || type == 86 || type == 109 || type == 112 || type == 115 || type == 131 || type == 141 || type == 171 || type == 173 || type == 185 || type == 201 || type == 214 || type == 242)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			if (type == 37)
 			{
 				return {0x20, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 			}
 		}
-		if (*scenario == B && type == 131 && *character == Leon)
+		if (*scenario == Scenario::B && type == 131 && *character == Character::Leon)
 		{
 			return {0x80, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -168,13 +168,13 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 11 || type == 15 || type == 21 || type == 35 || type == 40 || type == 54 || type == 62 || type == 87 || type == 90 || type == 93 || type == 102 || type == 103 || type == 114 || type == 133 || type == 152 || type == 202 || type == 218)
 	{
-		if (*scenario == B && type == 62)
+		if (*scenario == Scenario::B && type == 62)
 		{
 			return {0x28, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
 		else
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				if (type == 35)
 				{
@@ -185,7 +185,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 					return {0x20, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 				}
 			}
-			if (*character == Leon)
+			if (*character == Character::Leon)
 			{
 				return {0x24, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 			}
@@ -209,7 +209,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 13 || type == 22 || type == 57 || type == 116 || type == 180 || type == 200)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			if (type == 116)
 			{
@@ -220,7 +220,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 14)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x30, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -242,9 +242,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 23 || type == 25 || type == 48 || type == 49 || type == 78 || type == 94 || type == 104 || type == 128 || type == 134 || type == 149 || type == 160 || type == 183 || type == 191 || type == 197 || type == 212 || type == 250)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x10, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 			}
@@ -257,7 +257,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 		{
 			if (type == 149 || type == 183 || type == 134)
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x1B, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 				}
@@ -268,7 +268,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 			}
 			else
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x17, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 				}
@@ -282,7 +282,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 24)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
 		}
@@ -304,9 +304,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 34 || type == 105 || type == 108 || type == 142 || type == 145 || type == 172 || type == 192 || type == 210 || type == 223 || type == 235 || type == 259)
 	{
-		if (*scenario == B && *character == Claire && type == 145)
+		if (*scenario == Scenario::B && *character == Character::Claire && type == 145)
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x11, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00};
 			}
@@ -333,7 +333,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 42 || type == 89 || type == 99 || type == 123 || type == 140 || type == 157 || type == 158 || type == 203 || type == 216 || type == 219 || type == 225 || type == 227 || type == 263)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x26, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -345,7 +345,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 43)
 	{
-		if (*scenario == A)
+		if (*scenario == Scenario::A)
 		{
 			return {0xF0, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -357,7 +357,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 45)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x31, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -369,7 +369,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 50 || type == 101)
 	{
-		if (*scenario == B && type == 50)
+		if (*scenario == Scenario::B && type == 50)
 		{
 			return {0x5B, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -381,9 +381,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 52 || type == 138 || type == 154 || type == 161 || type == 174 || type == 187 || type == 232)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x12, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 			}
@@ -396,7 +396,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 		{
 			if (type == 154 || type == 232)
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x1B, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 				}
@@ -407,7 +407,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 			}
 			else
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x11, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00};
 				}
@@ -486,7 +486,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 88)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0xA0, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -498,7 +498,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 91)
 	{
-		if (*scenario == A)
+		if (*scenario == Scenario::A)
 		{
 			return {0x5B, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -515,7 +515,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 100)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x03, 0x00};
 		}
@@ -527,7 +527,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 106)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x3E, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -539,7 +539,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 117)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x32, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -551,7 +551,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 119)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x50, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -588,7 +588,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 139)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0xF1, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -600,9 +600,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 144)
 	{
-		if (*scenario == B && *character == Claire)
+		if (*scenario == Scenario::B && *character == Character::Claire)
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x17, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 			}
@@ -649,7 +649,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 169)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x37, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -676,7 +676,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 179)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x2B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x90, 0x01};
 		}
@@ -693,7 +693,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 194 || type == 215 || type == 234)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x19, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC8, 0x00};
 		}
@@ -701,7 +701,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 		{
 			if (type == 215)
 			{
-				if (*difficulty == Hardcore)
+				if (*difficulty == Difficulty::Hardcore)
 				{
 					return {0x17, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 				}
@@ -719,7 +719,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 198)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x41, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -766,7 +766,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 247)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x19, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x01};
 		}
@@ -778,7 +778,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 248)
 	{
-		if (*character == Leon)
+		if (*character == Character::Leon)
 		{
 			return {0x26, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -940,9 +940,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 292)
 	{
-		if (*scenario == A)
+		if (*scenario == Scenario::A)
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x0F, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 			}
@@ -953,7 +953,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 		}
 		else
 		{
-			if (*difficulty == Hardcore)
+			if (*difficulty == Difficulty::Hardcore)
 			{
 				return {0x1A, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 			}
@@ -976,7 +976,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 295)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			return {0x1B, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 		}
@@ -993,7 +993,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 297)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			return {0x12, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00};
 		}
@@ -1010,7 +1010,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 299)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			return {0x11, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00};
 		}
@@ -1037,7 +1037,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 303)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			return {0x17, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -1054,7 +1054,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 305)
 	{
-		if (*difficulty == Hardcore)
+		if (*difficulty == Difficulty::Hardcore)
 		{
 			return {0x10, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 		}
@@ -1333,7 +1333,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 
 	if (uniqueID[0] == 0x15)
 	{
-		if (uniqueID[1] == 0xE7 && *scenario == B)
+		if (uniqueID[1] == 0xE7 && *scenario == Scenario::B)
 		{
 			RandomizeItem(currentItem, GetItemByType(seed[165]));
 			// knight plug, b scenario
@@ -2065,7 +2065,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xE5)
 		{
-			if (*character == Claire)
+			if (*character == Character::Claire)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[262]));
 				// knife, outside break room
@@ -2570,7 +2570,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x35)
 		{
-			if (*character == Claire)
+			if (*character == Character::Claire)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[263]));
 				// blue herb, break room claire b scenario
@@ -3331,7 +3331,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xC3)
 		{
-			if (*character == Claire)
+			if (*character == Character::Claire)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[265]));
 				// acp ammo, break room claire B
@@ -3466,7 +3466,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xC4)
 		{
-			if (*character == Claire)
+			if (*character == Character::Claire)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[266]));
 				// fuse (break room hallway) claire b scenario
@@ -3688,7 +3688,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	if (uniqueID[0] == 0xF3)
 	{
 		// 01 is bishop repickup in sewer, only work in B scenario
-		if (uniqueID[1] == 0x01 && *scenario == B)
+		if (uniqueID[1] == 0x01 && *scenario == Scenario::B)
 		{
 			RandomizeItem(currentItem, GetItemByType(seed[164]));
 			// bishop, B scenario only plz

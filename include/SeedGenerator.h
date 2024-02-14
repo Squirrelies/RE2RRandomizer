@@ -6,7 +6,6 @@
 #include "Types.h"
 #include <algorithm>
 #include <future>
-#include <magic_enum.hpp>
 #include <map>
 #include <string>
 #include <vector>

@@ -58,11 +58,11 @@ void __stdcall UI::DrawMainUI(bool *open)
 	ImGui::Spacing();
 
 	ImGui::SeparatorText("Difficulty");
-	ImGui::RadioButton("Assisted", difficulty, 0);
+	// ImGui::RadioButton("Assisted", difficulty, 0);
+	// ImGui::SameLine();
+	ImGui::RadioButton("Standard", difficulty, 0);
 	ImGui::SameLine();
-	ImGui::RadioButton("Standard", difficulty, 1);
-	ImGui::SameLine();
-	ImGui::RadioButton("Hardcore", difficulty, 2);
+	ImGui::RadioButton("Hardcore", difficulty, 1);
 	ImGui::Spacing();
 
 	ImGui::Spacing();
@@ -78,9 +78,9 @@ void __stdcall UI::DrawMainUI(bool *open)
 			delete randomizer;
 		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (Difficulty *)difficulty, (Scenario *)scenario, (Character *)character);
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Enable Randomizer"))
-		logger->LogMessage("Enable Randomizer clicked!\n");
+	// ImGui::SameLine();
+	// if (ImGui::Button("Enable Randomizer"))
+	// 	logger->LogMessage("Enable Randomizer clicked!\n");
 
 	ImGui::End();
 }

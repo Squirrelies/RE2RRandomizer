@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
 # vcpkg dependencies.
 find_package(minhook CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
-find_package(magic_enum CONFIG REQUIRED)
 
 # Required libraries we'll link for ImGUI.
 find_library(D3D11_LIBRARY d3d11 REQUIRED)
@@ -62,7 +61,7 @@ src/SeedShuffler.cpp
 src/Randomizer.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
-PRIVATE minhook::minhook imgui::imgui magic_enum::magic_enum ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
+PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
 )
 add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all lib${PROJECT_NAME}Hook.dll)
 
