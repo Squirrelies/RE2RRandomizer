@@ -225,11 +225,11 @@
 struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 {
 	// uint8_t _Reserved[0x10]; // 0x00-0x0F
-	ItemType ItemId;      // 0x10-0x13
-	uint32_t WeaponId;    // 0x14-0x17
-	uint32_t WeaponParts; // 0x18-0x1B
-	uint32_t BulletId;    // 0x1C-0x1F
-	uint32_t Count;       // 0x20-0x23
+	RE2RREnums::ItemType ItemId;	// 0x10-0x13
+	uint32_t WeaponId;				// 0x14-0x17
+	uint32_t WeaponParts;			// 0x18-0x1B
+	uint32_t BulletId;				// 0x1C-0x1F
+	uint32_t Count;					// 0x20-0x23
 
 	// app_ropeway_gamemastering_InventoryManager_PrimitiveItem(uint32_t ItemId, uint32_t WeaponId, uint32_t WeaponParts, uint32_t BulletId, uint32_t Count)
 	// {

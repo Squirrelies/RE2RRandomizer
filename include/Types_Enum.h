@@ -6,23 +6,12 @@
 #ifndef RE2RR_TYPES_ENUM_H
 #define RE2RR_TYPES_ENUM_H
 
-namespace CREnums
-{
-	template <typename T>
-	std::string EnumToString(T UNUSED(enumValue))
-	{
-		return {};
-	}
-
-	template <typename R, typename T>
-	R EnumFromValue(T UNUSED(enumValue))
-	{
-		return {};
-	}
-}
+#define METHOD_NAME_STRINGIFIER(pre,name,post) pre ## name ## post
 
 #endif
 
+namespace RE2RREnums
+{
 enum class ENUM_NAME : ENUM_TYPE
 {
 #define ENUM_VALUE(name, value) name = value,
@@ -30,8 +19,9 @@ enum class ENUM_NAME : ENUM_TYPE
 #undef ENUM_VALUE
 };
 
-template <>
-std::string CREnums::EnumToString<ENUM_NAME>(ENUM_NAME enumValue)
+#define ENUM_METHOD_NAME(name) std::string METHOD_NAME_STRINGIFIER(Enum,name,ToString)(METHOD_NAME_STRINGIFIER(,name,) enumValue)
+ENUM_METHOD_NAME(ENUM_NAME)
+#undef ENUM_METHOD_NAME
 {
 	switch (enumValue)
 	{
@@ -45,8 +35,9 @@ std::string CREnums::EnumToString<ENUM_NAME>(ENUM_NAME enumValue)
 	}
 }
 
-template <>
-ENUM_NAME CREnums::EnumFromValue<ENUM_NAME, ENUM_TYPE>(ENUM_TYPE enumValue)
+#define ENUM_METHOD_NAME(name,type) name METHOD_NAME_STRINGIFIER(Enum,name,FromValue)(METHOD_NAME_STRINGIFIER(,type,) enumValue)
+ENUM_METHOD_NAME(ENUM_NAME,ENUM_TYPE)
+#undef ENUM_METHOD_NAME
 {
 	switch (enumValue)
 	{
@@ -58,6 +49,7 @@ ENUM_NAME CREnums::EnumFromValue<ENUM_NAME, ENUM_TYPE>(ENUM_TYPE enumValue)
 		default:
 			return {};
 	}
+}
 }
 
 #endif

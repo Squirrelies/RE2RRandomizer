@@ -2,9 +2,9 @@
 
 SeedShuffler::SeedShuffler(
     ImmediateLogger *logger,
-    Character character,
-    Scenario scenario,
-    Difficulty difficulty,
+    RE2RREnums::Character character,
+    RE2RREnums::Scenario scenario,
+    RE2RREnums::Difficulty difficulty,
     int listLength,
     bool &m_HasFoundSeed,
     std::vector<std::string> &ItemNames,
@@ -40,7 +40,7 @@ void SeedShuffler::ShuffleItems()
 
 	uint32_t rookpos = 5000;
 
-	if (character == Character::Leon)
+	if (character == RE2RREnums::Character::Leon)
 	{
 		rookpos = 148 + (rand() % 4);
 	}
@@ -64,11 +64,11 @@ void SeedShuffler::ShuffleItems()
 
 		bool exceptions;
 
-		if (scenario == Scenario::B)
+		if (scenario == RE2RREnums::Scenario::B)
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part, and dispersal cartridge
 
-			if (character == Character::Leon)
+			if (character == RE2RREnums::Character::Leon)
 			{
 				exceptions = exceptions && (i != 261 && i != 262 && i != 263 && i != 264 && i != 265); // claire b scenario extras
 			}
@@ -83,7 +83,7 @@ void SeedShuffler::ShuffleItems()
 			}
 		}
 
-		if (difficulty != Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+		if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
 		{
 			exceptions = exceptions && (i != 251 && i != 252 && i != 253 && i != 254 && i != 255);
 		}
@@ -94,13 +94,13 @@ void SeedShuffler::ShuffleItems()
 			if (i != tbarpos && i != sewerkeypos && i != chippos && i != rookpos)
 			{
 
-				if ((difficulty == Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != Difficulty::Hardcore)
+				if ((difficulty == RE2RREnums::Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::Hardcore)
 				{
 
-					if (character == Character::Claire)
+					if (character == RE2RREnums::Character::Claire)
 					{
 
-						if (scenario == Scenario::B)
+						if (scenario == RE2RREnums::Scenario::B)
 						{
 
 							UniqueIDList.push_back(i);
@@ -135,11 +135,11 @@ void SeedShuffler::ShuffleItems()
 
 		bool exceptions;
 
-		if (scenario == Scenario::B)
+		if (scenario == RE2RREnums::Scenario::B)
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part + dispersal cartridge
 
-			if (character == Character::Leon)
+			if (character == RE2RREnums::Character::Leon)
 			{
 				exceptions = exceptions && (i != 261 && i != 262 && i != 263 && i != 264 && i != 265); // claire b scenario extras
 			}
@@ -154,7 +154,7 @@ void SeedShuffler::ShuffleItems()
 			}
 		}
 
-		if (difficulty != Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+		if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
 		{
 			exceptions = exceptions && (i != 251 && i != 252 && i != 253 && i != 254 && i != 255);
 		}
@@ -162,17 +162,17 @@ void SeedShuffler::ShuffleItems()
 		if (exceptions)
 		{
 
-			if ((difficulty == Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != Difficulty::Hardcore)
+			if ((difficulty == RE2RREnums::Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::Hardcore)
 			{
 
 				// tbar, chip and sewer key exceptions
 				if (i != 167 && i != 170 && i != 199)
 				{
 
-					if (character == Character::Claire)
+					if (character == RE2RREnums::Character::Claire)
 					{
 						// extra claire exceptions
-						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == Scenario::B)
+						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == RE2RREnums::Scenario::B)
 						{
 
 							if (ItemNames[i] != "UNUSED")
@@ -223,12 +223,12 @@ void SeedShuffler::ShuffleItems()
 	m_FinalList[sewerkeypos] = 170;
 	m_FinalList[chippos] = 199;
 
-	if (character == Character::Leon)
+	if (character == RE2RREnums::Character::Leon)
 	{
 		m_FinalList[rookpos] = 151;
 	}
 
-	if (difficulty != Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+	if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
 	{
 		m_FinalList[251] = 251;
 		m_FinalList[252] = 252;
@@ -237,7 +237,7 @@ void SeedShuffler::ShuffleItems()
 		m_FinalList[255] = 255;
 	}
 
-	if (scenario == Scenario::A)
+	if (scenario == RE2RREnums::Scenario::A)
 	{
 
 		for (uint32_t i = 256; i < 266; ++i)
@@ -245,7 +245,7 @@ void SeedShuffler::ShuffleItems()
 			m_FinalList[i] = i;
 		}
 	}
-	else if (character == Character::Leon)
+	else if (character == RE2RREnums::Character::Leon)
 	{
 		for (uint32_t i = 261; i < 266; ++i)
 		{
@@ -413,7 +413,7 @@ bool SeedShuffler::CheckSpadeKeyInArea()
 	for (uint32_t i = 46; i < 58; ++i)
 	{
 
-		if (scenario == Scenario::B)
+		if (scenario == RE2RREnums::Scenario::B)
 		{
 			if (i == 57) // skip over 57 in B scenario
 			{
@@ -444,7 +444,7 @@ void SeedShuffler::CheckItemValidity()
 
 	// special situations first
 
-	if (scenario == Scenario::A) // a scenario only
+	if (scenario == RE2RREnums::Scenario::A) // a scenario only
 	{
 
 		// is there a knife or a spade key in zone 1?
@@ -511,7 +511,7 @@ void SeedShuffler::CheckItemValidity()
 		earlylocations.push_back(257);
 		earlylocations.push_back(258);
 
-		if (character == Character::Leon)
+		if (character == RE2RREnums::Character::Leon)
 		{
 			for (uint32_t i = 134; i < 141; ++i)
 			{
@@ -548,7 +548,7 @@ void SeedShuffler::CheckItemValidity()
 				boltcutteraccess = true;
 			}
 
-			if (character == Character::Leon)
+			if (character == RE2RREnums::Character::Leon)
 			{
 				if (m_FinalList[(*itr)] == 119) // square crank
 				{
@@ -625,7 +625,7 @@ void SeedShuffler::CheckItemValidity()
 		}
 	}
 
-	if (character == Character::Leon)
+	if (character == RE2RREnums::Character::Leon)
 	{
 
 		// can we use the rook plug or the t-bar valve to get out of the sewer access area TBAR REMOVED FROM HERE
@@ -697,7 +697,7 @@ void SeedShuffler::CheckItemValidity()
 	// joint plug
 	bool ispluginzone = false;
 
-	if (character == Character::Leon)
+	if (character == RE2RREnums::Character::Leon)
 	{
 
 		for (uint32_t i = 244; i < 247; ++i)

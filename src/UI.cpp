@@ -73,10 +73,10 @@ void __stdcall UI::DrawMainUI(bool *open)
 		logger->LogMessage("Generate Seed clicked!\n");
 
 		SeedGenerator seedGenerator(logger);
-		seedGenerator.GenerateSeed((Character)*character, (Scenario)*scenario, (Difficulty)*difficulty, true);
+		seedGenerator.GenerateSeed((RE2RREnums::Character)*character, (RE2RREnums::Scenario)*scenario, (RE2RREnums::Difficulty)*difficulty, true);
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (Difficulty *)difficulty, (Scenario *)scenario, (Character *)character);
+		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario, (RE2RREnums::Character *)character);
 	}
 	// ImGui::SameLine();
 	// if (ImGui::Button("Enable Randomizer"))

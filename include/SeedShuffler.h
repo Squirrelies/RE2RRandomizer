@@ -20,9 +20,9 @@ private:
 	std::vector<uint32_t> m_ForbiddenDependencies;
 	std::map<uint32_t, uint32_t> m_DebugInfo;
 	std::mt19937 m_Twister;
-	Character character;
-	Scenario scenario;
-	Difficulty difficulty;
+	RE2RREnums::Character character;
+	RE2RREnums::Scenario scenario;
+	RE2RREnums::Difficulty difficulty;
 
 	bool m_HasFoundSeed;
 	std::vector<std::string> ItemNames;
@@ -41,9 +41,9 @@ protected:
 public:
 	SeedShuffler(
 	    ImmediateLogger *logger,
-	    Character character,
-	    Scenario scenario,
-	    Difficulty difficulty,
+	    RE2RREnums::Character character,
+	    RE2RREnums::Scenario scenario,
+	    RE2RREnums::Difficulty difficulty,
 	    int listLength,
 	    bool &m_HasFoundSeed,
 	    std::vector<std::string> &ItemNames,

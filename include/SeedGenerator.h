@@ -31,9 +31,9 @@ private:
 	std::unique_ptr<std::string> CheatSheetItemToString(const uint32_t);
 	std::vector<std::string> GetCheatSheet(void);
 	void PrintCheatSheetItemToFile(FILE *, const int);
-	void MixWeapons(Character, Scenario, Difficulty);
-	void CreateCheatSheetVector(Character, Scenario, Difficulty, bool);
-	void WriteDataToFile(Character, Scenario, Difficulty, bool);
+	void MixWeapons(RE2RREnums::Character, RE2RREnums::Scenario, RE2RREnums::Difficulty);
+	void CreateCheatSheetVector(RE2RREnums::Character, RE2RREnums::Scenario, RE2RREnums::Difficulty, bool);
+	void WriteDataToFile(RE2RREnums::Character, RE2RREnums::Scenario, RE2RREnums::Difficulty, bool);
 
 protected:
 public:
@@ -47,7 +47,7 @@ public:
 		this->logger = nullptr;
 	}
 
-	void GenerateSeed(Character, Scenario, Difficulty, bool);
+	void GenerateSeed(RE2RREnums::Character, RE2RREnums::Scenario, RE2RREnums::Difficulty, bool);
 	std::vector<uint32_t> GetSeed(void);
 };
 

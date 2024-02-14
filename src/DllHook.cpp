@@ -55,9 +55,9 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	return TRUE;
 }
 
-Difficulty *difficultyTest;
-Scenario *scenarioTest;
-Character *characterTest;
+RE2RREnums::Difficulty *difficultyTest;
+RE2RREnums::Scenario *scenarioTest;
+RE2RREnums::Character *characterTest;
 DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 {
 	logger->LogMessage("[RE2R-R] Menu called.\n");
