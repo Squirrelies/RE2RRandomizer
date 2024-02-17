@@ -34,6 +34,14 @@
 #include <string>
 #include <vector>
 
+#ifdef UNICODE
+#define StringToGUID StringToGUIDW
+#else
+#define StringToGUID StringToGUIDA
+#endif
+bool StringToGUIDA(const std::string &stringGUID, GUID &guid);
+bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
+
 // Enum Character
 #ifndef RE2RR_TYPES_H_Character
 #define RE2RR_TYPES_H_Character
@@ -42,7 +50,11 @@
 #define ENUM_LIST       \
 	ENUM_VALUE(Leon, 0) \
 	ENUM_VALUE(Claire, 1)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
 #include "Types_Enum.h"
+#endif
 #undef ENUM_LIST
 #undef ENUM_TYPE
 #undef ENUM_NAME
@@ -57,7 +69,11 @@
 #define ENUM_LIST    \
 	ENUM_VALUE(A, 0) \
 	ENUM_VALUE(B, 1)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
 #include "Types_Enum.h"
+#endif
 #undef ENUM_LIST
 #undef ENUM_TYPE
 #undef ENUM_NAME
@@ -72,7 +88,11 @@
 #define ENUM_LIST           \
 	ENUM_VALUE(Standard, 0) \
 	ENUM_VALUE(Hardcore, 1)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
 #include "Types_Enum.h"
+#endif
 #undef ENUM_LIST
 #undef ENUM_TYPE
 #undef ENUM_NAME
@@ -215,7 +235,58 @@
 	ENUM_VALUE(WoodenBox1, 0x0126)                  \
 	ENUM_VALUE(WoodenBox2, 0x0127)                  \
 	ENUM_VALUE(TinStorageBox2, 0x0128)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
 #include "Types_Enum.h"
+#endif
+#undef ENUM_LIST
+#undef ENUM_TYPE
+#undef ENUM_NAME
+#endif
+//
+
+// Enum WeaponType
+#ifndef RE2RR_TYPES_H_WeaponType
+#define RE2RR_TYPES_H_WeaponType
+#define ENUM_NAME WeaponType
+#define ENUM_TYPE uint32_t
+#define ENUM_LIST                                       \
+	ENUM_VALUE(None, 0xFFFFFFFFU)                       \
+	ENUM_VALUE(Handgun_Matilda, 0x01)                   \
+	ENUM_VALUE(Handgun_M19, 0x02)                       \
+	ENUM_VALUE(Handgun_JMB_Hp3, 0x03)                   \
+	ENUM_VALUE(Handgun_Quickdraw_Army, 0x04)            \
+	ENUM_VALUE(Handgun_MUP, 0x07)                       \
+	ENUM_VALUE(Handgun_BroomHc, 0x08)                   \
+	ENUM_VALUE(Handgun_SLS60, 0x09)                     \
+	ENUM_VALUE(Shotgun_W870, 0x0B)                      \
+	ENUM_VALUE(SMG_MQ11, 0x15)                          \
+	ENUM_VALUE(SMG_LE5_Infinite, 0x17)                  \
+	ENUM_VALUE(Handgun_LightningHawk, 0x1F)             \
+	ENUM_VALUE(EMF_Visualizer, 0x29)                    \
+	ENUM_VALUE(GrenadeLauncher_GM79, 0x2A)              \
+	ENUM_VALUE(ChemicalFlamethrower, 0x2B)              \
+	ENUM_VALUE(SparkShot, 0x2C)                         \
+	ENUM_VALUE(ATM4, 0x2D)                              \
+	ENUM_VALUE(CombatKnife, 0x2E)                       \
+	ENUM_VALUE(CombatKnife_Infinite, 0x2F)              \
+	ENUM_VALUE(AntiTankRocketLauncher, 0x31)            \
+	ENUM_VALUE(Minigun, 0x32)                           \
+	ENUM_VALUE(HandGrenade, 0x41)                       \
+	ENUM_VALUE(FlashGrenade, 0x42)                      \
+	ENUM_VALUE(Handgun_SamuraiEdge_Infinite, 0x52)      \
+	ENUM_VALUE(Handgun_SamuraiEdge_ChrisRedfield, 0x53) \
+	ENUM_VALUE(Handgun_SamuraiEdge_JillValentine, 0x54) \
+	ENUM_VALUE(Handgun_SamuraiEdge_AlbertWesker, 0x55)  \
+	ENUM_VALUE(ATM4_Infinite, 0xDE)                     \
+	ENUM_VALUE(AntiTankRocketLauncher_Infinite, 0xF2)   \
+	ENUM_VALUE(Minigun_Infinite, 0xFC)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
+#include "Types_Enum.h"
+#endif
 #undef ENUM_LIST
 #undef ENUM_TYPE
 #undef ENUM_NAME
@@ -225,11 +296,11 @@
 struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 {
 	// uint8_t _Reserved[0x10]; // 0x00-0x0F
-	RE2RREnums::ItemType ItemId;	// 0x10-0x13
-	uint32_t WeaponId;				// 0x14-0x17
-	uint32_t WeaponParts;			// 0x18-0x1B
-	uint32_t BulletId;				// 0x1C-0x1F
-	uint32_t Count;					// 0x20-0x23
+	RE2RREnums::ItemType ItemId;     // 0x10-0x13
+	RE2RREnums::WeaponType WeaponId; // 0x14-0x17
+	uint32_t WeaponParts;            // 0x18-0x1B
+	uint32_t BulletId;               // 0x1C-0x1F
+	uint32_t Count;                  // 0x20-0x23
 
 	// app_ropeway_gamemastering_InventoryManager_PrimitiveItem(uint32_t ItemId, uint32_t WeaponId, uint32_t WeaponParts, uint32_t BulletId, uint32_t Count)
 	// {

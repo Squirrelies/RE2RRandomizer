@@ -30,8 +30,7 @@ private:
 	std::vector<uint32_t> ZoneIDByItemID;
 	std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> ZoneRequiredItems;
 
-	void
-	CheckItemValidity(void);
+	void CheckItemValidity(void);
 	void ShuffleItems(void);
 	bool CheckDependencies(uint32_t itemID);
 	bool CheckOptionalDependency(std::vector<uint32_t> OptionalItems);

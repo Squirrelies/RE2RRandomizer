@@ -1,15 +1,23 @@
 #include "Randomizer.h"
 
+const static char *logItemFormat = "\"%s\",\"%d\",\"0x%X\",\"%s\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%s\"\n";
 void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(*currentItem: %s, itemPositionGuid: %s) called.\n", currentItem->ToString().c_str(), GUIDToString(itemPositionGuid).c_str());
-	SetItemByGUID(currentItem, itemPositionGuid);
+	itemLog->LogMessage(logItemFormat,
+	                    RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), currentItem->ItemId, currentItem->ItemId,
+	                    RE2RREnums::EnumWeaponTypeToString(currentItem->WeaponId).c_str(), currentItem->WeaponId, currentItem->WeaponId,
+	                    currentItem->WeaponParts, currentItem->WeaponParts,
+	                    currentItem->BulletId, currentItem->BulletId,
+	                    currentItem->Count, currentItem->Count,
+	                    GUIDToString(itemPositionGuid).c_str());
+	// SetItemByGUID(currentItem, itemPositionGuid);
 }
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n\t%s -> %s\n", currentItem->ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
-	*currentItem = newItem;
+	//*currentItem = newItem;
 }
 
 // Returns a vector of uint8_t representing the app.ropeway.gamemastering.InventoryManager.PrimitiveItem structure 0x10-0x24 (0x14).
@@ -1111,7 +1119,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[145]));
+			RandomizeItem(currentItem, GetItemByType(seed[145 - 1]));
 			//--claire's flame rounds outside break room, b scenario
 		}
 	}
@@ -1120,12 +1128,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x3A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[39]));
+			RandomizeItem(currentItem, GetItemByType(seed[39 - 1]));
 			// flash grenade, east office
 		}
 		if (uniqueID[1] == 0xBD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[196]));
+			RandomizeItem(currentItem, GetItemByType(seed[196 - 1]));
 			// large gunpowder, kitchen
 		}
 	}
@@ -1134,29 +1142,29 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[244]));
+			RandomizeItem(currentItem, GetItemByType(seed[244 - 1]));
 			// ACP ammo, pump room, b scenario
 		}
 		if (uniqueID[1] == 0x80)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[183]));
+			RandomizeItem(currentItem, GetItemByType(seed[183 - 1]));
 			// ACP Ammo, Workroom, b scenario
 		}
 		if (uniqueID[1] == 0x8A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[79]));
+			RandomizeItem(currentItem, GetItemByType(seed[79 - 1]));
 			// flame rounds, east storage room. claire
 		}
 		if (uniqueID[1] == 0xF4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[203]));
+			RandomizeItem(currentItem, GetItemByType(seed[203 - 1]));
 			// gunpowder, Lobby
 		}
 	}
 
 	if (uniqueID[0] == 0x03)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[157]));
+		RandomizeItem(currentItem, GetItemByType(seed[157 - 1]));
 		// large gunpowder, water injection chamber
 	}
 
@@ -1164,17 +1172,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x28)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[146]));
+			RandomizeItem(currentItem, GetItemByType(seed[146 - 1]));
 			// hand grenade, sewer entrance
 		}
 		if (uniqueID[1] == 0x33)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[74]));
+			RandomizeItem(currentItem, GetItemByType(seed[74 - 1]));
 			// large gunpowder, racoon area west
 		}
 		if (uniqueID[1] == 0x81)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[155]));
+			RandomizeItem(currentItem, GetItemByType(seed[155 - 1]));
 			// mag ammo, rpd access room
 		}
 	}
@@ -1188,14 +1196,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xF7)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[248]));
+			RandomizeItem(currentItem, GetItemByType(seed[248 - 1]));
 			// extra flamethrower fuel, hiding place press room
 		}
 	}
 
 	if (uniqueID[0] == 0x07)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[33]));
+		RandomizeItem(currentItem, GetItemByType(seed[33 - 1]));
 		// flash grenade, detonator room
 	}
 
@@ -1203,17 +1211,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x80)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[44]));
+			RandomizeItem(currentItem, GetItemByType(seed[44 - 1]));
 			// courtyard key, guard room, b scenario
 		}
 		if (uniqueID[1] == 0x0E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[220]));
+			RandomizeItem(currentItem, GetItemByType(seed[220 - 1]));
 			// yellow gunpowder, modulator room
 		}
 		if (uniqueID[1] == 0x30)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[206]));
+			RandomizeItem(currentItem, GetItemByType(seed[206 - 1]));
 			// flash grenade, greenhouse control room
 		}
 	}
@@ -1222,12 +1230,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x4F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[197]));
+			RandomizeItem(currentItem, GetItemByType(seed[197 - 1]));
 			// knife, kitchen
 		}
 		if (uniqueID[1] == 0xF8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[27]));
+			RandomizeItem(currentItem, GetItemByType(seed[27 - 1]));
 			// handgun bullets, press room
 		}
 	}
@@ -1236,12 +1244,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[195]));
+			RandomizeItem(currentItem, GetItemByType(seed[195 - 1]));
 			// flamethrower fuel, cafeteria
 		}
 		if (uniqueID[1] == 0xB6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[159]));
+			RandomizeItem(currentItem, GetItemByType(seed[159 - 1]));
 			// yellow gunpowder, lower waterway
 		}
 	}
@@ -1250,7 +1258,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x43)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[135]));
+			RandomizeItem(currentItem, GetItemByType(seed[135 - 1]));
 			// SLS rounds, office
 		}
 	}
@@ -1259,7 +1267,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x72)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[150]));
+			RandomizeItem(currentItem, GetItemByType(seed[150 - 1]));
 			// SLS rounds, upper walkway
 		}
 	}
@@ -1268,12 +1276,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[257]));
+			RandomizeItem(currentItem, GetItemByType(seed[257 - 1]));
 			// ACP Ammo, Stars Office, B scenario
 		}
 		if (uniqueID[1] == 0x6D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[232]));
+			RandomizeItem(currentItem, GetItemByType(seed[232 - 1]));
 			// ACP Ammo (Bottom Left), Bioreactor's Room, B scenario
 		}
 	}
@@ -1282,19 +1290,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x82)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[38]));
+			RandomizeItem(currentItem, GetItemByType(seed[38 - 1]));
 			// ink ribbon x2, east office, hardcore
 		}
 		if (uniqueID[1] == 0x86)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[175]));
+			RandomizeItem(currentItem, GetItemByType(seed[175 - 1]));
 			// submachinegun ammo, bottom waterway, claire
 		}
 	}
 
 	if (uniqueID[0] == 0x12)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[12]));
+		RandomizeItem(currentItem, GetItemByType(seed[12 - 1]));
 		// gunpowder, west office
 	}
 
@@ -1302,12 +1310,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x13)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[54]));
+			RandomizeItem(currentItem, GetItemByType(seed[54 - 1]));
 			// spade key, western area 3F
 		}
 		if (uniqueID[1] == 0x83)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[115]));
+			RandomizeItem(currentItem, GetItemByType(seed[115 - 1]));
 			// gunpowder (up ladder), machinery room
 		}
 	}
@@ -1316,17 +1324,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xC0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[26]));
+			RandomizeItem(currentItem, GetItemByType(seed[26 - 1]));
 			// Shotgun Shells (shotgun cupboard), safety deposit room
 		}
 		if (uniqueID[1] == 0xDD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[5]));
+			RandomizeItem(currentItem, GetItemByType(seed[5 - 1]));
 			// Quickdraw army, guardroom B scenario Claire
 		}
 		if (uniqueID[1] == 0xF1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[88]));
+			RandomizeItem(currentItem, GetItemByType(seed[88 - 1]));
 			// ink ribbon x1, boiler room, Leon Hardcore
 		}
 	}
@@ -1335,7 +1343,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xE7 && *scenario == RE2RREnums::Scenario::B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[165]));
+			RandomizeItem(currentItem, GetItemByType(seed[165 - 1]));
 			// knight plug, b scenario
 		}
 		else if (uniqueID[1] == 0xE7)
@@ -1345,22 +1353,22 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x2C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[187]));
+			RandomizeItem(currentItem, GetItemByType(seed[187 - 1]));
 			// red herb, main power room
 		}
 		if (uniqueID[1] == 0x55)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[217]));
+			RandomizeItem(currentItem, GetItemByType(seed[217 - 1]));
 			// yellow gunpowder, server room
 		}
 		if (uniqueID[1] == 0x94)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[148]));
+			RandomizeItem(currentItem, GetItemByType(seed[148 - 1]));
 			// handgun bullets second, sewer entrance
 		}
 		if (uniqueID[1] == 0xDC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[186]));
+			RandomizeItem(currentItem, GetItemByType(seed[186 - 1]));
 			// green herb, outside garbage room
 		}
 	}
@@ -1369,24 +1377,24 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x15)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[1]));
+			RandomizeItem(currentItem, GetItemByType(seed[1 - 1]));
 			// handgun bullets, main hall
 		}
 		if (uniqueID[1] == 0x1A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[37]));
+			RandomizeItem(currentItem, GetItemByType(seed[37 - 1]));
 			// mechanic jack handle, records room
 		}
 		if (uniqueID[1] == 0xD8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[214]));
+			RandomizeItem(currentItem, GetItemByType(seed[214 - 1]));
 			// Trophy, Low Temp Testing Lab, B scenario
 		}
 	}
 
 	if (uniqueID[0] == 0x19)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[172]));
+		RandomizeItem(currentItem, GetItemByType(seed[172 - 1]));
 		// green herb, bottom waterway overpass
 	}
 
@@ -1394,12 +1402,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x66)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[129]));
+			RandomizeItem(currentItem, GetItemByType(seed[129 - 1]));
 			// firing range, flame rounds, claire
 		}
 		if (uniqueID[1] == 0xC3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[147]));
+			RandomizeItem(currentItem, GetItemByType(seed[147 - 1]));
 			// handgun bullets first, sewer entrance
 		}
 	}
@@ -1408,7 +1416,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[235]));
+			RandomizeItem(currentItem, GetItemByType(seed[235 - 1]));
 			// needles, bioreactors room
 		}
 	}
@@ -1417,12 +1425,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x49)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[68]));
+			RandomizeItem(currentItem, GetItemByType(seed[68 - 1]));
 			// statue's left arm, art room
 		}
 		if (uniqueID[1] == 0xF1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[264]));
+			RandomizeItem(currentItem, GetItemByType(seed[264 - 1]));
 			// white gunpowder, break room b scenario claire
 		}
 	}
@@ -1431,22 +1439,22 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x33)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[228]));
+			RandomizeItem(currentItem, GetItemByType(seed[228 - 1]));
 			// white gunpowder, p-4 level testing lab, claire
 		}
 		if (uniqueID[1] == 0x3C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[226]));
+			RandomizeItem(currentItem, GetItemByType(seed[226 - 1]));
 			// yellow gunpowder, biotesting lab
 		}
 		if (uniqueID[1] == 0x94)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[235]));
+			RandomizeItem(currentItem, GetItemByType(seed[235 - 1]));
 			// flamethrower fuel, bioreactors room
 		}
 		if (uniqueID[1] == 0xB5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[120]));
+			RandomizeItem(currentItem, GetItemByType(seed[120 - 1]));
 			// square crank, jail
 		}
 	}
@@ -1455,22 +1463,22 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x03)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[25]));
+			RandomizeItem(currentItem, GetItemByType(seed[25 - 1]));
 			// grenade launcher, weapons locker, claire
 		}
 		if (uniqueID[1] == 0x4D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[247]));
+			RandomizeItem(currentItem, GetItemByType(seed[247 - 1]));
 			// joint plug, Escape Shaft
 		}
 		if (uniqueID[1] == 0xEF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[93]));
+			RandomizeItem(currentItem, GetItemByType(seed[93 - 1]));
 			// handgun bullets, interrogation room
 		}
 		if (uniqueID[1] == 0xFE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[125]));
+			RandomizeItem(currentItem, GetItemByType(seed[125 - 1]));
 			// red herb, morgue
 		}
 	}
@@ -1479,12 +1487,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x46)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[251]));
+			RandomizeItem(currentItem, GetItemByType(seed[251 - 1]));
 			// flame rounds, STARS office, claire
 		}
 		if (uniqueID[1] == 0xA8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[134]));
+			RandomizeItem(currentItem, GetItemByType(seed[134 - 1]));
 			// green herb, basketball court
 		}
 	}
@@ -1493,12 +1501,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x17)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[194]));
+			RandomizeItem(currentItem, GetItemByType(seed[194 - 1]));
 			// ACP Ammo, Cafeteria, B Scenario
 		}
 		if (uniqueID[1] == 0x7A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[158]));
+			RandomizeItem(currentItem, GetItemByType(seed[158 - 1]));
 			// yellow gunpowder, water injection chamber
 		}
 	}
@@ -1507,14 +1515,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[92]));
+			RandomizeItem(currentItem, GetItemByType(seed[92 - 1]));
 			// portable safe, observation room, b scenario
 		}
 	}
 
 	if (uniqueID[0] == 0x23)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[119]));
+		RandomizeItem(currentItem, GetItemByType(seed[119 - 1]));
 		// handgun bullets, jail entrance
 	}
 
@@ -1522,22 +1530,22 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x04)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[98]));
+			RandomizeItem(currentItem, GetItemByType(seed[98 - 1]));
 			// flash grenade, STARS office
 		}
 		if (uniqueID[1] == 0x9C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[72]));
+			RandomizeItem(currentItem, GetItemByType(seed[72 - 1]));
 			// bolt cutters, outside fire escape, b scenario
 		}
 		if (uniqueID[1] == 0x97)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[140]));
+			RandomizeItem(currentItem, GetItemByType(seed[140 - 1]));
 			// relief, private collection room
 		}
 		if (uniqueID[1] == 0xF0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[100]));
+			RandomizeItem(currentItem, GetItemByType(seed[100 - 1]));
 			// white gunpowder, STARS office, claire
 		}
 	}
@@ -1546,12 +1554,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x36)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[174]));
+			RandomizeItem(currentItem, GetItemByType(seed[174 - 1]));
 			// green herb, bottom waterway
 		}
 		if (uniqueID[1] == 0xF0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[85]));
+			RandomizeItem(currentItem, GetItemByType(seed[85 - 1]));
 			// red herb, roof area
 		}
 	}
@@ -1560,7 +1568,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x27)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[155]));
+			RandomizeItem(currentItem, GetItemByType(seed[155 - 1]));
 			// sls ammo, RPD access room, claire
 		}
 	}
@@ -1569,7 +1577,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x8C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[47]));
+			RandomizeItem(currentItem, GetItemByType(seed[47 - 1]));
 			// ACP ammo, western area 2F, b scenario
 		}
 	}
@@ -1578,42 +1586,42 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x0C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[251]));
+			RandomizeItem(currentItem, GetItemByType(seed[251 - 1]));
 			// shotgun shells, stars office
 		}
 		if (uniqueID[1] == 0x89)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[150]));
+			RandomizeItem(currentItem, GetItemByType(seed[150 - 1]));
 			// shotgun shells, upper walkway
 		}
 		if (uniqueID[1] == 0x94)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[50]));
+			RandomizeItem(currentItem, GetItemByType(seed[50 - 1]));
 			// flame rounds, valve room, not in locker, claire
 		}
 	}
 
 	if (uniqueID[0] == 0x2A)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[81]));
+		RandomizeItem(currentItem, GetItemByType(seed[81 - 1]));
 		// flash grenade, east area 3F
 	}
 
 	if (uniqueID[0] == 0x2B)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[215]));
+		RandomizeItem(currentItem, GetItemByType(seed[215 - 1]));
 		// green herb, Lounge
 	}
 
 	if (uniqueID[0] == 0x2C)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[42]));
+		RandomizeItem(currentItem, GetItemByType(seed[42 - 1]));
 		// valve, east office
 	}
 
 	if (uniqueID[0] == 0x2D)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[97]));
+		RandomizeItem(currentItem, GetItemByType(seed[97 - 1]));
 		// red herb, STARS office
 	}
 
@@ -1621,7 +1629,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x00)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[92]));
+			RandomizeItem(currentItem, GetItemByType(seed[92 - 1]));
 			// portable safe claire b scenario interrogation room
 		}
 	}
@@ -1630,12 +1638,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x26)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[24]));
+			RandomizeItem(currentItem, GetItemByType(seed[24 - 1]));
 			// shotgun shells (locker), safety deposit room
 		}
 		if (uniqueID[1] == 0x30)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[233]));
+			RandomizeItem(currentItem, GetItemByType(seed[233 - 1]));
 			// mag ammo, bioreactors room
 		}
 	}
@@ -1644,24 +1652,24 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x1F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[55]));
+			RandomizeItem(currentItem, GetItemByType(seed[55 - 1]));
 			// gunpowder, west storage room
 		}
 		if (uniqueID[1] == 0xC9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[21]));
+			RandomizeItem(currentItem, GetItemByType(seed[21 - 1]));
 			// combat knife, safety deposit room
 		}
 		if (uniqueID[1] == 0xFE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[230]));
+			RandomizeItem(currentItem, GetItemByType(seed[230 - 1]));
 			// handgun bullets (top left), bioreactor's room, B scenario
 		}
 	}
 
 	if (uniqueID[0] == 0x31)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[171]));
+		RandomizeItem(currentItem, GetItemByType(seed[171 - 1]));
 		// sewer key, bottom way overpass
 	}
 
@@ -1669,7 +1677,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x15)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[6]));
+			RandomizeItem(currentItem, GetItemByType(seed[6 - 1]));
 			// ACP ammo, reception, B scenario
 		}
 	}
@@ -1678,7 +1686,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xBF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[188]));
+			RandomizeItem(currentItem, GetItemByType(seed[188 - 1]));
 			// submachinegun ammo, g2 fight, claire
 		}
 	}
@@ -1687,19 +1695,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xDC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[246]));
+			RandomizeItem(currentItem, GetItemByType(seed[246 - 1]));
 			// submachinegun ammo, orphanage, claire
 		}
 		if (uniqueID[1] == 0xFD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[18]));
+			RandomizeItem(currentItem, GetItemByType(seed[18 - 1]));
 			// red herb, dark room
 		}
 	}
 
 	if (uniqueID[0] == 0x36)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[245]));
+		RandomizeItem(currentItem, GetItemByType(seed[245 - 1]));
 		// red herb, escape shaft
 	}
 
@@ -1707,17 +1715,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x15)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[48]));
+			RandomizeItem(currentItem, GetItemByType(seed[48 - 1]));
 			// red herb, western area 2F
 		}
 		if (uniqueID[1] == 0x92)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[86]));
+			RandomizeItem(currentItem, GetItemByType(seed[86 - 1]));
 			// green herb (left), roof area
 		}
 		if (uniqueID[1] == 0xE0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[161]));
+			RandomizeItem(currentItem, GetItemByType(seed[161 - 1]));
 			// flame rounds, control room, claire
 		}
 	}
@@ -1726,12 +1734,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x64)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[161]));
+			RandomizeItem(currentItem, GetItemByType(seed[161 - 1]));
 			// shotgun shells, control room
 		}
 		if (uniqueID[1] == 0xA4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[82]));
+			RandomizeItem(currentItem, GetItemByType(seed[82 - 1]));
 			// wooden boards, east area 3F
 		}
 	}
@@ -1740,27 +1748,27 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x22)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[179]));
+			RandomizeItem(currentItem, GetItemByType(seed[179 - 1]));
 			// King Plug, supplies storage room
 		}
 		if (uniqueID[1] == 0x3C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[229]));
+			RandomizeItem(currentItem, GetItemByType(seed[229 - 1]));
 			// Red Herb, P-4 Level Testing Lab
 		}
 		if (uniqueID[1] == 0x84)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[17]));
+			RandomizeItem(currentItem, GetItemByType(seed[17 - 1]));
 			// Handgun Bullets, dark room
 		}
 		if (uniqueID[1] == 0x8D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[90]));
+			RandomizeItem(currentItem, GetItemByType(seed[90 - 1]));
 			// white gunpowder, outside observation room, claire
 		}
 		if (uniqueID[1] == 0x98)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[61]));
+			RandomizeItem(currentItem, GetItemByType(seed[61 - 1]));
 			// Knife, Library
 		}
 	}
@@ -1769,12 +1777,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x1B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[208]));
+			RandomizeItem(currentItem, GetItemByType(seed[208 - 1]));
 			// blue herb, greenhouse
 		}
 		if (uniqueID[1] == 0x5D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[31]));
+			RandomizeItem(currentItem, GetItemByType(seed[31 - 1]));
 			// detonator (no battery), detonator room
 		}
 	}
@@ -1783,17 +1791,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x8C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[77]));
+			RandomizeItem(currentItem, GetItemByType(seed[77 - 1]));
 			// blue herb, east storage room
 		}
 		if (uniqueID[1] == 0xB5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[129]));
+			RandomizeItem(currentItem, GetItemByType(seed[129 - 1]));
 			// shotgun shells, firing range
 		}
 		if (uniqueID[1] == 0xF7)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[233]));
+			RandomizeItem(currentItem, GetItemByType(seed[233 - 1]));
 			// sls rounds, bioreactor's room, claire
 		}
 	}
@@ -1802,12 +1810,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x60)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[126]));
+			RandomizeItem(currentItem, GetItemByType(seed[126 - 1]));
 			// flash grenade, morgue
 		}
 		if (uniqueID[1] == 0x6F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[180]));
+			RandomizeItem(currentItem, GetItemByType(seed[180 - 1]));
 			// spark shot, claire
 		}
 		if (uniqueID[1] == 0x6B)
@@ -1817,12 +1825,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x82)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[185]));
+			RandomizeItem(currentItem, GetItemByType(seed[185 - 1]));
 			// blue herb, outside garbage room
 		}
 		if (uniqueID[1] == 0x85)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[123]));
+			RandomizeItem(currentItem, GetItemByType(seed[123 - 1]));
 			// blue herb, outside kennel
 		}
 	}
@@ -1831,25 +1839,25 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x4E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[106]));
+			RandomizeItem(currentItem, GetItemByType(seed[106 - 1]));
 			// Hand Grenade, underground stairs
 		}
 		if (uniqueID[1] == 0x9D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[76]));
+			RandomizeItem(currentItem, GetItemByType(seed[76 - 1]));
 			// boxed electronic part, Clock Tower
 		}
 	}
 
 	if (uniqueID[0] == 0x45)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[63]));
+		RandomizeItem(currentItem, GetItemByType(seed[63 - 1]));
 		// gunpowder, lounge
 	}
 
 	if (uniqueID[0] == 0x46)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[165]));
+		RandomizeItem(currentItem, GetItemByType(seed[165 - 1]));
 		// Knight piece, monitor room
 	}
 
@@ -1857,12 +1865,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xB4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[192]));
+			RandomizeItem(currentItem, GetItemByType(seed[192 - 1]));
 			// flame rounds, security room, claire
 		}
 		if (uniqueID[1] == 0xF4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[144]));
+			RandomizeItem(currentItem, GetItemByType(seed[144 - 1]));
 			// handgun bullets, gun shop
 		}
 	}
@@ -1871,12 +1879,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x20)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[108]));
+			RandomizeItem(currentItem, GetItemByType(seed[108 - 1]));
 			// Handgun Bullets (Top Left), Machinery Room
 		}
 		if (uniqueID[1] == 0x50)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[222]));
+			RandomizeItem(currentItem, GetItemByType(seed[222 - 1]));
 			// Signal Modulator, Modulator Room
 		}
 	}
@@ -1885,7 +1893,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xD6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[162]));
+			RandomizeItem(currentItem, GetItemByType(seed[162 - 1]));
 			// submachinegun ammo, control room, claire
 		}
 	}
@@ -1894,7 +1902,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xCB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[120]));
+			RandomizeItem(currentItem, GetItemByType(seed[120 - 1]));
 			// turntable minigun, claire
 		}
 	}
@@ -1903,12 +1911,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x13)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[28]));
+			RandomizeItem(currentItem, GetItemByType(seed[28 - 1]));
 			// handgun bullets, east closet ambush
 		}
 		if (uniqueID[1] == 0x33)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[241]));
+			RandomizeItem(currentItem, GetItemByType(seed[241 - 1]));
 			// combat knife, monitor room
 		}
 	}
@@ -1917,27 +1925,27 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x10)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[191]));
+			RandomizeItem(currentItem, GetItemByType(seed[191 - 1]));
 			// knife, g2 fight room
 		}
 		if (uniqueID[1] == 0x28)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[111]));
+			RandomizeItem(currentItem, GetItemByType(seed[111 - 1]));
 			// red herb, machinery room
 		}
 		if (uniqueID[1] == 0x2B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[136]));
+			RandomizeItem(currentItem, GetItemByType(seed[136 - 1]));
 			// knife, heart room east storage, claire
 		}
 		if (uniqueID[1] == 0x75)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[22]));
+			RandomizeItem(currentItem, GetItemByType(seed[22 - 1]));
 			// gunpowder, safety deposit room
 		}
 		if (uniqueID[1] == 0x79)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[200]));
+			RandomizeItem(currentItem, GetItemByType(seed[200 - 1]));
 			// upgrade chip (general staff), nap room
 		}
 	}
@@ -1946,25 +1954,25 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xB4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[223]));
+			RandomizeItem(currentItem, GetItemByType(seed[223 - 1]));
 			// lab digital video cassette, biotesting lab
 		}
 		if (uniqueID[1] == 0xF5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[134]));
+			RandomizeItem(currentItem, GetItemByType(seed[134 - 1]));
 			// gunpowder, generator room
 		}
 	}
 
 	if (uniqueID[0] == 0x52)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[80]));
+		RandomizeItem(currentItem, GetItemByType(seed[80 - 1]));
 		// handgun bullets, east area 3F
 	}
 
 	if (uniqueID[0] == 0x54)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[20]));
+		RandomizeItem(currentItem, GetItemByType(seed[20 - 1]));
 		// handgun bullets, safety deposit room
 	}
 
@@ -1972,7 +1980,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x6C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[259]));
+			RandomizeItem(currentItem, GetItemByType(seed[259 - 1]));
 			// blue herb, outside fire escape, b scenario
 		}
 	}
@@ -1986,20 +1994,20 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x40)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[170]));
+			RandomizeItem(currentItem, GetItemByType(seed[170 - 1]));
 			// shotgun stock (w-870)
 		}
 	}
 
 	if (uniqueID[0] == 0x59)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[35]));
+		RandomizeItem(currentItem, GetItemByType(seed[35 - 1]));
 		// hand grenade, records room
 	}
 
 	if (uniqueID[0] == 0x5A)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[153]));
+		RandomizeItem(currentItem, GetItemByType(seed[153 - 1]));
 		// gunpowder, worker's break room
 	}
 
@@ -2007,19 +2015,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xB4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[159]));
+			RandomizeItem(currentItem, GetItemByType(seed[159 - 1]));
 			// white gunpowder, lower waterway
 		}
 		if (uniqueID[1] == 0xE1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[204]));
+			RandomizeItem(currentItem, GetItemByType(seed[204 - 1]));
 			// white gunpowder, first plant room, claire
 		}
 	}
 
 	if (uniqueID[0] == 0x5C)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[160]));
+		RandomizeItem(currentItem, GetItemByType(seed[160 - 1]));
 		// blue herb, lower waterway
 	}
 
@@ -2027,17 +2035,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x36)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[164]));
+			RandomizeItem(currentItem, GetItemByType(seed[164 - 1]));
 			// bishop piece, monitor room
 		}
 		if (uniqueID[1] == 0xB5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[14]));
+			RandomizeItem(currentItem, GetItemByType(seed[14 - 1]));
 			// hip pouch, west office
 		}
 		if (uniqueID[1] == 0xFD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[99]));
+			RandomizeItem(currentItem, GetItemByType(seed[99 - 1]));
 			// fas, stars office
 		}
 	}
@@ -2046,17 +2054,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x3F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[1]));
+			RandomizeItem(currentItem, GetItemByType(seed[1 - 1]));
 			// acp ammo, main hall B scenario
 		}
 		if (uniqueID[1] == 0x8B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[113]));
+			RandomizeItem(currentItem, GetItemByType(seed[113 - 1]));
 			// green herb(bottom right), machinery room
 		}
 		if (uniqueID[1] == 0xA6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[254]));
+			RandomizeItem(currentItem, GetItemByType(seed[254 - 1]));
 			// ink ribbon x2, interrogation room hardcore
 		}
 	}
@@ -2067,12 +2075,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		{
 			if (*character == RE2RREnums::Character::Claire)
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[262]));
+				RandomizeItem(currentItem, GetItemByType(seed[262 - 1]));
 				// knife, outside break room
 			}
 			else
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[136]));
+				RandomizeItem(currentItem, GetItemByType(seed[136 - 1]));
 				// knife, outside break room
 			}
 		}
@@ -2082,12 +2090,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xAB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[231]));
+			RandomizeItem(currentItem, GetItemByType(seed[231 - 1]));
 			// fas, bioreactor's room
 		}
 		if (uniqueID[1] == 0xD4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[58]));
+			RandomizeItem(currentItem, GetItemByType(seed[58 - 1]));
 			// hip pouch, main hall, b scenario
 		}
 	}
@@ -2096,12 +2104,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[49]));
+			RandomizeItem(currentItem, GetItemByType(seed[49 - 1]));
 			// flame rounds in locker in valve room claire
 		}
 		if (uniqueID[1] == 0xD2)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[92]));
+			RandomizeItem(currentItem, GetItemByType(seed[92 - 1]));
 			// bejeweled box, interrogation room, claire
 		}
 	}
@@ -2110,17 +2118,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x05)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[247]));
+			RandomizeItem(currentItem, GetItemByType(seed[247 - 1]));
 			// turntable joint plug, claire
 		}
 		if (uniqueID[1] == 0x25)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[109]));
+			RandomizeItem(currentItem, GetItemByType(seed[109 - 1]));
 			// hand grenade, machinery room
 		}
 		if (uniqueID[1] == 0xD1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[7]));
+			RandomizeItem(currentItem, GetItemByType(seed[7 - 1]));
 			// green herb, reception
 		}
 	}
@@ -2129,12 +2137,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x04)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[202]));
+			RandomizeItem(currentItem, GetItemByType(seed[202 - 1]));
 			// green herb, lobby
 		}
 		if (uniqueID[1] == 0xC3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[252]));
+			RandomizeItem(currentItem, GetItemByType(seed[252 - 1]));
 			// Ink Ribbon x1, Lab Reception, Hardcore
 		}
 	}
@@ -2143,12 +2151,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[226]));
+			RandomizeItem(currentItem, GetItemByType(seed[226 - 1]));
 			// white gunpowder, biotesting lab, claire
 		}
 		if (uniqueID[1] == 0xA6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[89]));
+			RandomizeItem(currentItem, GetItemByType(seed[89 - 1]));
 			// shoulder stock (GM 79), elevator controls room, claire
 		}
 	}
@@ -2162,17 +2170,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xCF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[245]));
+			RandomizeItem(currentItem, GetItemByType(seed[245 - 1]));
 			// turntable red herb, claire
 		}
 		if (uniqueID[1] == 0xEC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[204]));
+			RandomizeItem(currentItem, GetItemByType(seed[204 - 1]));
 			// yellow gunpowder, first plant room
 		}
 		if (uniqueID[1] == 0xFD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[8]));
+			RandomizeItem(currentItem, GetItemByType(seed[8 - 1]));
 			// handgun bullets, operations room
 		}
 	}
@@ -2181,19 +2189,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x01)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[149]));
+			RandomizeItem(currentItem, GetItemByType(seed[149 - 1]));
 			// ACP Ammo, Upper Walkway, B scenario
 		}
 		if (uniqueID[1] == 0x5B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[199]));
+			RandomizeItem(currentItem, GetItemByType(seed[199 - 1]));
 			// regulator (flamethrower), nap room
 		}
 	}
 
 	if (uniqueID[0] == 0x6C)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[29]));
+		RandomizeItem(currentItem, GetItemByType(seed[29 - 1]));
 		// wooden boards, east closet ambush
 	}
 
@@ -2201,7 +2209,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xFE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[258]));
+			RandomizeItem(currentItem, GetItemByType(seed[258 - 1]));
 			// Red Herb, Outside Fire Escape, B Scenario
 		}
 	}
@@ -2210,17 +2218,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x99)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[105]));
+			RandomizeItem(currentItem, GetItemByType(seed[105 - 1]));
 			// flame rounds, secret room, claire
 		}
 		if (uniqueID[1] == 0x2D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[137]));
+			RandomizeItem(currentItem, GetItemByType(seed[137 - 1]));
 			// blue herb, outside bus, claire
 		}
 		if (uniqueID[1] == 0xDA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[243]));
+			RandomizeItem(currentItem, GetItemByType(seed[243 - 1]));
 			// green herb, pump room
 		}
 	}
@@ -2229,7 +2237,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xB8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[114]));
+			RandomizeItem(currentItem, GetItemByType(seed[114 - 1]));
 			// ACP ammo (bottom right), machinery room, b scenario
 		}
 	}
@@ -2238,19 +2246,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x53)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[23]));
+			RandomizeItem(currentItem, GetItemByType(seed[23 - 1]));
 			// hip pouch, safety deposit room
 		}
 		if (uniqueID[1] == 0x9F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[239]));
+			RandomizeItem(currentItem, GetItemByType(seed[239 - 1]));
 			// ACP ammo, bottom right, right, bioreactor's room, b scenario
 		}
 	}
 
 	if (uniqueID[0] == 0x71)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[205]));
+		RandomizeItem(currentItem, GetItemByType(seed[205 - 1]));
 		// dispersal cartridge (empty), greenhouse control room
 	}
 
@@ -2258,17 +2266,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xC6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[192]));
+			RandomizeItem(currentItem, GetItemByType(seed[192 - 1]));
 			// shotgun that spawns at lab if you don't pick it up
 		}
 		if (uniqueID[1] == 0x5E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[131]));
+			RandomizeItem(currentItem, GetItemByType(seed[131 - 1]));
 			// red herb, firing range lockers
 		}
 		if (uniqueID[1] == 0x93)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[53]));
+			RandomizeItem(currentItem, GetItemByType(seed[53 - 1]));
 			// mag ammo, western area 3F
 		}
 	}
@@ -2277,12 +2285,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x30)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[211]));
+			RandomizeItem(currentItem, GetItemByType(seed[211 - 1]));
 			// hand grenade, drug testing lab
 		}
 		if (uniqueID[1] == 0x44)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[23]));
+			RandomizeItem(currentItem, GetItemByType(seed[23 - 1]));
 			// hip pouch, safety deposit room
 		}
 	}
@@ -2291,31 +2299,31 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x24)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[234]));
+			RandomizeItem(currentItem, GetItemByType(seed[234 - 1]));
 			// flash grenade (bottom left), bioreactor's room
 		}
 		if (uniqueID[1] == 0x40)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[104]));
+			RandomizeItem(currentItem, GetItemByType(seed[104 - 1]));
 			// ink ribbon, secret room hardcore
 		}
 	}
 
 	if (uniqueID[0] == 0x75)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[149]));
+		RandomizeItem(currentItem, GetItemByType(seed[149 - 1]));
 		// handgun bullets, upper walkway
 	}
 
 	if (uniqueID[0] == 0x76)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[118]));
+		RandomizeItem(currentItem, GetItemByType(seed[118 - 1]));
 		// gun stock (matilda), parking garage
 	}
 
 	if (uniqueID[0] == 0x78)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[214]));
+		RandomizeItem(currentItem, GetItemByType(seed[214 - 1]));
 		// trophy, lounge
 	}
 
@@ -2323,27 +2331,27 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x2C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[116]));
+			RandomizeItem(currentItem, GetItemByType(seed[116 - 1]));
 			// green herb (up ladder), machinery room
 		}
 		if (uniqueID[1] == 0xC1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[19]));
+			RandomizeItem(currentItem, GetItemByType(seed[19 - 1]));
 			// film commemorative, claire
 		}
 		if (uniqueID[1] == 0x77)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[246]));
+			RandomizeItem(currentItem, GetItemByType(seed[246 - 1]));
 			// handgun bullets, escape shaft
 		}
 		if (uniqueID[1] == 0xAD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[188]));
+			RandomizeItem(currentItem, GetItemByType(seed[188 - 1]));
 			// mag ammo, G2 fight room
 		}
 		if (uniqueID[1] == 0xD3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[182]));
+			RandomizeItem(currentItem, GetItemByType(seed[182 - 1]));
 			// film - hiding place, workroom
 		}
 	}
@@ -2352,12 +2360,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x02)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[225]));
+			RandomizeItem(currentItem, GetItemByType(seed[225 - 1]));
 			// blue herb, biotesting lab
 		}
 		if (uniqueID[1] == 0x58)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[87]));
+			RandomizeItem(currentItem, GetItemByType(seed[87 - 1]));
 			// green herb(right), roof area
 		}
 	}
@@ -2366,12 +2374,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x00)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[53]));
+			RandomizeItem(currentItem, GetItemByType(seed[53 - 1]));
 			// submachinegun ammo, western area 3F
 		}
 		if (uniqueID[1] == 0x8E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[88]));
+			RandomizeItem(currentItem, GetItemByType(seed[88 - 1]));
 			// blue herb, elevator controls room, claire
 		}
 	}
@@ -2380,12 +2388,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x24)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[41]));
+			RandomizeItem(currentItem, GetItemByType(seed[41 - 1]));
 			// gunpowder, east office
 		}
 		if (uniqueID[1] == 0xB9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[141]));
+			RandomizeItem(currentItem, GetItemByType(seed[141 - 1]));
 			// white gunpowder, private collection room, claire
 		}
 	}
@@ -2394,17 +2402,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x09)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[143]));
+			RandomizeItem(currentItem, GetItemByType(seed[143 - 1]));
 			// hand grenade, gun shop
 		}
 		if (uniqueID[1] == 0x9C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[93]));
+			RandomizeItem(currentItem, GetItemByType(seed[93 - 1]));
 			// ACP ammo, interrogation room, b scenario
 		}
 		if (uniqueID[1] == 0xB3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[32]));
+			RandomizeItem(currentItem, GetItemByType(seed[32 - 1]));
 			// green herb, detonator room
 		}
 	}
@@ -2413,12 +2421,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x0B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[180]));
+			RandomizeItem(currentItem, GetItemByType(seed[180 - 1]));
 			// flamethrower, supplies storage room
 		}
 		if (uniqueID[1] == 0x8F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[45]));
+			RandomizeItem(currentItem, GetItemByType(seed[45 - 1]));
 			// green herb, waiting room
 		}
 	}
@@ -2427,36 +2435,36 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[105]));
+			RandomizeItem(currentItem, GetItemByType(seed[105 - 1]));
 			// shotgun shells, secret room
 		}
 		if (uniqueID[1] == 0xCC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[13]));
+			RandomizeItem(currentItem, GetItemByType(seed[13 - 1]));
 			// handgun bullets, west office
 		}
 		if (uniqueID[1] == 0xF4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[43]));
+			RandomizeItem(currentItem, GetItemByType(seed[43 - 1]));
 			// white gunpowder, east office, claire
 		}
 	}
 
 	if (uniqueID[0] == 0x81)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[232]));
+		RandomizeItem(currentItem, GetItemByType(seed[232 - 1]));
 		// handgun bullets (bottom left), bioreactors room
 	}
 
 	if (uniqueID[0] == 0x83)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[114]));
+		RandomizeItem(currentItem, GetItemByType(seed[114 - 1]));
 		// handgun bullets (bottom right), machinery room
 	}
 
 	if (uniqueID[0] == 0x84)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[168]));
+		RandomizeItem(currentItem, GetItemByType(seed[168 - 1]));
 		// t-bar valve, treatment pool room
 	}
 
@@ -2470,14 +2478,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xF8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[177]));
+			RandomizeItem(currentItem, GetItemByType(seed[177 - 1]));
 			// blue herb, supplies storage room
 		}
 	}
 
 	if (uniqueID[0] == 0x86)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[34]));
+		RandomizeItem(currentItem, GetItemByType(seed[34 - 1]));
 		// wooden boards, detonator room
 	}
 
@@ -2485,12 +2493,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x90)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[30]));
+			RandomizeItem(currentItem, GetItemByType(seed[30 - 1]));
 			// fas, bathroom
 		}
 		if (uniqueID[1] == 0xB9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[121]));
+			RandomizeItem(currentItem, GetItemByType(seed[121 - 1]));
 			// parking garage key card, jail
 		}
 	}
@@ -2499,17 +2507,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[244]));
+			RandomizeItem(currentItem, GetItemByType(seed[244 - 1]));
 			// handgun bullets, pump room
 		}
 		if (uniqueID[1] == 0x82)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[44]));
+			RandomizeItem(currentItem, GetItemByType(seed[44 - 1]));
 			// fuse (main hall), east office
 		}
 		if (uniqueID[1] == 0xC9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[213]));
+			RandomizeItem(currentItem, GetItemByType(seed[213 - 1]));
 			// flame rounds, lounge, claire
 		}
 	}
@@ -2518,7 +2526,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xEF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[24]));
+			RandomizeItem(currentItem, GetItemByType(seed[24 - 1]));
 			// flame rounds in locker 208
 		}
 	}
@@ -2527,14 +2535,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xAF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[237]));
+			RandomizeItem(currentItem, GetItemByType(seed[237 - 1]));
 			// flash grenade (top right), bioreactors room
 		}
 	}
 
 	if (uniqueID[0] == 0x8C)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[66]));
+		RandomizeItem(currentItem, GetItemByType(seed[66 - 1]));
 		// green herb, chopper crash area
 	}
 
@@ -2542,12 +2550,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x74)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[249]));
+			RandomizeItem(currentItem, GetItemByType(seed[249 - 1]));
 			// wooden box, stars office, claire
 		}
 		if (uniqueID[1] == 0x8B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[60]));
+			RandomizeItem(currentItem, GetItemByType(seed[60 - 1]));
 			// handgun bullets, library
 		}
 	}
@@ -2556,12 +2564,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x1C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[216]));
+			RandomizeItem(currentItem, GetItemByType(seed[216 - 1]));
 			// flame rounds, server room, claire
 		}
 		if (uniqueID[1] == 0xF6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[148]));
+			RandomizeItem(currentItem, GetItemByType(seed[148 - 1]));
 			// ACP Ammo (second), Sewer Entrance, Leon B Scenario
 		}
 	}
@@ -2572,28 +2580,28 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		{
 			if (*character == RE2RREnums::Character::Claire)
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[263]));
+				RandomizeItem(currentItem, GetItemByType(seed[263 - 1]));
 				// blue herb, break room claire b scenario
 			}
 			else
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[137]));
+				RandomizeItem(currentItem, GetItemByType(seed[137 - 1]));
 				// blue herb, break room
 			}
 		}
 		if (uniqueID[1] == 0xB4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[57]));
+			RandomizeItem(currentItem, GetItemByType(seed[57 - 1]));
 			// handgun bullets, west storage room
 		}
 		if (uniqueID[1] == 0xED)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[130]));
+			RandomizeItem(currentItem, GetItemByType(seed[130 - 1]));
 			// film 3F locker, firing range lockers
 		}
 		if (uniqueID[1] == 0xFF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[107]));
+			RandomizeItem(currentItem, GetItemByType(seed[107 - 1]));
 			// suppressor, underground stairs, claire
 		}
 	}
@@ -2602,12 +2610,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x81)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[162]));
+			RandomizeItem(currentItem, GetItemByType(seed[162 - 1]));
 			// mag ammo, control room
 		}
 		if (uniqueID[1] == 0x9B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[176]));
+			RandomizeItem(currentItem, GetItemByType(seed[176 - 1]));
 			// red herb, supplies storage room
 		}
 	}
@@ -2622,17 +2630,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x87)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[154]));
+			RandomizeItem(currentItem, GetItemByType(seed[154 - 1]));
 			// handgun bullets
 		}
 		if (uniqueID[1] == 0xC1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[57]));
+			RandomizeItem(currentItem, GetItemByType(seed[57 - 1]));
 			// acp ammo, west storage room, b scenario
 		}
 		if (uniqueID[1] == 0xF6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[75]));
+			RandomizeItem(currentItem, GetItemByType(seed[75 - 1]));
 			// small gear
 		}
 	}
@@ -2641,7 +2649,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x58)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[21]));
+			RandomizeItem(currentItem, GetItemByType(seed[21 - 1]));
 			// combat knife, locker 103, claire
 		}
 	}
@@ -2650,17 +2658,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x0C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[183]));
+			RandomizeItem(currentItem, GetItemByType(seed[183 - 1]));
 			// handgun bullets, workroom
 		}
 		if (uniqueID[1] == 0x67)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[63]));
+			RandomizeItem(currentItem, GetItemByType(seed[63 - 1]));
 			// lion statue film, lounge, b scenario
 		}
 		if (uniqueID[1] == 0x85)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[60]));
+			RandomizeItem(currentItem, GetItemByType(seed[60 - 1]));
 			// ACP ammo, library, b scenario
 		}
 	}
@@ -2669,7 +2677,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[5]));
+			RandomizeItem(currentItem, GetItemByType(seed[5 - 1]));
 			// M19, guard room, b scenario
 		}
 	}
@@ -2678,12 +2686,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x2A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[89]));
+			RandomizeItem(currentItem, GetItemByType(seed[89 - 1]));
 			// club key, boiler room
 		}
 		if (uniqueID[1] == 0x61)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[193]));
+			RandomizeItem(currentItem, GetItemByType(seed[193 - 1]));
 			// hand grenade, cafeteria
 		}
 	}
@@ -2697,7 +2705,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xDE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[103]));
+			RandomizeItem(currentItem, GetItemByType(seed[103 - 1]));
 			// gunpowder, linen room
 		}
 	}
@@ -2707,12 +2715,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		if (uniqueID[1] == 0x69)
 		{
 			// nice
-			RandomizeItem(currentItem, GetItemByType(seed[20]));
+			RandomizeItem(currentItem, GetItemByType(seed[20 - 1]));
 			// ACP Ammo, Safety deposit room, B scenario
 		}
 		if (uniqueID[1] == 0x8E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[239]));
+			RandomizeItem(currentItem, GetItemByType(seed[239 - 1]));
 			// handgun bullets (bottom right, right), bioreactors room
 		}
 	}
@@ -2721,12 +2729,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[70]));
+			RandomizeItem(currentItem, GetItemByType(seed[70 - 1]));
 			// ACP ammo, fire escape, b scenario
 		}
 		if (uniqueID[1] == 0x5F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[210]));
+			RandomizeItem(currentItem, GetItemByType(seed[210 - 1]));
 			// large gunpowder, drug testing lab
 		}
 	}
@@ -2735,27 +2743,27 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x15)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[69]));
+			RandomizeItem(currentItem, GetItemByType(seed[69 - 1]));
 			// scepter, art room
 		}
 		if (uniqueID[1] == 0x4D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[15]));
+			RandomizeItem(currentItem, GetItemByType(seed[15 - 1]));
 			// speed loader for claire
 		}
 		if (uniqueID[1] == 0x7A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[65]));
+			RandomizeItem(currentItem, GetItemByType(seed[65 - 1]));
 			// wooden boards, chopper crash area
 		}
 		if (uniqueID[1] == 0x86)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[198]));
+			RandomizeItem(currentItem, GetItemByType(seed[198 - 1]));
 			// flame rounds, nap room, claire
 		}
 		if (uniqueID[1] == 0x93)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[91]));
+			RandomizeItem(currentItem, GetItemByType(seed[91 - 1]));
 			// gunpowder, observation room
 		}
 	}
@@ -2764,17 +2772,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x09)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[67]));
+			RandomizeItem(currentItem, GetItemByType(seed[67 - 1]));
 			// weapons locker key, art room
 		}
 		if (uniqueID[1] == 0x14)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[169]));
+			RandomizeItem(currentItem, GetItemByType(seed[169 - 1]));
 			// blue herb, treatment pool room
 		}
 		if (uniqueID[1] == 0x61)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[110]));
+			RandomizeItem(currentItem, GetItemByType(seed[110 - 1]));
 			// green herb (top left), machinery room
 		}
 	}
@@ -2783,22 +2791,22 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x13)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[94]));
+			RandomizeItem(currentItem, GetItemByType(seed[94 - 1]));
 			// gunpowder, outside stars office
 		}
 		if (uniqueID[1] == 0x24)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[209]));
+			RandomizeItem(currentItem, GetItemByType(seed[209 - 1]));
 			// upgrade chip (senior staff), greenhouse
 		}
 		if (uniqueID[1] == 0x95)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[145]));
+			RandomizeItem(currentItem, GetItemByType(seed[145 - 1]));
 			// long barrel (w-870), gun shop
 		}
 		if (uniqueID[1] == 0xA6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[195]));
+			RandomizeItem(currentItem, GetItemByType(seed[195 - 1]));
 			// needle cartridges, cafeteria, claire
 		}
 	}
@@ -2807,7 +2815,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x65)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[40]));
+			RandomizeItem(currentItem, GetItemByType(seed[40 - 1]));
 			// east office, acp ammo, b scenario
 		}
 	}
@@ -2816,7 +2824,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x31)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[118]));
+			RandomizeItem(currentItem, GetItemByType(seed[118 - 1]));
 			// JMB Hp3 car boot, claire
 		}
 	}
@@ -2825,12 +2833,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x85)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[144]));
+			RandomizeItem(currentItem, GetItemByType(seed[144 - 1]));
 			// ACP Ammo, Gun Shop, Leon B scenario
 		}
 		if (uniqueID[1] == 0xC7)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[28]));
+			RandomizeItem(currentItem, GetItemByType(seed[28 - 1]));
 			// ACP Ammo, east closet ambush b scenario
 		}
 	}
@@ -2839,7 +2847,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x0F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[224]));
+			RandomizeItem(currentItem, GetItemByType(seed[224 - 1]));
 			// hand grenade, biotesting lab
 		}
 	}
@@ -2848,25 +2856,25 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x17)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[107]));
+			RandomizeItem(currentItem, GetItemByType(seed[107 - 1]));
 			// long barrel (lightning hawk), underground stairs
 		}
 		if (uniqueID[1] == 0x8E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[4]));
+			RandomizeItem(currentItem, GetItemByType(seed[4 - 1]));
 			// ACP ammo upstairs main hall b scenario
 		}
 	}
 
 	if (uniqueID[0] == 0xA3)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[104]));
+		RandomizeItem(currentItem, GetItemByType(seed[104 - 1]));
 		// gunpowder, secret room
 	}
 
 	if (uniqueID[0] == 0xA4)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[194]));
+		RandomizeItem(currentItem, GetItemByType(seed[194 - 1]));
 		// handgun bullets, cafeteria
 	}
 
@@ -2874,7 +2882,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x8D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[58]));
+			RandomizeItem(currentItem, GetItemByType(seed[58 - 1]));
 			// hip pouch, west storage room
 		}
 		if (uniqueID[1] == 0xD3)
@@ -2897,20 +2905,20 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x8C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[52]));
+			RandomizeItem(currentItem, GetItemByType(seed[52 - 1]));
 			// ACP ammo, western area 3F, b scenario
 		}
 	}
 
 	if (uniqueID[0] == 0xA8)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[151]));
+		RandomizeItem(currentItem, GetItemByType(seed[151 - 1]));
 		// uss digital video cassette, rook bridge area
 	}
 
 	if (uniqueID[0] == 0xA9)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[135]));
+		RandomizeItem(currentItem, GetItemByType(seed[135 - 1]));
 		// shotgun shells, outside break room
 	}
 
@@ -2918,17 +2926,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[78]));
+			RandomizeItem(currentItem, GetItemByType(seed[78 - 1]));
 			// large gear, east storage room
 		}
 		if (uniqueID[1] == 0x81)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[163]));
+			RandomizeItem(currentItem, GetItemByType(seed[163 - 1]));
 			// ACP Ammo, monitor room, B Scenario
 		}
 		if (uniqueID[1] == 0x87)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[1]));
+			RandomizeItem(currentItem, GetItemByType(seed[1 - 1]));
 			// ink ribbon in main hall hardcore
 		}
 	}
@@ -2937,12 +2945,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xA7)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[240]));
+			RandomizeItem(currentItem, GetItemByType(seed[240 - 1]));
 			// fas, monitor room
 		}
 		if (uniqueID[1] == 0xB6)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[49]));
+			RandomizeItem(currentItem, GetItemByType(seed[49 - 1]));
 			// shotgun shells, western area 2F
 		}
 	}
@@ -2951,12 +2959,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x74)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[238]));
+			RandomizeItem(currentItem, GetItemByType(seed[238 - 1]));
 			// handgun bullets (bottom right, left), bioreactors room
 		}
 		if (uniqueID[1] == 0x3E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[184]));
+			RandomizeItem(currentItem, GetItemByType(seed[184 - 1]));
 			// SLS ammo, workroom lift, claire
 		}
 	}
@@ -2965,24 +2973,24 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x54)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[167]));
+			RandomizeItem(currentItem, GetItemByType(seed[167 - 1]));
 			// red herb, treatment pool room
 		}
 		if (uniqueID[1] == 0x9F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[83]));
+			RandomizeItem(currentItem, GetItemByType(seed[83 - 1]));
 			// blue herb, balcony
 		}
 		if (uniqueID[1] == 0xEC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[119]));
+			RandomizeItem(currentItem, GetItemByType(seed[119 - 1]));
 			// ACP Ammo, Jail Entrance, B scenario Leon
 		}
 	}
 
 	if (uniqueID[0] == 0xAF)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[175]));
+		RandomizeItem(currentItem, GetItemByType(seed[175 - 1]));
 		// mag ammo, bottom waterway
 	}
 
@@ -2990,7 +2998,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xC8)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[256]));
+			RandomizeItem(currentItem, GetItemByType(seed[256 - 1]));
 			// office ink ribbon after sherry, hardcore
 		}
 	}
@@ -2999,7 +3007,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x35)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[158]));
+			RandomizeItem(currentItem, GetItemByType(seed[158 - 1]));
 			// white gunpowder, water injection chamber, claire
 		}
 	}
@@ -3008,12 +3016,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xC1)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[227]));
+			RandomizeItem(currentItem, GetItemByType(seed[227 - 1]));
 			// large gunpowder, p4 level testing lab
 		}
 		if (uniqueID[1] == 0xE3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[181]));
+			RandomizeItem(currentItem, GetItemByType(seed[181 - 1]));
 			// hip pouch, workroom
 		}
 	}
@@ -3022,12 +3030,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x71)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[8]));
+			RandomizeItem(currentItem, GetItemByType(seed[8 - 1]));
 			// ACP ammo, operations room B scenario
 		}
 		if (uniqueID[1] == 0xCA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[236]));
+			RandomizeItem(currentItem, GetItemByType(seed[236 - 1]));
 			// hand grenade, bioreactor's room
 		}
 	}
@@ -3036,14 +3044,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xD3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[139]));
+			RandomizeItem(currentItem, GetItemByType(seed[139 - 1]));
 			// submachinegun ammo, basketball court, claire
 		}
 	}
 
 	if (uniqueID[0] == 0xB6)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[47]));
+		RandomizeItem(currentItem, GetItemByType(seed[47 - 1]));
 		// handgun bullets, western area 2F
 	}
 
@@ -3051,12 +3059,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xBF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[222]));
+			RandomizeItem(currentItem, GetItemByType(seed[222 - 1]));
 			// signal modulator, lab main shaft, b scenario
 		}
 		if (uniqueID[1] == 0xD0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[133]));
+			RandomizeItem(currentItem, GetItemByType(seed[133 - 1]));
 			// boxed electronic part, east storage, claire only
 		}
 	}
@@ -3071,19 +3079,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x6F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[124]));
+			RandomizeItem(currentItem, GetItemByType(seed[124 - 1]));
 			// yellow gunpowder, kennel
 		}
 		if (uniqueID[1] == 0x82)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[108]));
+			RandomizeItem(currentItem, GetItemByType(seed[108 - 1]));
 			// ACP ammo (top left), machinery room, b scenario
 		}
 	}
 
 	if (uniqueID[0] == 0xBC)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[43]));
+		RandomizeItem(currentItem, GetItemByType(seed[43 - 1]));
 		// yellow gunpowder, east office
 	}
 
@@ -3091,7 +3099,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x16)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[147]));
+			RandomizeItem(currentItem, GetItemByType(seed[147 - 1]));
 			// ACP Ammo (first), Sewer Entrance, b scenario Leon
 		}
 	}
@@ -3100,7 +3108,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x51)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[26]));
+			RandomizeItem(currentItem, GetItemByType(seed[26 - 1]));
 			// flame rounds in weapons locker, claire
 		}
 	}
@@ -3109,19 +3117,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x38)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[56]));
+			RandomizeItem(currentItem, GetItemByType(seed[56 - 1]));
 			// wooden boards, west storage room
 		}
 		if (uniqueID[1] == 0xE4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[4]));
+			RandomizeItem(currentItem, GetItemByType(seed[4 - 1]));
 			// handgun bullets (upstairs), main hall
 		}
 	}
 
 	if (uniqueID[0] == 0xC1)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[19]));
+		RandomizeItem(currentItem, GetItemByType(seed[19 - 1]));
 		// film: commemorative, safety deposit room
 	}
 
@@ -3129,12 +3137,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[3]));
+			RandomizeItem(currentItem, GetItemByType(seed[3 - 1]));
 			// lion medal, main hall
 		}
 		if (uniqueID[1] == 0xFB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[148]));
+			RandomizeItem(currentItem, GetItemByType(seed[148 - 1]));
 			// ink ribbon x2
 		}
 	}
@@ -3143,17 +3151,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x80)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[70]));
+			RandomizeItem(currentItem, GetItemByType(seed[70 - 1]));
 			// handgun bullets, fire escape
 		}
 		if (uniqueID[1] == 0xC0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[166]));
+			RandomizeItem(currentItem, GetItemByType(seed[166 - 1]));
 			// pawn piece, monitor room
 		}
 		if (uniqueID[1] == 0xCD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[22]));
+			RandomizeItem(currentItem, GetItemByType(seed[22 - 1]));
 			// gunpowder in 102 locker, claire
 		}
 	}
@@ -3162,7 +3170,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xAC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[158]));
+			RandomizeItem(currentItem, GetItemByType(seed[158 - 1]));
 			// Ink ribbon x2, water injection chamber, hardcore
 		}
 	}
@@ -3171,27 +3179,27 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x19)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[189]));
+			RandomizeItem(currentItem, GetItemByType(seed[189 - 1]));
 			// ACP Ammo, G2 Fight Room, B scenario
 		}
 		if (uniqueID[1] == 0x1D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[84]));
+			RandomizeItem(currentItem, GetItemByType(seed[84 - 1]));
 			// ACP Ammo, Roof Area, B scenario
 		}
 		if (uniqueID[1] == 0xA4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[112]));
+			RandomizeItem(currentItem, GetItemByType(seed[112 - 1]));
 			// handgun bullets (bottom left), machinery room
 		}
 		if (uniqueID[1] == 0xBC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[249]));
+			RandomizeItem(currentItem, GetItemByType(seed[249 - 1]));
 			// wooden box, stars office
 		}
 		if (uniqueID[1] == 0xCB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[173]));
+			RandomizeItem(currentItem, GetItemByType(seed[173 - 1]));
 			// hand grenade, bottom waterway overpass
 		}
 	}
@@ -3200,12 +3208,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x7D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[219]));
+			RandomizeItem(currentItem, GetItemByType(seed[219 - 1]));
 			// gunpowder, low-temp testing lab
 		}
 		if (uniqueID[1] == 0xF4)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[141]));
+			RandomizeItem(currentItem, GetItemByType(seed[141 - 1]));
 			// yellow gunpowder, break room
 		}
 	}
@@ -3214,12 +3222,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x1A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[51]));
+			RandomizeItem(currentItem, GetItemByType(seed[51 - 1]));
 			// portable safe, western area 2F
 		}
 		if (uniqueID[1] == 0xE5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[95]));
+			RandomizeItem(currentItem, GetItemByType(seed[95 - 1]));
 			// flame rounds outside stars office, claire
 		}
 	}
@@ -3228,7 +3236,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xBE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[199]));
+			RandomizeItem(currentItem, GetItemByType(seed[199 - 1]));
 			// high voltage condenser, nap room, claire
 		}
 	}
@@ -3237,7 +3245,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x96)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[124]));
+			RandomizeItem(currentItem, GetItemByType(seed[124 - 1]));
 			// white gunpowder, kennel, claire
 		}
 	}
@@ -3246,14 +3254,14 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xEE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[132]));
+			RandomizeItem(currentItem, GetItemByType(seed[132 - 1]));
 			// green herb, path to chief's office, claire
 		}
 	}
 
 	if (uniqueID[0] == 0xCD)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[95]));
+		RandomizeItem(currentItem, GetItemByType(seed[95 - 1]));
 		// shotgun shells, outside stars office
 	}
 
@@ -3261,7 +3269,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x56)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[101]));
+			RandomizeItem(currentItem, GetItemByType(seed[101 - 1]));
 			// mq11, stars office, claire
 		}
 	}
@@ -3270,12 +3278,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x29)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[190]));
+			RandomizeItem(currentItem, GetItemByType(seed[190 - 1]));
 			// flash grenade, g2 fight room
 		}
 		if (uniqueID[1] == 0x68)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[141]));
+			RandomizeItem(currentItem, GetItemByType(seed[141 - 1]));
 			// Ink ribbon x1, private collection room hardcore claire
 		}
 		if (uniqueID[1] == 0x8E)
@@ -3285,25 +3293,25 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x9E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[132]));
+			RandomizeItem(currentItem, GetItemByType(seed[132 - 1]));
 			// green herb, generator room
 		}
 		if (uniqueID[1] == 0xB0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[64]));
+			RandomizeItem(currentItem, GetItemByType(seed[64 - 1]));
 			// unicorn medallion, lounge
 		}
 	}
 
 	if (uniqueID[0] == 0xD1)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[59]));
+		RandomizeItem(currentItem, GetItemByType(seed[59 - 1]));
 		// maiden medallion
 	}
 
 	if (uniqueID[0] == 0xD3)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[122]));
+		RandomizeItem(currentItem, GetItemByType(seed[122 - 1]));
 		// fas, jail
 	}
 
@@ -3311,47 +3319,47 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x24)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[6]));
+			RandomizeItem(currentItem, GetItemByType(seed[6 - 1]));
 			// handgun bullets, reception
 		}
 		if (uniqueID[1] == 0x27)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[184]));
+			RandomizeItem(currentItem, GetItemByType(seed[184 - 1]));
 			// shotgun shells, workroom lift
 		}
 		if (uniqueID[1] == 0x46)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[117]));
+			RandomizeItem(currentItem, GetItemByType(seed[117 - 1]));
 			// hip pouch, operators room
 		}
 		if (uniqueID[1] == 0x98)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[25]));
+			RandomizeItem(currentItem, GetItemByType(seed[25 - 1]));
 			// shotgun, safety deposit room
 		}
 		if (uniqueID[1] == 0xC3)
 		{
 			if (*character == RE2RREnums::Character::Claire)
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[265]));
+				RandomizeItem(currentItem, GetItemByType(seed[265 - 1]));
 				// acp ammo, break room claire B
 			}
 			else
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[138]));
+				RandomizeItem(currentItem, GetItemByType(seed[138 - 1]));
 				// handgun bullets, break room
 			}
 		}
 		if (uniqueID[1] == 0xEE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[72]));
+			RandomizeItem(currentItem, GetItemByType(seed[72 - 1]));
 			// bolt cutters, fire escape
 		}
 	}
 
 	if (uniqueID[0] == 0xD5)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[50]));
+		RandomizeItem(currentItem, GetItemByType(seed[50 - 1]));
 		// shotgun shells, western area 2F
 	}
 
@@ -3359,12 +3367,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[112]));
+			RandomizeItem(currentItem, GetItemByType(seed[112 - 1]));
 			// ACP ammo (bottom left), machinery room, b scenario
 		}
 		if (uniqueID[1] == 0xBB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[119]));
+			RandomizeItem(currentItem, GetItemByType(seed[119 - 1]));
 			// white gunpowder, elevator controls room, claire
 		}
 	}
@@ -3373,7 +3381,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x98)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[96]));
+			RandomizeItem(currentItem, GetItemByType(seed[96 - 1]));
 			// battery, stars office
 		}
 		// 7A is Ada ink ribbon hardcore
@@ -3381,7 +3389,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 
 	if (uniqueID[0] == 0xD8)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[102]));
+		RandomizeItem(currentItem, GetItemByType(seed[102 - 1]));
 		// portable safe, linen room
 	}
 
@@ -3389,12 +3397,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x88)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[198]));
+			RandomizeItem(currentItem, GetItemByType(seed[198 - 1]));
 			// shotgun shells, nap room
 		}
 		if (uniqueID[1] == 0xE2)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[220]));
+			RandomizeItem(currentItem, GetItemByType(seed[220 - 1]));
 			// white gunpowder, modulator room, claire
 		}
 	}
@@ -3403,13 +3411,13 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x11)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[238]));
+			RandomizeItem(currentItem, GetItemByType(seed[238 - 1]));
 			// ACP ammo (bottom right, left), Bioreactor's room, b scenario
 		}
 		else
 		{
 			// gotta check this isn't 0x11 at some point
-			RandomizeItem(currentItem, GetItemByType(seed[250]));
+			RandomizeItem(currentItem, GetItemByType(seed[250 - 1]));
 			// rising rookie film, stars office hiding place
 		}
 	}
@@ -3418,12 +3426,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x39)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[15]));
+			RandomizeItem(currentItem, GetItemByType(seed[15 - 1]));
 			// high capacity mag (matilda), west office
 		}
 		if (uniqueID[1] == 0xA0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[79]));
+			RandomizeItem(currentItem, GetItemByType(seed[79 - 1]));
 			// shotgun shells, east storage room
 		}
 	}
@@ -3432,12 +3440,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x05)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[38]));
+			RandomizeItem(currentItem, GetItemByType(seed[38 - 1]));
 			// green herb, east office
 		}
 		if (uniqueID[1] == 0xCC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[207]));
+			RandomizeItem(currentItem, GetItemByType(seed[207 - 1]));
 			// red herb, greenhouse
 		}
 	}
@@ -3452,7 +3460,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x34)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[40]));
+			RandomizeItem(currentItem, GetItemByType(seed[40 - 1]));
 			// handgun bullets, east office
 		}
 	}
@@ -3461,19 +3469,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x34)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[202]));
+			RandomizeItem(currentItem, GetItemByType(seed[202 - 1]));
 			// Ink Ribbon x2, Lobby hardcore
 		}
 		if (uniqueID[1] == 0xC4)
 		{
 			if (*character == RE2RREnums::Character::Claire)
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[266]));
+				RandomizeItem(currentItem, GetItemByType(seed[266 - 1]));
 				// fuse (break room hallway) claire b scenario
 			}
 			else
 			{
-				RandomizeItem(currentItem, GetItemByType(seed[140]));
+				RandomizeItem(currentItem, GetItemByType(seed[140 - 1]));
 				// fuse (break room hallway)
 			}
 		}
@@ -3483,12 +3491,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x80)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[213]));
+			RandomizeItem(currentItem, GetItemByType(seed[213 - 1]));
 			// shotgun shells, lounge
 		}
 		if (uniqueID[1] == 0xE9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[221]));
+			RandomizeItem(currentItem, GetItemByType(seed[221 - 1]));
 			// handgun bullets, modulator room
 		}
 	}
@@ -3497,12 +3505,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x22)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[11]));
+			RandomizeItem(currentItem, GetItemByType(seed[11 - 1]));
 			// wooden boards, western area 1F
 		}
 		if (uniqueID[1] == 0x76)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[228]));
+			RandomizeItem(currentItem, GetItemByType(seed[228 - 1]));
 			// yellow gunpowder, p-4 level testing lab
 		}
 	}
@@ -3511,12 +3519,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x43)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[146]));
+			RandomizeItem(currentItem, GetItemByType(seed[146 - 1]));
 			// submachine gun ammo, break room, claire b scenario
 		}
 		if (uniqueID[1] == 0xF9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[261]));
+			RandomizeItem(currentItem, GetItemByType(seed[261 - 1]));
 			// ACP ammo, guardroom, b scenario
 		}
 	}
@@ -3525,12 +3533,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x92)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[260]));
+			RandomizeItem(currentItem, GetItemByType(seed[260 - 1]));
 			// hand grenade, guardroom, b scenario
 		}
 		if (uniqueID[1] == 0xDB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[27]));
+			RandomizeItem(currentItem, GetItemByType(seed[27 - 1]));
 			// ACP Ammo, Press Room B scenario
 		}
 	}
@@ -3539,17 +3547,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x5D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[242]));
+			RandomizeItem(currentItem, GetItemByType(seed[242 - 1]));
 			// blue herb, pump room
 		}
 		if (uniqueID[1] == 0xB2)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[16]));
+			RandomizeItem(currentItem, GetItemByType(seed[16 - 1]));
 			// gunpowder, dark room
 		}
 		if (uniqueID[1] == 0xFA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[144]));
+			RandomizeItem(currentItem, GetItemByType(seed[144 - 1]));
 			// submachinegun ammo, outside office, claire
 		}
 	}
@@ -3558,12 +3566,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xBA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[143]));
+			RandomizeItem(currentItem, GetItemByType(seed[143 - 1]));
 			// hand grenade, bus, claire only
 		}
 		if (uniqueID[1] == 0xF0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[163]));
+			RandomizeItem(currentItem, GetItemByType(seed[163 - 1]));
 			// handgun bullets, monitor room
 		}
 	}
@@ -3572,12 +3580,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x6C)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[138]));
+			RandomizeItem(currentItem, GetItemByType(seed[138 - 1]));
 			// submachine ammo, chief's office, claire
 		}
 		if (uniqueID[1] == 0xEF)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[122]));
+			RandomizeItem(currentItem, GetItemByType(seed[122 - 1]));
 			// FAS, orphanage
 		}
 	}
@@ -3586,12 +3594,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xA2)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[128]));
+			RandomizeItem(currentItem, GetItemByType(seed[128 - 1]));
 			// car key, firing range
 		}
 		if (uniqueID[1] == 0xAA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[36]));
+			RandomizeItem(currentItem, GetItemByType(seed[36 - 1]));
 			// ink ribbon x2, records room hardcore
 		}
 	}
@@ -3600,17 +3608,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x3B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[253]));
+			RandomizeItem(currentItem, GetItemByType(seed[253 - 1]));
 			// ink ribbon x1, escape area typewriter hardcore
 		}
 		if (uniqueID[1] == 0x4E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[152]));
+			RandomizeItem(currentItem, GetItemByType(seed[152 - 1]));
 			// rook piece, rook bridge area
 		}
 		if (uniqueID[1] == 0xC9)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[229]));
+			RandomizeItem(currentItem, GetItemByType(seed[229 - 1]));
 			// Ink ribbon x1, p-4 level testing lab hardcore
 		}
 	}
@@ -3619,12 +3627,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x30)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[71]));
+			RandomizeItem(currentItem, GetItemByType(seed[71 - 1]));
 			// wooden boards, fire escape
 		}
 		if (uniqueID[1] == 0xE5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[100]));
+			RandomizeItem(currentItem, GetItemByType(seed[100 - 1]));
 			// yellow gunpowsder, stars office
 		}
 	}
@@ -3633,17 +3641,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x1F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[255]));
+			RandomizeItem(currentItem, GetItemByType(seed[255 - 1]));
 			// Ink Ribbon x1, Sherry hardcore
 		}
 		if (uniqueID[1] == 0x2A)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[88]));
+			RandomizeItem(currentItem, GetItemByType(seed[88 - 1]));
 			// gunpowder, boiler room
 		}
 		if (uniqueID[1] == 0x8B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[216]));
+			RandomizeItem(currentItem, GetItemByType(seed[216 - 1]));
 			// flamethrower fuel, server room
 		}
 	}
@@ -3652,12 +3660,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xAD)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[156]));
+			RandomizeItem(currentItem, GetItemByType(seed[156 - 1]));
 			// Knife, lower waterway pre-slide
 		}
 		if (uniqueID[1] == 0xAE)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[230]));
+			RandomizeItem(currentItem, GetItemByType(seed[230 - 1]));
 			// handgun bullets (top left), bioreactors room
 		}
 	}
@@ -3666,12 +3674,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x8E)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[46]));
+			RandomizeItem(currentItem, GetItemByType(seed[46 - 1]));
 			// muzzle brake (matilda), waiting room
 		}
 		if (uniqueID[1] == 0x90)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[217]));
+			RandomizeItem(currentItem, GetItemByType(seed[217 - 1]));
 			// white gunpowder, server room, claire
 		}
 	}
@@ -3680,7 +3688,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xE0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[20]));
+			RandomizeItem(currentItem, GetItemByType(seed[20 - 1]));
 			// handgun bullets in locker, claire
 		}
 	}
@@ -3690,7 +3698,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		// 01 is bishop repickup in sewer, only work in B scenario
 		if (uniqueID[1] == 0x01 && *scenario == RE2RREnums::Scenario::B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[164]));
+			RandomizeItem(currentItem, GetItemByType(seed[164 - 1]));
 			// bishop, B scenario only plz
 		}
 		if (uniqueID[1] == 0x69)
@@ -3700,17 +3708,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0x04)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[192]));
+			RandomizeItem(currentItem, GetItemByType(seed[192 - 1]));
 			// shotgun shells, security room
 		}
 		if (uniqueID[1] == 0x31)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[10]));
+			RandomizeItem(currentItem, GetItemByType(seed[10 - 1]));
 			// green herb, western area 1F
 		}
 		if (uniqueID[1] == 0x98)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[142]));
+			RandomizeItem(currentItem, GetItemByType(seed[142 - 1]));
 			// green herb, outside RPD
 		}
 	}
@@ -3719,24 +3727,24 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x66)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[212]));
+			RandomizeItem(currentItem, GetItemByType(seed[212 - 1]));
 			// large gunpowder, underneath greenhouse
 		}
 		if (uniqueID[1] == 0xB5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[127]));
+			RandomizeItem(currentItem, GetItemByType(seed[127 - 1]));
 			// diamond key, morgue
 		}
 		if (uniqueID[1] == 0xE3)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[73]));
+			RandomizeItem(currentItem, GetItemByType(seed[73 - 1]));
 			// green herb, main hall 3F
 		}
 	}
 
 	if (uniqueID[0] == 0xF5)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[101]));
+		RandomizeItem(currentItem, GetItemByType(seed[101 - 1]));
 		// lightning hawk, stars office
 	}
 
@@ -3744,19 +3752,19 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xE5)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[163]));
+			RandomizeItem(currentItem, GetItemByType(seed[163 - 1]));
 			// Ink ribbon x2, monitor room hardcore
 		}
 		if (uniqueID[1] == 0xF2)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[139]));
+			RandomizeItem(currentItem, GetItemByType(seed[139 - 1]));
 			// mag ammo, break room
 		}
 	}
 
 	if (uniqueID[0] == 0xF7)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[36]));
+		RandomizeItem(currentItem, GetItemByType(seed[36 - 1]));
 		// gunpowder, records room
 	}
 
@@ -3764,17 +3772,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x34)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[133]));
+			RandomizeItem(currentItem, GetItemByType(seed[133 - 1]));
 			// boxed electronic part, generator room
 		}
 		if (uniqueID[1] == 0x3F)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[84]));
+			RandomizeItem(currentItem, GetItemByType(seed[84 - 1]));
 			// handgun bullets, roof area
 		}
 		if (uniqueID[1] == 0x72)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[201]));
+			RandomizeItem(currentItem, GetItemByType(seed[201 - 1]));
 			// hip pouch, nap room
 		}
 		if (uniqueID[1] == 0x79)
@@ -3784,7 +3792,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xAB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[51]));
+			RandomizeItem(currentItem, GetItemByType(seed[51 - 1]));
 			// Bejeweled Box, western area 2F, b scenario
 		}
 	}
@@ -3793,24 +3801,24 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x08)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[2]));
+			RandomizeItem(currentItem, GetItemByType(seed[2 - 1]));
 			// fas, main hall
 		}
 		if (uniqueID[1] == 0x55)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[178]));
+			RandomizeItem(currentItem, GetItemByType(seed[178 - 1]));
 			// queen plug, supplies storage room
 		}
 		if (uniqueID[1] == 0x6D)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[52]));
+			RandomizeItem(currentItem, GetItemByType(seed[52 - 1]));
 			// handgun bullets, western area 3F
 		}
 	}
 
 	if (uniqueID[0] == 0xFA)
 	{
-		RandomizeItem(currentItem, GetItemByType(seed[90]));
+		RandomizeItem(currentItem, GetItemByType(seed[90 - 1]));
 		// yellow gunpowder, outside observation room
 	}
 
@@ -3818,12 +3826,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x67)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[189]));
+			RandomizeItem(currentItem, GetItemByType(seed[189 - 1]));
 			// handgun bullets, g2 fight room
 		}
 		if (uniqueID[1] == 0xBC)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[9]));
+			RandomizeItem(currentItem, GetItemByType(seed[9 - 1]));
 			// handgun bullets, western area 1F
 		}
 	}
@@ -3832,17 +3840,17 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[5]));
+			RandomizeItem(currentItem, GetItemByType(seed[5 - 1]));
 			// knife (marvin), main hall
 		}
 		if (uniqueID[1] == 0xCB)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[9]));
+			RandomizeItem(currentItem, GetItemByType(seed[9 - 1]));
 			// ACP ammo, western area 1F B scenario
 		}
 		if (uniqueID[1] == 0xF0)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[218]));
+			RandomizeItem(currentItem, GetItemByType(seed[218 - 1]));
 			// knife, server room
 		}
 	}
@@ -3851,12 +3859,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x29)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[20]));
+			RandomizeItem(currentItem, GetItemByType(seed[20 - 1]));
 			// acp ammo, locker room claire B scenario
 		}
 		if (uniqueID[1] == 0x94)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[62]));
+			RandomizeItem(currentItem, GetItemByType(seed[62 - 1]));
 			// red book, library
 		}
 	}
@@ -3865,12 +3873,12 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x9B)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[246]));
+			RandomizeItem(currentItem, GetItemByType(seed[246 - 1]));
 			// ACP Ammo, Escape Shaft, Leon B scenario
 		}
 		if (uniqueID[1] == 0xEA)
 		{
-			RandomizeItem(currentItem, GetItemByType(seed[92]));
+			RandomizeItem(currentItem, GetItemByType(seed[92 - 1]));
 			// bejeweled box, observation room
 		}
 	}
