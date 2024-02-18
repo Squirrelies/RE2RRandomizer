@@ -54,6 +54,9 @@ constexpr uintptr_t SetCurrentScenarioTypeFuncOffset = 0x1C46590;
 constexpr uintptr_t SetCurrentDifficultyFuncOffset = 0x1C46920;
 constexpr uintptr_t SetLoadLocationFuncOffset = 0x1C48300;
 constexpr uintptr_t SetLoadAreaFuncOffset = 0x1C48350;
+constexpr uintptr_t EntriedMapFuncOffset = 0x95E6F0;
+constexpr uintptr_t SetRoomMapIdFuncOffset = 0x255940;
+constexpr uintptr_t OnChangeMapIdentifierFuncOffset = 0x12B5230;
 #elif DXVERSION == 12
 // DX12-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
@@ -62,6 +65,9 @@ constexpr uintptr_t SetCurrentScenarioTypeFuncOffset = 0x0000000;
 constexpr uintptr_t SetCurrentDifficultyFuncOffset = 0x0000000;
 constexpr uintptr_t SetLoadLocationFuncOffset = 0x0000000;
 constexpr uintptr_t SetLoadAreaFuncOffset = 0x0000000;
+constexpr uintptr_t EntriedMapFuncOffset = 0x0000000;
+constexpr uintptr_t SetRoomMapIdFuncOffset = 0x0000000;
+constexpr uintptr_t OnChangeMapIdentifierFuncOffset = 0x0000000;
 #endif
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
@@ -72,6 +78,9 @@ typedef void(__stdcall *SetCurrentScenarioType)(uintptr_t, uintptr_t, RE2RREnums
 typedef void(__stdcall *SetCurrentDifficulty)(uintptr_t, uintptr_t, RE2RREnums::Difficulty *);
 typedef void(__stdcall *SetLoadLocation)(uintptr_t, uintptr_t, RE2RREnums::LocationID *);
 typedef void(__stdcall *SetLoadArea)(uintptr_t, uintptr_t, RE2RREnums::MapID *);
+typedef void(__stdcall *EntriedMap)(uintptr_t, uintptr_t, RE2RREnums::MapPartsID, RE2RREnums::FloorID);
+typedef void(__stdcall *SetRoomMapId)(uintptr_t, uintptr_t, RE2RREnums::MapPartsID);
+typedef void(__stdcall *OnChangeMapIdentifier)(uintptr_t, uintptr_t, app_ropeway_MansionManager_MapIdentifier *, app_ropeway_MansionManager_MapIdentifier *);
 
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
@@ -88,6 +97,9 @@ __stdcall void HookSetCurrentScenarioType(uintptr_t, uintptr_t, RE2RREnums::Scen
 __stdcall void HookSetCurrentDifficulty(uintptr_t, uintptr_t, RE2RREnums::Difficulty *);
 __stdcall void HookSetLoadLocation(uintptr_t, uintptr_t, RE2RREnums::LocationID *);
 __stdcall void HookSetLoadArea(uintptr_t, uintptr_t, RE2RREnums::MapID *);
+__stdcall void HookEntriedMap(uintptr_t, uintptr_t, RE2RREnums::MapPartsID, RE2RREnums::FloorID);
+__stdcall void HookSetRoomMapId(uintptr_t, uintptr_t, RE2RREnums::MapPartsID);
+__stdcall void HookOnChangeMapIdentifier(uintptr_t, uintptr_t, app_ropeway_MansionManager_MapIdentifier *, app_ropeway_MansionManager_MapIdentifier *);
 void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);

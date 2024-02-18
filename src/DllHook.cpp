@@ -26,7 +26,7 @@ bool initGetDeviceStateM1 = false;
 bool initGetDeviceStateM2 = false;
 bool initGetDeviceStateJ1 = false;
 bool initGetDeviceStateJ2 = false;
-bool isUIOpen = true;
+bool isUIOpen = false;
 UINT resizeWidth = 0U;
 UINT resizeHeight = 0U;
 ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
@@ -41,6 +41,12 @@ SetLoadLocation setLoadLocationFuncTarget = reinterpret_cast<SetLoadLocation>((u
 SetLoadLocation setLoadLocationFunc = nullptr;
 SetLoadArea setLoadAreaFuncTarget = reinterpret_cast<SetLoadArea>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetLoadAreaFuncOffset);
 SetLoadArea setLoadAreaFunc = nullptr;
+EntriedMap entriedMapFuncTarget = reinterpret_cast<EntriedMap>((uintptr_t)GetModuleHandleW(L"re2.exe") + EntriedMapFuncOffset);
+EntriedMap entriedMapFunc = nullptr;
+SetRoomMapId setRoomMapIdFuncTarget = reinterpret_cast<SetRoomMapId>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetRoomMapIdFuncOffset);
+SetRoomMapId setRoomMapIdFunc = nullptr;
+OnChangeMapIdentifier onChangeMapIdentifierFuncTarget = reinterpret_cast<OnChangeMapIdentifier>((uintptr_t)GetModuleHandleW(L"re2.exe") + OnChangeMapIdentifierFuncOffset);
+OnChangeMapIdentifier onChangeMapIdentifierFunc = nullptr;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -94,6 +100,15 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 
 	if (!HookFunction<SetLoadArea>(setLoadAreaFuncTarget, (SetLoadArea)HookSetLoadArea, &setLoadAreaFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadArea): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<EntriedMap>(entriedMapFuncTarget, (EntriedMap)HookEntriedMap, &entriedMapFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookEntriedMap): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<SetRoomMapId>(setRoomMapIdFuncTarget, (SetRoomMapId)HookSetRoomMapId, &setRoomMapIdFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookSetRoomMapId): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<OnChangeMapIdentifier>(onChangeMapIdentifierFuncTarget, (OnChangeMapIdentifier)HookOnChangeMapIdentifier, &onChangeMapIdentifierFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookOnChangeMapIdentifier): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");
 
@@ -239,6 +254,24 @@ __stdcall void HookSetLoadArea(uintptr_t param1, uintptr_t param2, RE2RREnums::M
 {
 	logger->LogMessage("[RE2R-R] HookSetLoadArea called: %s\n", RE2RREnums::EnumMapIDToString(*param3).c_str());
 	setLoadAreaFunc(param1, param2, param3);
+}
+
+__stdcall void HookEntriedMap(uintptr_t param1, uintptr_t param2, RE2RREnums::MapPartsID param3, RE2RREnums::FloorID param4)
+{
+	logger->LogMessage("[RE2R-R] HookEntriedMap called: %s / %s\n", RE2RREnums::EnumMapPartsIDToString(param3).c_str(), RE2RREnums::EnumFloorIDToString(param4).c_str());
+	entriedMapFunc(param1, param2, param3, param4);
+}
+
+__stdcall void HookSetRoomMapId(uintptr_t param1, uintptr_t param2, RE2RREnums::MapPartsID param3)
+{
+	logger->LogMessage("[RE2R-R] HookSetRoomMapId called: %s\n", RE2RREnums::EnumMapPartsIDToString(param3).c_str());
+	setRoomMapIdFunc(param1, param2, param3);
+}
+
+__stdcall void HookOnChangeMapIdentifier(uintptr_t param1, uintptr_t param2, app_ropeway_MansionManager_MapIdentifier *param3, app_ropeway_MansionManager_MapIdentifier *param4)
+{
+	logger->LogMessage("[RE2R-R] HookOnChangeMapIdentifier called: %s / %s\n", param3->ToString().c_str(), param4->ToString().c_str());
+	onChangeMapIdentifierFunc(param1, param2, param3, param4);
 }
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
