@@ -1447,6 +1447,32 @@ bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 #endif
 //
 
+struct via_vec3
+{
+	float x; // 0x00-0x0F
+	float y; // 0x10-0x13
+	float z; // 0x14-0x17
+
+	std::string ToString()
+	{
+		const char *toStringFormat = "{ \"%s\": %f, \"%s\": %f, \"%s\": %f }";
+
+		int bufferSize = snprintf(NULL, 0, toStringFormat,
+		                          RE2RR_NAMEOF(x), x,
+		                          RE2RR_NAMEOF(y), y,
+		                          RE2RR_NAMEOF(z), z);
+		char *toString = (char *)malloc(bufferSize + 1);
+		snprintf(toString, bufferSize + 1, toStringFormat,
+		         RE2RR_NAMEOF(x), x,
+		         RE2RR_NAMEOF(y), y,
+		         RE2RR_NAMEOF(z), z);
+		std::string returnValue = std::string(toString);
+		free(toString);
+
+		return returnValue;
+	}
+};
+
 struct app_ropeway_MansionManager_MapIdentifier
 {
 	uint8_t _Reserved[0x10];  // 0x00-0x0F

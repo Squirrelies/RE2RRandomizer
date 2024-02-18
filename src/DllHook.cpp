@@ -39,6 +39,8 @@ SetCurrentDifficulty setCurrentDifficultyFuncTarget = reinterpret_cast<SetCurren
 SetCurrentDifficulty setCurrentDifficultyFunc = nullptr;
 SetLoadLocation setLoadLocationFuncTarget = reinterpret_cast<SetLoadLocation>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetLoadLocationFuncOffset);
 SetLoadLocation setLoadLocationFunc = nullptr;
+GetLoadArea getLoadAreaFuncTarget = reinterpret_cast<GetLoadArea>((uintptr_t)GetModuleHandleW(L"re2.exe") + GetLoadAreaFuncOffset);
+GetLoadArea getLoadAreaFunc = nullptr;
 SetLoadArea setLoadAreaFuncTarget = reinterpret_cast<SetLoadArea>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetLoadAreaFuncOffset);
 SetLoadArea setLoadAreaFunc = nullptr;
 EntriedMap entriedMapFuncTarget = reinterpret_cast<EntriedMap>((uintptr_t)GetModuleHandleW(L"re2.exe") + EntriedMapFuncOffset);
@@ -47,6 +49,14 @@ SetRoomMapId setRoomMapIdFuncTarget = reinterpret_cast<SetRoomMapId>((uintptr_t)
 SetRoomMapId setRoomMapIdFunc = nullptr;
 OnChangeMapIdentifier onChangeMapIdentifierFuncTarget = reinterpret_cast<OnChangeMapIdentifier>((uintptr_t)GetModuleHandleW(L"re2.exe") + OnChangeMapIdentifierFuncOffset);
 OnChangeMapIdentifier onChangeMapIdentifierFunc = nullptr;
+GetMapArea getMapAreaFuncTarget = reinterpret_cast<GetMapArea>((uintptr_t)GetModuleHandleW(L"re2.exe") + GetMapAreaFuncOffset);
+GetMapArea getMapAreaFunc = nullptr;
+LocationThroughManagerUpdate locationThroughManagerUpdateFuncTarget = reinterpret_cast<LocationThroughManagerUpdate>((uintptr_t)GetModuleHandleW(L"re2.exe") + LocationThroughManagerUpdateFuncOffset);
+LocationThroughManagerUpdate locationThroughManagerUpdateFunc = nullptr;
+GetLocationID getLocationIDFuncTarget = reinterpret_cast<GetLocationID>((uintptr_t)GetModuleHandleW(L"re2.exe") + GetLocationIDFuncOffset);
+GetLocationID getLocationIDFunc = nullptr;
+UIMapManagerUpdate uiMapManagerUpdateFuncTarget = reinterpret_cast<UIMapManagerUpdate>((uintptr_t)GetModuleHandleW(L"re2.exe") + UIMapManagerUpdateFuncOffset);
+UIMapManagerUpdate uiMapManagerUpdateFunc = nullptr;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -95,20 +105,35 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	if (!HookFunction<SetCurrentDifficulty>(setCurrentDifficultyFuncTarget, (SetCurrentDifficulty)HookSetCurrentDifficulty, &setCurrentDifficultyFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookSetCurrentDifficulty): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<SetLoadLocation>(setLoadLocationFuncTarget, (SetLoadLocation)HookSetLoadLocation, &setLoadLocationFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadLocation): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<SetLoadLocation>(setLoadLocationFuncTarget, (SetLoadLocation)HookSetLoadLocation, &setLoadLocationFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadLocation): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<SetLoadArea>(setLoadAreaFuncTarget, (SetLoadArea)HookSetLoadArea, &setLoadAreaFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadArea): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<GetLoadArea>(getLoadAreaFuncTarget, (GetLoadArea)HookGetLoadArea, &getLoadAreaFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookGetLoadArea): %s\n", MH_StatusToString(status));
+
+	// if (!HookFunction<SetLoadArea>(setLoadAreaFuncTarget, (SetLoadArea)HookSetLoadArea, &setLoadAreaFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadArea): %s\n", MH_StatusToString(status));
 
 	if (!HookFunction<EntriedMap>(entriedMapFuncTarget, (EntriedMap)HookEntriedMap, &entriedMapFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookEntriedMap): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<SetRoomMapId>(setRoomMapIdFuncTarget, (SetRoomMapId)HookSetRoomMapId, &setRoomMapIdFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookSetRoomMapId): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<SetRoomMapId>(setRoomMapIdFuncTarget, (SetRoomMapId)HookSetRoomMapId, &setRoomMapIdFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookSetRoomMapId): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<OnChangeMapIdentifier>(onChangeMapIdentifierFuncTarget, (OnChangeMapIdentifier)HookOnChangeMapIdentifier, &onChangeMapIdentifierFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookOnChangeMapIdentifier): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<OnChangeMapIdentifier>(onChangeMapIdentifierFuncTarget, (OnChangeMapIdentifier)HookOnChangeMapIdentifier, &onChangeMapIdentifierFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookOnChangeMapIdentifier): %s\n", MH_StatusToString(status));
+
+	// if (!HookFunction<GetMapArea>(getMapAreaFuncTarget, (GetMapArea)HookGetMapArea, &getMapAreaFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookGetMapArea): %s\n", MH_StatusToString(status));
+
+	// if (!HookFunction<LocationThroughManagerUpdate>(locationThroughManagerUpdateFuncTarget, (LocationThroughManagerUpdate)HookLocationThroughManagerUpdate, &locationThroughManagerUpdateFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookLocationThroughManagerUpdate): %s\n", MH_StatusToString(status));
+
+	// if (!HookFunction<GetLocationID>(getLocationIDFuncTarget, (GetLocationID)HookGetLocationID, &getLocationIDFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookGetLocationID): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<UIMapManagerUpdate>(uiMapManagerUpdateFuncTarget, (UIMapManagerUpdate)HookUIMapManagerUpdate, &uiMapManagerUpdateFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookUIMapManagerUpdate): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");
 
@@ -250,6 +275,13 @@ __stdcall void HookSetLoadLocation(uintptr_t param1, uintptr_t param2, RE2RREnum
 	setLoadLocationFunc(param1, param2, param3);
 }
 
+__stdcall RE2RREnums::MapID *HookGetLoadArea(void)
+{
+	RE2RREnums::MapID *mapId = getLoadAreaFunc();
+	logger->LogMessage("[RE2R-R] HookGetLoadArea called: %s\n", RE2RREnums::EnumMapIDToString(*mapId).c_str());
+	return mapId;
+}
+
 __stdcall void HookSetLoadArea(uintptr_t param1, uintptr_t param2, RE2RREnums::MapID *param3)
 {
 	logger->LogMessage("[RE2R-R] HookSetLoadArea called: %s\n", RE2RREnums::EnumMapIDToString(*param3).c_str());
@@ -272,6 +304,43 @@ __stdcall void HookOnChangeMapIdentifier(uintptr_t param1, uintptr_t param2, app
 {
 	logger->LogMessage("[RE2R-R] HookOnChangeMapIdentifier called: %s / %s\n", param3->ToString().c_str(), param4->ToString().c_str());
 	onChangeMapIdentifierFunc(param1, param2, param3, param4);
+}
+
+__stdcall RE2RREnums::MapArea HookGetMapArea(uintptr_t param1, uintptr_t param2, RE2RREnums::MapID param3, via_vec3 *param4)
+{
+	RE2RREnums::MapArea mapArea = getMapAreaFunc(param1, param2, param3, param4);
+	logger->LogMessage("[RE2R-R] HookGetMapArea called: %s / %s -> %s\n", RE2RREnums::EnumMapIDToString(param3).c_str(), param4->ToString().c_str(), RE2RREnums::EnumMapAreaToString(mapArea).c_str());
+	return mapArea;
+}
+
+__stdcall void HookLocationThroughManagerUpdate(uintptr_t param1, uintptr_t param2)
+{
+	locationThroughManagerUpdateFunc(param1, param2);
+	RE2RREnums::LocationID *locationID = (RE2RREnums::LocationID *)(param2 + 0xA4);
+	RE2RREnums::MapID *mapID = (RE2RREnums::MapID *)(param2 + 0xD0);
+
+	if (*locationID != RE2RREnums::LocationID::invalid && *mapID != RE2RREnums::MapID::Invalid)
+		logger->LogMessage("[RE2R-R] HookLocationThroughManagerUpdate called. %s / %s\n", RE2RREnums::EnumLocationIDToString(*locationID).c_str(), RE2RREnums::EnumMapIDToString(*mapID).c_str());
+}
+
+__stdcall RE2RREnums::LocationID HookGetLocationID(uintptr_t param1, RE2RREnums::MapID param2)
+{
+	RE2RREnums::LocationID locationID = getLocationIDFunc(param1, param2);
+	logger->LogMessage("[RE2R-R] HookGetLocationID called: %s -> %s\n", RE2RREnums::EnumMapIDToString(param2).c_str(), RE2RREnums::EnumLocationIDToString(locationID).c_str());
+	return locationID;
+}
+
+__stdcall void HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2)
+{
+	uiMapManagerUpdateFunc(param1, param2);
+	RE2RREnums::MapPartsID *mapPartsID = (RE2RREnums::MapPartsID *)(param2 + 0xC8);
+	RE2RREnums::MapID *mapID = (RE2RREnums::MapID *)(param2 + 0xCC);
+	RE2RREnums::FloorID *floorID = (RE2RREnums::FloorID *)(param2 + 0xD4);
+
+	logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
+	                   RE2RREnums::EnumMapPartsIDToString(*mapPartsID).c_str(),
+	                   RE2RREnums::EnumMapIDToString(*mapID).c_str(),
+	                   RE2RREnums::EnumFloorIDToString(*floorID).c_str());
 }
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
