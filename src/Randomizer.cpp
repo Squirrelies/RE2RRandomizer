@@ -43,7 +43,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 				return {0x1A, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
 			}
 		}
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::CLAIRE_A)
 			{
@@ -135,7 +135,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 	{
 		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && type == 4)
 		{
-			if (*character == RE2RREnums::Character::Leon)
+			if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 			{
 				return {0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x07, 0x00};
 			}
@@ -159,7 +159,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 				return {0x20, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
 			}
 		}
-		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && type == 131 && *character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && type == 131 && *scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x80, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -193,7 +193,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 					return {0x20, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 				}
 			}
-			if (*character == RE2RREnums::Character::Leon)
+			if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 			{
 				return {0x24, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 			}
@@ -228,7 +228,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 14)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x30, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -250,7 +250,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 23 || type == 25 || type == 48 || type == 49 || type == 78 || type == 94 || type == 104 || type == 128 || type == 134 || type == 149 || type == 160 || type == 183 || type == 191 || type == 197 || type == 212 || type == 250)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			if (*difficulty == RE2RREnums::Difficulty::HARD)
 			{
@@ -290,7 +290,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 24)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
 		}
@@ -312,7 +312,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 34 || type == 105 || type == 108 || type == 142 || type == 145 || type == 172 || type == 192 || type == 210 || type == 223 || type == 235 || type == 259)
 	{
-		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && *character == RE2RREnums::Character::Claire && type == 145)
+		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && *scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B && type == 145)
 		{
 			if (*difficulty == RE2RREnums::Difficulty::HARD)
 			{
@@ -341,7 +341,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 42 || type == 89 || type == 99 || type == 123 || type == 140 || type == 157 || type == 158 || type == 203 || type == 216 || type == 219 || type == 225 || type == 227 || type == 263)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x26, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -365,7 +365,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 45)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x31, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -389,7 +389,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 52 || type == 138 || type == 154 || type == 161 || type == 174 || type == 187 || type == 232)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			if (*difficulty == RE2RREnums::Difficulty::HARD)
 			{
@@ -494,7 +494,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 88)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0xA0, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -523,7 +523,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 100)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x03, 0x00};
 		}
@@ -535,7 +535,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 106)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x3E, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -547,7 +547,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 117)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x32, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -559,7 +559,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 119)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x50, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -596,7 +596,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 139)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0xF1, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -608,7 +608,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 144)
 	{
-		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && *character == RE2RREnums::Character::Claire)
+		if (*scenario == RE2RREnums::Scenario::LEON_B || *scenario == RE2RREnums::Scenario::CLAIRE_B && *scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			if (*difficulty == RE2RREnums::Difficulty::HARD)
 			{
@@ -657,7 +657,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 169)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x37, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -684,7 +684,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 179)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x00, 0x00, 0x00, 0x00, 0x2B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x90, 0x01};
 		}
@@ -701,7 +701,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 194 || type == 215 || type == 234)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x19, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC8, 0x00};
 		}
@@ -727,7 +727,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 198)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x41, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -774,7 +774,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 247)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x19, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x01};
 		}
@@ -786,7 +786,7 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 	if (type == 248)
 	{
-		if (*character == RE2RREnums::Character::Leon)
+		if (*scenario == RE2RREnums::Scenario::LEON_A || *scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			return {0x26, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 		}
@@ -2073,7 +2073,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0xE5)
 		{
-			if (*character == RE2RREnums::Character::Claire)
+			if (*scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[262 - 1]));
 				// knife, outside break room
@@ -2578,7 +2578,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 	{
 		if (uniqueID[1] == 0x35)
 		{
-			if (*character == RE2RREnums::Character::Claire)
+			if (*scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[263 - 1]));
 				// blue herb, break room claire b scenario
@@ -3339,7 +3339,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xC3)
 		{
-			if (*character == RE2RREnums::Character::Claire)
+			if (*scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[265 - 1]));
 				// acp ammo, break room claire B
@@ -3474,7 +3474,7 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 		}
 		if (uniqueID[1] == 0xC4)
 		{
-			if (*character == RE2RREnums::Character::Claire)
+			if (*scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				RandomizeItem(currentItem, GetItemByType(seed[266 - 1]));
 				// fuse (break room hallway) claire b scenario

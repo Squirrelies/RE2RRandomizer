@@ -11,9 +11,8 @@ class UI
 {
 private:
 	ImmediateLogger *logger;
-	int *character;
-	int *scenario;
-	int *difficulty;
+	RE2RREnums::Scenario *scenario;
+	RE2RREnums::Difficulty *difficulty;
 	Randomizer *randomizer;
 
 protected:
@@ -21,14 +20,12 @@ public:
 	UI(ImmediateLogger *logger)
 	{
 		this->logger = logger;
-		this->character = new int(0);
-		this->scenario = new int(0);
-		this->difficulty = new int(0);
+		this->scenario = new RE2RREnums::Scenario(RE2RREnums::Scenario::LEON_A);
+		this->difficulty = new RE2RREnums::Difficulty(RE2RREnums::Difficulty::NORMAL);
 		this->randomizer = nullptr;
 	}
 	~UI()
 	{
-		delete this->character;
 		delete this->scenario;
 		delete this->difficulty;
 		delete this->randomizer;

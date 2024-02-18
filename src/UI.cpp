@@ -45,24 +45,23 @@ void __stdcall UI::DrawMainUI(bool *open)
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::SeparatorText("Character");
-	ImGui::RadioButton("Leon", character, 0);
+	ImGui::SeparatorText("Character/Scenario");
+	ImGui::RadioButton("Leon A", (int32_t *)scenario, (int32_t)RE2RREnums::Scenario::LEON_A);
 	ImGui::SameLine();
-	ImGui::RadioButton("Claire", character, 1);
+	ImGui::RadioButton("Leon B", (int32_t *)scenario, (int32_t)RE2RREnums::Scenario::LEON_B);
 	ImGui::Spacing();
 
-	ImGui::SeparatorText("Scenario");
-	ImGui::RadioButton("A", scenario, 0);
+	ImGui::RadioButton("Claire A", (int32_t *)scenario, (int32_t)RE2RREnums::Scenario::CLAIRE_A);
 	ImGui::SameLine();
-	ImGui::RadioButton("B", scenario, 1);
+	ImGui::RadioButton("Claire B", (int32_t *)scenario, (int32_t)RE2RREnums::Scenario::CLAIRE_B);
 	ImGui::Spacing();
 
 	ImGui::SeparatorText("Difficulty");
-	// ImGui::RadioButton("Assisted", difficulty, 0);
+	// ImGui::RadioButton("Assisted", difficulty, (int32_t)RE2RREnums::Difficulty::EASY);
 	// ImGui::SameLine();
-	ImGui::RadioButton("Standard", difficulty, 0);
+	ImGui::RadioButton("Standard", (int32_t *)difficulty, (int32_t)RE2RREnums::Difficulty::NORMAL);
 	ImGui::SameLine();
-	ImGui::RadioButton("Hardcore", difficulty, 1);
+	ImGui::RadioButton("Hardcore", (int32_t *)difficulty, (int32_t)RE2RREnums::Difficulty::HARD);
 	ImGui::Spacing();
 
 	ImGui::Spacing();
@@ -73,10 +72,10 @@ void __stdcall UI::DrawMainUI(bool *open)
 		logger->LogMessage("Generate Seed clicked!\n");
 
 		SeedGenerator seedGenerator(logger);
-		seedGenerator.GenerateSeed((RE2RREnums::Character)*character, (RE2RREnums::Scenario)*scenario, (RE2RREnums::Difficulty)*difficulty, true);
+		seedGenerator.GenerateSeed((RE2RREnums::Scenario)*scenario, (RE2RREnums::Difficulty)*difficulty, true);
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario, (RE2RREnums::Character *)character);
+		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario);
 	}
 	// ImGui::SameLine();
 	// if (ImGui::Button("Enable Randomizer"))

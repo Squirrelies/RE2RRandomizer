@@ -2,7 +2,6 @@
 
 SeedShuffler::SeedShuffler(
     ImmediateLogger *logger,
-    RE2RREnums::Character character,
     RE2RREnums::Scenario scenario,
     RE2RREnums::Difficulty difficulty,
     int listLength,
@@ -13,7 +12,6 @@ SeedShuffler::SeedShuffler(
     std::map<uint32_t, std::map<uint32_t, std::vector<uint32_t>>> &ZoneRequiredItems)
 {
 	this->logger = logger;
-	this->character = character;
 	this->scenario = scenario;
 	this->difficulty = difficulty;
 	this->m_ListLength = listLength;
@@ -40,7 +38,7 @@ void SeedShuffler::ShuffleItems()
 
 	uint32_t rookpos = 5000;
 
-	if (character == RE2RREnums::Character::Leon)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 	{
 		rookpos = 148 + (rand() % 4);
 	}
@@ -68,7 +66,7 @@ void SeedShuffler::ShuffleItems()
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part, and dispersal cartridge
 
-			if (character == RE2RREnums::Character::Leon)
+			if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 			{
 				exceptions = exceptions && (i != 261 && i != 262 && i != 263 && i != 264 && i != 265); // claire b scenario extras
 			}
@@ -97,7 +95,7 @@ void SeedShuffler::ShuffleItems()
 				if ((difficulty == RE2RREnums::Difficulty::HARD && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::HARD)
 				{
 
-					if (character == RE2RREnums::Character::Claire)
+					if (scenario == RE2RREnums::Scenario::CLAIRE_A || scenario == RE2RREnums::Scenario::CLAIRE_B)
 					{
 
 						if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
@@ -139,7 +137,7 @@ void SeedShuffler::ShuffleItems()
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part + dispersal cartridge
 
-			if (character == RE2RREnums::Character::Leon)
+			if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 			{
 				exceptions = exceptions && (i != 261 && i != 262 && i != 263 && i != 264 && i != 265); // claire b scenario extras
 			}
@@ -169,7 +167,7 @@ void SeedShuffler::ShuffleItems()
 				if (i != 167 && i != 170 && i != 199)
 				{
 
-					if (character == RE2RREnums::Character::Claire)
+					if (scenario == RE2RREnums::Scenario::CLAIRE_A || scenario == RE2RREnums::Scenario::CLAIRE_B)
 					{
 						// extra claire exceptions
 						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
@@ -223,7 +221,7 @@ void SeedShuffler::ShuffleItems()
 	m_FinalList[sewerkeypos] = 170;
 	m_FinalList[chippos] = 199;
 
-	if (character == RE2RREnums::Character::Leon)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 	{
 		m_FinalList[rookpos] = 151;
 	}
@@ -245,7 +243,7 @@ void SeedShuffler::ShuffleItems()
 			m_FinalList[i] = i;
 		}
 	}
-	else if (character == RE2RREnums::Character::Leon)
+	else if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 	{
 		for (uint32_t i = 261; i < 266; ++i)
 		{
@@ -511,7 +509,7 @@ void SeedShuffler::CheckItemValidity()
 		earlylocations.push_back(257);
 		earlylocations.push_back(258);
 
-		if (character == RE2RREnums::Character::Leon)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 		{
 			for (uint32_t i = 134; i < 141; ++i)
 			{
@@ -548,7 +546,7 @@ void SeedShuffler::CheckItemValidity()
 				boltcutteraccess = true;
 			}
 
-			if (character == RE2RREnums::Character::Leon)
+			if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 			{
 				if (m_FinalList[(*itr)] == 119) // square crank
 				{
@@ -625,7 +623,7 @@ void SeedShuffler::CheckItemValidity()
 		}
 	}
 
-	if (character == RE2RREnums::Character::Leon)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 	{
 
 		// can we use the rook plug or the t-bar valve to get out of the sewer access area TBAR REMOVED FROM HERE
@@ -697,7 +695,7 @@ void SeedShuffler::CheckItemValidity()
 	// joint plug
 	bool ispluginzone = false;
 
-	if (character == RE2RREnums::Character::Leon)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::LEON_B)
 	{
 
 		for (uint32_t i = 244; i < 247; ++i)

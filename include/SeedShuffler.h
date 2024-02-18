@@ -20,7 +20,6 @@ private:
 	std::vector<uint32_t> m_ForbiddenDependencies;
 	std::map<uint32_t, uint32_t> m_DebugInfo;
 	std::mt19937 m_Twister;
-	RE2RREnums::Character character;
 	RE2RREnums::Scenario scenario;
 	RE2RREnums::Difficulty difficulty;
 
@@ -40,7 +39,6 @@ protected:
 public:
 	SeedShuffler(
 	    ImmediateLogger *logger,
-	    RE2RREnums::Character character,
 	    RE2RREnums::Scenario scenario,
 	    RE2RREnums::Difficulty difficulty,
 	    int listLength,

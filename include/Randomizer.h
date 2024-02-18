@@ -14,7 +14,6 @@ private:
 	std::vector<uint32_t> seed;
 	RE2RREnums::Difficulty *difficulty;
 	RE2RREnums::Scenario *scenario;
-	RE2RREnums::Character *character;
 	ImmediateLogger *itemLog;
 
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
@@ -23,30 +22,28 @@ private:
 
 protected:
 public:
-	Randomizer(ImmediateLogger *logger, std::vector<uint32_t> seed, RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario, RE2RREnums::Character *character)
+	Randomizer(ImmediateLogger *logger, std::vector<uint32_t> seed, RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario)
 	{
 		this->logger = logger;
 		this->seed = seed;
 		this->difficulty = difficulty;
 		this->scenario = scenario;
-		this->character = character;
 
-		const char *logFileNameFormat = "RE2RRItemLog_%s%s%s.csv";
-		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumCharacterToString(*character).c_str(), RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
+		const char *logFileNameFormat = "RE2RRItemLog_%s%s.csv";
+		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
 		char *logFileName = (char *)malloc(logFileNameSize);
-		snprintf(logFileName, logFileNameSize, logFileNameFormat, RE2RREnums::EnumCharacterToString(*character).c_str(), RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str());
+		snprintf(logFileName, logFileNameSize, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str());
 		this->itemLog = new ImmediateLogger(fopen(logFileName, "w"));
 		free(logFileName);
 
 		this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
 		                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)");
 
-		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s, %s: %s) called.\n",
+		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s) called.\n",
 		                   RE2RR_NAMEOF(logger), (void *)logger,
 		                   RE2RR_NAMEOF(seed), (void *)&seed,
 		                   RE2RR_NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(*difficulty).c_str(),
-		                   RE2RR_NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str(),
-		                   RE2RR_NAMEOF(character), RE2RREnums::EnumCharacterToString(*character).c_str());
+		                   RE2RR_NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str());
 	}
 	~Randomizer()
 	{
@@ -55,7 +52,6 @@ public:
 		this->seed.clear();
 		delete this->difficulty;
 		delete this->scenario;
-		delete this->character;
 	}
 
 	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
