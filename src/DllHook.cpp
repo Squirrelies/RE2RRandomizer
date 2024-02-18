@@ -33,6 +33,14 @@ ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetMod
 ItemPickup itemPickupFunc = nullptr;
 // ItemPutDownKeep itemPutDownKeepFuncTarget = reinterpret_cast<ItemPutDownKeep>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPutDownKeepFuncOffset);
 // ItemPutDownKeep itemPutDownKeepFunc = nullptr;
+SetCurrentScenarioType setCurrentScenarioTypeFuncTarget = reinterpret_cast<SetCurrentScenarioType>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetCurrentScenarioTypeFuncOffset);
+SetCurrentScenarioType setCurrentScenarioTypeFunc = nullptr;
+SetCurrentDifficulty setCurrentDifficultyFuncTarget = reinterpret_cast<SetCurrentDifficulty>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetCurrentDifficultyFuncOffset);
+SetCurrentDifficulty setCurrentDifficultyFunc = nullptr;
+SetLoadLocation setLoadLocationFuncTarget = reinterpret_cast<SetLoadLocation>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetLoadLocationFuncOffset);
+SetLoadLocation setLoadLocationFunc = nullptr;
+SetLoadArea setLoadAreaFuncTarget = reinterpret_cast<SetLoadArea>((uintptr_t)GetModuleHandleW(L"re2.exe") + SetLoadAreaFuncOffset);
+SetLoadArea setLoadAreaFunc = nullptr;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -55,9 +63,6 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	return TRUE;
 }
 
-RE2RREnums::Difficulty *difficultyTest;
-RE2RREnums::Scenario *scenarioTest;
-RE2RREnums::Character *characterTest;
 DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 {
 	logger->LogMessage("[RE2R-R] Menu called.\n");
@@ -77,6 +82,18 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 
 	// if (!HookFunction<ItemPutDownKeep>(itemPutDownKeepFuncTarget, (ItemPutDownKeep)HookItemPutDownKeep, &itemPutDownKeepFunc, status))
 	// 	logger->LogMessage("[RE2R-R] Hook failed (HookItemPutDownKeep): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<SetCurrentScenarioType>(setCurrentScenarioTypeFuncTarget, (SetCurrentScenarioType)HookSetCurrentScenarioType, &setCurrentScenarioTypeFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookSetCurrentScenarioType): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<SetCurrentDifficulty>(setCurrentDifficultyFuncTarget, (SetCurrentDifficulty)HookSetCurrentDifficulty, &setCurrentDifficultyFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookSetCurrentDifficulty): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<SetLoadLocation>(setLoadLocationFuncTarget, (SetLoadLocation)HookSetLoadLocation, &setLoadLocationFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadLocation): %s\n", MH_StatusToString(status));
+
+	if (!HookFunction<SetLoadArea>(setLoadAreaFuncTarget, (SetLoadArea)HookSetLoadArea, &setLoadAreaFunc, status))
+		logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadArea): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");
 
@@ -199,6 +216,30 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 // 	randomizer->ItemPutdown(itemId);
 // 	itemPutDownKeepFunc(param1, param2, param3);
 // }
+
+__stdcall void HookSetCurrentScenarioType(uintptr_t param1, uintptr_t param2, RE2RREnums::Scenario *param3)
+{
+	logger->LogMessage("[RE2R-R] HookSetCurrentScenarioType called: %s\n", RE2RREnums::EnumScenarioToString(*param3).c_str());
+	setCurrentScenarioTypeFunc(param1, param2, param3);
+}
+
+__stdcall void HookSetCurrentDifficulty(uintptr_t param1, uintptr_t param2, RE2RREnums::Difficulty *param3)
+{
+	logger->LogMessage("[RE2R-R] HookSetCurrentDifficulty called: %s\n", RE2RREnums::EnumDifficultyToString(*param3).c_str());
+	setCurrentDifficultyFunc(param1, param2, param3);
+}
+
+__stdcall void HookSetLoadLocation(uintptr_t param1, uintptr_t param2, RE2RREnums::LocationID *param3)
+{
+	logger->LogMessage("[RE2R-R] HookSetLoadLocation called: %s\n", RE2RREnums::EnumLocationIDToString(*param3).c_str());
+	setLoadLocationFunc(param1, param2, param3);
+}
+
+__stdcall void HookSetLoadArea(uintptr_t param1, uintptr_t param2, RE2RREnums::MapID *param3)
+{
+	logger->LogMessage("[RE2R-R] HookSetLoadArea called: %s\n", RE2RREnums::EnumMapIDToString(*param3).c_str());
+	setLoadAreaFunc(param1, param2, param3);
+}
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 {

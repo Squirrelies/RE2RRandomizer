@@ -50,20 +50,28 @@
 // DX11-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
 // constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1237FA0;
+constexpr uintptr_t SetCurrentScenarioTypeFuncOffset = 0x1C46590;
+constexpr uintptr_t SetCurrentDifficultyFuncOffset = 0x1C46920;
+constexpr uintptr_t SetLoadLocationFuncOffset = 0x1C48300;
+constexpr uintptr_t SetLoadAreaFuncOffset = 0x1C48350;
 #elif DXVERSION == 12
 // DX12-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
 // constexpr uintptr_t ItemPutDownKeepFuncOffset = 0x1E341F0;
+constexpr uintptr_t SetCurrentScenarioTypeFuncOffset = 0x0000000;
+constexpr uintptr_t SetCurrentDifficultyFuncOffset = 0x0000000;
+constexpr uintptr_t SetLoadLocationFuncOffset = 0x0000000;
+constexpr uintptr_t SetLoadAreaFuncOffset = 0x0000000;
 #endif
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 typedef uintptr_t(__stdcall *ItemPickup)(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 // typedef void(__stdcall *ItemPutDownKeep)(uintptr_t, uintptr_t, uintptr_t);
-typedef void(__stdcall *SetCurrentScenarioType)(uintptr_t, uintptr_t, uintptr_t);
-typedef void(__stdcall *SetCurrentDifficulty)(uintptr_t, uintptr_t, uintptr_t);
-typedef void(__stdcall *SetLoadLocation)(uintptr_t, uintptr_t, uintptr_t);
-typedef void(__stdcall *SetLoadArea)(uintptr_t, uintptr_t, uintptr_t);
+typedef void(__stdcall *SetCurrentScenarioType)(uintptr_t, uintptr_t, RE2RREnums::Scenario *);
+typedef void(__stdcall *SetCurrentDifficulty)(uintptr_t, uintptr_t, RE2RREnums::Difficulty *);
+typedef void(__stdcall *SetLoadLocation)(uintptr_t, uintptr_t, RE2RREnums::LocationID *);
+typedef void(__stdcall *SetLoadArea)(uintptr_t, uintptr_t, RE2RREnums::MapID *);
 
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
@@ -76,6 +84,10 @@ bool Startup(void);
 void Shutdown(void);
 __stdcall uintptr_t HookItemPickup(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 //__stdcall void HookItemPutDownKeep(uintptr_t, uintptr_t, uintptr_t);
+__stdcall void HookSetCurrentScenarioType(uintptr_t, uintptr_t, RE2RREnums::Scenario *);
+__stdcall void HookSetCurrentDifficulty(uintptr_t, uintptr_t, RE2RREnums::Difficulty *);
+__stdcall void HookSetLoadLocation(uintptr_t, uintptr_t, RE2RREnums::LocationID *);
+__stdcall void HookSetLoadArea(uintptr_t, uintptr_t, RE2RREnums::MapID *);
 void InitImGui(IDXGISwapChain *, ID3D11Device *);
 LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
 HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
