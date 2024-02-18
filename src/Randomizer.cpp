@@ -1,17 +1,35 @@
 #include "Randomizer.h"
 
-const static char *logItemFormat = "\"%s\",\"%d\",\"0x%X\",\"%s\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%s\"\n";
-void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
+const static char *logItemFormat = "\"%s\",\"%d\",\"0x%X\",\"%s\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%s\",\"%s\",\"%s\",\"%s\"\n";
+void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(*currentItem: %s, itemPositionGuid: %s) called.\n", currentItem->ToString().c_str(), GUIDToString(itemPositionGuid).c_str());
+	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
+	                   RE2RR_NAMEOF(itemToReplace), itemToReplace,
+	                   RE2RR_NAMEOF(currentItem), currentItem->ToString().c_str(),
+	                   RE2RR_NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
 	itemLog->LogMessage(logItemFormat,
 	                    RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), currentItem->ItemId, currentItem->ItemId,
 	                    RE2RREnums::EnumWeaponTypeToString(currentItem->WeaponId).c_str(), currentItem->WeaponId, currentItem->WeaponId,
 	                    currentItem->WeaponParts, currentItem->WeaponParts,
 	                    currentItem->BulletId, currentItem->BulletId,
 	                    currentItem->Count, currentItem->Count,
-	                    GUIDToString(itemPositionGuid).c_str());
+	                    GUIDToString(itemPositionGuid).c_str(),
+	                    RE2RREnums::EnumMapPartsIDToString(mapPartsId).c_str(),
+	                    RE2RREnums::EnumMapIDToString(mapId).c_str(),
+	                    RE2RREnums::EnumFloorIDToString(floorId).c_str());
 	// SetItemByGUID(currentItem, itemPositionGuid);
+}
+
+bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID mapId, RE2RREnums::FloorID floorId)
+{
+	bool returnValue = this->mapPartsId != mapPartsId || this->mapId != mapId || this->floorId != floorId;
+	if (returnValue)
+	{
+		this->mapPartsId = mapPartsId;
+		this->mapId = mapId;
+		this->floorId = floorId;
+	}
+	return returnValue;
 }
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)

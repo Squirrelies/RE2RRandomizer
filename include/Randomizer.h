@@ -14,6 +14,9 @@ private:
 	std::vector<uint32_t> seed;
 	RE2RREnums::Difficulty *difficulty;
 	RE2RREnums::Scenario *scenario;
+	RE2RREnums::MapPartsID mapPartsId;
+	RE2RREnums::MapID mapId;
+	RE2RREnums::FloorID floorId;
 	ImmediateLogger *itemLog;
 
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
@@ -28,6 +31,9 @@ public:
 		this->seed = seed;
 		this->difficulty = difficulty;
 		this->scenario = scenario;
+		this->mapPartsId = RE2RREnums::MapPartsID::Invalid;
+		this->mapId = RE2RREnums::MapID::Invalid;
+		this->floorId = RE2RREnums::FloorID::None;
 
 		const char *logFileNameFormat = "RE2RRItemLog_%s%s.csv";
 		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
@@ -36,8 +42,8 @@ public:
 		this->itemLog = new ImmediateLogger(fopen(logFileName, "w"));
 		free(logFileName);
 
-		this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
-		                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)");
+		this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+		                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)", "MapPartsId", "MapId", "FloorId");
 
 		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s) called.\n",
 		                   RE2RR_NAMEOF(logger), (void *)logger,
@@ -54,7 +60,8 @@ public:
 		delete this->scenario;
 	}
 
-	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
+	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
+	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 };
 
 std::string GUIDToString(GUID *);

@@ -114,8 +114,8 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	// if (!HookFunction<SetLoadArea>(setLoadAreaFuncTarget, (SetLoadArea)HookSetLoadArea, &setLoadAreaFunc, status))
 	// 	logger->LogMessage("[RE2R-R] Hook failed (HookSetLoadArea): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<EntriedMap>(entriedMapFuncTarget, (EntriedMap)HookEntriedMap, &entriedMapFunc, status))
-		logger->LogMessage("[RE2R-R] Hook failed (HookEntriedMap): %s\n", MH_StatusToString(status));
+	// if (!HookFunction<EntriedMap>(entriedMapFuncTarget, (EntriedMap)HookEntriedMap, &entriedMapFunc, status))
+	// 	logger->LogMessage("[RE2R-R] Hook failed (HookEntriedMap): %s\n", MH_StatusToString(status));
 
 	// if (!HookFunction<SetRoomMapId>(setRoomMapIdFuncTarget, (SetRoomMapId)HookSetRoomMapId, &setRoomMapIdFunc, status))
 	// 	logger->LogMessage("[RE2R-R] Hook failed (HookSetRoomMapId): %s\n", MH_StatusToString(status));
@@ -239,10 +239,11 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	// logger->LogMessage("[RE2R-R] HookItemPickup(%p, %p, %p, %p) called.\n", param1, param2, param3, param4);
 	logger->LogMessage("[RE2R-R] HookItemPickup called. { %s, %s }\n", ((app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14))->ToString().c_str(), GUIDToString((GUID *)(param4 + 0x30)).c_str());
 
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70);
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70); // Sometimes uninitialized data, only write here.
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14);   // This is where we want to read to get what the item is.
 	GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
 
-	randomizer->ItemPickup(currentItem, itemPositionGuid);
+	randomizer->ItemPickup(itemToReplace, currentItem, itemPositionGuid);
 	return itemPickupFunc(param1, param2, param3, param4);
 }
 
@@ -333,14 +334,20 @@ __stdcall RE2RREnums::LocationID HookGetLocationID(uintptr_t param1, RE2RREnums:
 __stdcall void HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2)
 {
 	uiMapManagerUpdateFunc(param1, param2);
-	RE2RREnums::MapPartsID *mapPartsID = (RE2RREnums::MapPartsID *)(param2 + 0xC8);
-	RE2RREnums::MapID *mapID = (RE2RREnums::MapID *)(param2 + 0xCC);
-	RE2RREnums::FloorID *floorID = (RE2RREnums::FloorID *)(param2 + 0xD4);
 
-	logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
-	                   RE2RREnums::EnumMapPartsIDToString(*mapPartsID).c_str(),
-	                   RE2RREnums::EnumMapIDToString(*mapID).c_str(),
-	                   RE2RREnums::EnumFloorIDToString(*floorID).c_str());
+	Randomizer *randomizer = ui->GetRandomizer();
+	if (randomizer != nullptr)
+	{
+		RE2RREnums::MapPartsID mapPartsID = *(RE2RREnums::MapPartsID *)(param2 + 0xC8);
+		RE2RREnums::MapID mapID = *(RE2RREnums::MapID *)(param2 + 0xCC);
+		RE2RREnums::FloorID floorID = *(RE2RREnums::FloorID *)(param2 + 0xD4);
+
+		if (randomizer->ChangeArea(mapPartsID, mapID, floorID))
+			logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
+			                   RE2RREnums::EnumMapPartsIDToString(mapPartsID).c_str(),
+			                   RE2RREnums::EnumMapIDToString(mapID).c_str(),
+			                   RE2RREnums::EnumFloorIDToString(floorID).c_str());
+	}
 }
 
 void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)

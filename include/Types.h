@@ -1203,12 +1203,13 @@ bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 //
 
 // Enum FloorID (app.ropeway.gamemastering.Floor.ID)
+// Changed invalid to None.
 #ifndef RE2RR_TYPES_H_FloorID
 #define RE2RR_TYPES_H_FloorID
 #define ENUM_NAME FloorID
 #define ENUM_TYPE int32_t
 #define ENUM_LIST                       \
-	ENUM_VALUE(invalid, 0)              \
+	ENUM_VALUE(None, 0)                 \
 	ENUM_VALUE(RPD_A, 1)                \
 	ENUM_VALUE(RPD_B, 2)                \
 	ENUM_VALUE(RPD_C, 3)                \
