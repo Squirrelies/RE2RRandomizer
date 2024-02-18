@@ -2,7 +2,7 @@
 
 void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Scenario scenario, RE2RREnums::Difficulty difficulty, bool mixWeapons)
 {
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneIDByItemID.push_back(1);
 		ZoneIDByItemID.push_back(1);
@@ -25,7 +25,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneIDByItemID.push_back(3);
 		ZoneIDByItemID.push_back(3);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneIDByItemID.push_back(6);
 		ZoneIDByItemID.push_back(6);
@@ -56,14 +56,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneIDByItemID.push_back(5);
 	ZoneIDByItemID.push_back(5);
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneIDByItemID.push_back(6);
 		ZoneIDByItemID.push_back(6);
 		ZoneIDByItemID.push_back(6);
 		ZoneIDByItemID.push_back(6);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneIDByItemID.push_back(3);
 		ZoneIDByItemID.push_back(3);
@@ -85,7 +85,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneIDByItemID.push_back(9);
 	ZoneIDByItemID.push_back(9);
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneIDByItemID.push_back(9);
 		ZoneIDByItemID.push_back(1);
@@ -117,7 +117,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneIDByItemID.push_back(11);
 		ZoneIDByItemID.push_back(11);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneIDByItemID.push_back(2);
 		ZoneIDByItemID.push_back(6);
@@ -249,7 +249,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneIDByItemID.push_back(27);
 		ZoneIDByItemID.push_back(27);
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ZoneIDByItemID.push_back(27);
 			ZoneIDByItemID.push_back(27);
@@ -259,7 +259,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ZoneIDByItemID.push_back(27);
 			ZoneIDByItemID.push_back(27);
 		}
-		else if (scenario == RE2RREnums::Scenario::B)
+		else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			ZoneIDByItemID.push_back(3);
 			ZoneIDByItemID.push_back(3);
@@ -295,14 +295,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneIDByItemID.push_back(29); // 142
 		ZoneIDByItemID.push_back(29);
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ZoneIDByItemID.push_back(28);
 			ZoneIDByItemID.push_back(29);
 			ZoneIDByItemID.push_back(29);
 			ZoneIDByItemID.push_back(29);
 		}
-		else if (scenario == RE2RREnums::Scenario::B)
+		else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			ZoneIDByItemID.push_back(3);
 			ZoneIDByItemID.push_back(3);
@@ -377,11 +377,11 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneIDByItemID.push_back(42);
 	ZoneIDByItemID.push_back(42);
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneIDByItemID.push_back(42);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneIDByItemID.push_back(43);
 	}
@@ -457,7 +457,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// added special knife / spade zone logic
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[2][0].push_back(71); // bolt cutters to guard room
 		ZoneRequiredItems[3][0].push_back(43); // courtyard key
@@ -475,19 +475,19 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	uint32_t clubid = 88;
 	uint32_t squarecrankpos = 119;
 
-	if (scenario == RE2RREnums::Scenario::B && character == RE2RREnums::Character::Claire)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B && character == RE2RREnums::Character::Claire)
 	{
 		fuseid = 265;
 		clubid = 146;
 		squarecrankpos = 147;
 	}
 
-	if (scenario == RE2RREnums::Scenario::B && character == RE2RREnums::Character::Leon)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B && character == RE2RREnums::Character::Leon)
 	{
 		heartid = 131;
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// elliot zone
@@ -506,14 +506,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ZoneRequiredItems[6][0].push_back(71); // spade key + bolt cutters
 		}
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[6][0].push_back(43);     // courtyard key
 		ZoneRequiredItems[6][1].push_back(53);     // spade key
 		ZoneRequiredItems[6][2].push_back(fuseid); // fuse
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// detonator zone
@@ -529,7 +529,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[7][8].push_back(217);
 		ZoneRequiredItems[7][9].push_back(240);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[7][0].push_back(43); // courtyard key
 
@@ -548,7 +548,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[7][4].push_back(heartid); // heart key
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// records room
@@ -572,7 +572,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[8][8].push_back(217);
 		ZoneRequiredItems[8][9].push_back(240);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[8][0].push_back(43); // courtyard key
 
@@ -594,7 +594,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// east office
 	ZoneRequiredItems[9][0].push_back(71); // bolt cutters
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		if (character == RE2RREnums::Character::Leon) // claire can't go around the medallion way
@@ -609,7 +609,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ZoneRequiredItems[9][0].push_back(53); // spade key
 		}
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[9][0].push_back(43); // courtyard key
 	}
@@ -618,19 +618,19 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneRequiredItems[10][0].push_back(30);
 	ZoneRequiredItems[10][0].push_back(95); // detonator + battery
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[10][0].push_back(43);     // courtyard key
 		ZoneRequiredItems[10][1].push_back(53);     // spade key
 		ZoneRequiredItems[10][2].push_back(fuseid); // fuse
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		// helicopter crash zone
 		ZoneRequiredItems[11][0].push_back(53); // spade key
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 
 		// upper heart key access
@@ -651,14 +651,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		// there are no items for leon to get with the heart key
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		// scepter
 		ZoneRequiredItems[12][0].push_back(53);
 		ZoneRequiredItems[12][0].push_back(61);
 		ZoneRequiredItems[12][0].push_back(67); // spade key + statue arm + red book
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[12][0].push_back(43); // courtyard key
 		ZoneRequiredItems[12][0].push_back(61); // red book
@@ -668,7 +668,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// outer clock tower
 	ZoneRequiredItems[13][0].push_back(36); // mechanic jack handle
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneRequiredItems[13][1].push_back(4); // one of the knives
 		ZoneRequiredItems[13][2].push_back(20);
@@ -680,7 +680,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[13][8].push_back(217);
 		ZoneRequiredItems[13][9].push_back(240);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[13][0].push_back(43);     // courtyard key
 		ZoneRequiredItems[13][1].push_back(53);     // spade key
@@ -702,7 +702,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ZoneRequiredItems[15][0].push_back(74); // small gear
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		// rooftop access area
 		ZoneRequiredItems[16][1].push_back(4);
@@ -732,7 +732,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ZoneRequiredItems[16][10].push_back(63); // spade key + 3 medallions
 		}
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[16][0].push_back(43); // courtyard key
 
@@ -745,7 +745,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[16][3].push_back(53); // spade key
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// Observation / Interrogation Room
@@ -785,7 +785,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 		// ZoneRequiredItems[17][10].push_back(2); ZoneRequiredItems[17][10].push_back(58); ZoneRequiredItems[17][10].push_back(63); //3 medallions, I don't think this should be here?
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[17] = ZoneRequiredItems[16];
 
@@ -800,7 +800,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		}
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// interrogation room needs medallions
@@ -809,7 +809,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ZoneRequiredItems[52][0].push_back(58);
 		ZoneRequiredItems[52][0].push_back(63);
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 
 		ZoneRequiredItems[52][0].push_back(43); // courtyard key
@@ -878,7 +878,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// outside stars office
 	ZoneRequiredItems[18][0].push_back(41); // valve
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[18][0].push_back(43);     // courtyard key
 		ZoneRequiredItems[18][1].push_back(53);     // spade key
@@ -889,7 +889,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneRequiredItems[19] = ZoneRequiredItems[18];
 	ZoneRequiredItems[19][0].push_back(68); // scepter
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ZoneRequiredItems[19][0].push_back(91); // bejeweled box
 	}
@@ -911,7 +911,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneRequiredItems[21][0].push_back(167); // tbar valve
 	ZoneRequiredItems[21][0].push_back(170); // sewer key
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		// do everything in one go here
 		for (uint32_t i = 21; i < 29; i++)
@@ -961,7 +961,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneRequiredItems[26][0].push_back(63);  // 3 medallions
 	ZoneRequiredItems[26][0].push_back(126); // diamond key
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		if (character == RE2RREnums::Character::Leon) // leon only backtracking
@@ -980,7 +980,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ZoneRequiredItems[27][0].push_back(heartid); // heart key
 		}
 	}
-	else if (scenario == RE2RREnums::Scenario::B)
+	else if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[27][0].push_back(2);
 		ZoneRequiredItems[27][0].push_back(58);
@@ -1091,7 +1091,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ZoneRequiredItems[50][1].push_back(53);
 	ZoneRequiredItems[50][1].push_back(71); // spade key + bolt cutters
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		ZoneRequiredItems[47][0].push_back(43);     // courtyard key
 		ZoneRequiredItems[47][1].push_back(53);     // spade key
@@ -1131,7 +1131,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// main hall fuse (43), not lab
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		DisallowedZoneMap[50].push_back(4); // portable safes
 	}
@@ -1143,7 +1143,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	DisallowedZoneMap[101].push_back(4);
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		DisallowedZoneMap[53].push_back(11); // spade key
@@ -1160,7 +1160,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	DisallowedZoneMap[71].push_back(7); // bolt cutters
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		if (character == RE2RREnums::Character::Claire) // claire can't have the bolt cutters be in these locations
@@ -1185,7 +1185,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	DisallowedZoneMap[clubid].push_back(8); // club key
 	DisallowedZoneMap[clubid].push_back(17);
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		DisallowedZoneMap[91].push_back(19); // bejeweled box
 		DisallowedZoneMap[91].push_back(22);
@@ -1247,7 +1247,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	DisallowedZoneMap[127].push_back(24); // car key
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		// fuse break room hallway (139), not lab
@@ -1455,14 +1455,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// main hall
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x2");
 	}
 	else
 	{
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -1475,7 +1475,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("First Aid Spray");
 	ItemNames.push_back("Lion Medallion");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (upstairs)");
 		ItemNames.push_back("Combat Knife (Marvin gift)");
@@ -1503,7 +1503,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ItemNames.push_back("Green Herb");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		// operations room
 		ItemNames.push_back("Handgun Bullets");
@@ -1526,7 +1526,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// west office
 	ItemNames.push_back("Gunpowder");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1549,14 +1549,14 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// dark room
 	ItemNames.push_back("Gunpowder");
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x3");
 	}
 	else
 	{
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -1571,7 +1571,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// safety deposit room
 	ItemNames.push_back("Film: Commemorative");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1597,7 +1597,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("Flame Rounds (GM 79 Cupboard)");
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		// press room
 		ItemNames.push_back("Handgun Bullets");
@@ -1628,7 +1628,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// records room
 	ItemNames.push_back("Hand Grenade");
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x2");
 	}
@@ -1641,7 +1641,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// east office
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x2");
 	}
@@ -1652,7 +1652,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ItemNames.push_back("Flash Grenade");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1673,7 +1673,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("White Gunpowder");
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Fuse (Main Hall)");
 	}
@@ -1696,7 +1696,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// western area 2F
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1718,7 +1718,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("Flame Rounds");
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		ItemNames.push_back("Portable Safe");
@@ -1750,7 +1750,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Gunpowder");
 	ItemNames.push_back("Wooden Boards");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1759,7 +1759,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("ACP Ammo");
 	}
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Hip Pouch (REMOVED IN HARDCORE)");
 	}
@@ -1773,7 +1773,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// library
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1786,7 +1786,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Red Book");
 
 	// lounge
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Gunpowder");
 	}
@@ -1808,7 +1808,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// fire escape
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1845,7 +1845,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// east area 3F
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1862,7 +1862,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// roof area
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -1879,7 +1879,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	{
 
 		// boiler room
-		if (difficulty == RE2RREnums::Difficulty::Hardcore)
+		if (difficulty == RE2RREnums::Difficulty::HARD)
 		{
 			ItemNames.push_back("Ink Ribbon x1");
 		}
@@ -1909,7 +1909,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// observation room
 	ItemNames.push_back("Gunpowder");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Bejeweled Box");
 
@@ -1984,7 +1984,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// machinery room
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Top Left)");
 	}
@@ -1997,7 +1997,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Green Herb (Top Left)");
 	ItemNames.push_back("Red Herb");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Bottom Left)");
 	}
@@ -2008,7 +2008,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ItemNames.push_back("Green Herb (Bottom Right)");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Bottom Right)");
 	}
@@ -2021,7 +2021,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Green Herb (Up Ladder)");
 
 	// operators room
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x1");
 	}
@@ -2044,7 +2044,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	{
 
 		// Jail entrance
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2106,7 +2106,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 		// generator room
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Green Herb");
 		}
@@ -2125,7 +2125,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		// break room
 		ItemNames.push_back("Blue Herb");
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2145,7 +2145,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		// gun shop
 		ItemNames.push_back("Hand Grenade");
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2159,7 +2159,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		// sewer entrance
 		ItemNames.push_back("Hand Grenade");
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2168,13 +2168,13 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 			ItemNames.push_back("ACP Ammo");
 		}
 
-		if (difficulty == RE2RREnums::Difficulty::Hardcore)
+		if (difficulty == RE2RREnums::Difficulty::HARD)
 		{
 			ItemNames.push_back("Ink Ribbon x2");
 		}
 		else
 		{
-			if (scenario == RE2RREnums::Scenario::A)
+			if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 			{
 				ItemNames.push_back("Handgun Bullets");
 			}
@@ -2197,7 +2197,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("Submachinegun Ammo");
 		ItemNames.push_back("Lovers Relief");
 
-		if (difficulty == RE2RREnums::Difficulty::Hardcore)
+		if (difficulty == RE2RREnums::Difficulty::HARD)
 		{
 			ItemNames.push_back("Ink Ribbon x1");
 		}
@@ -2210,7 +2210,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("Hand Grenade");
 		ItemNames.push_back("Submachinegun Ammo");
 
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 
 			ItemNames.push_back("UNUSED");
@@ -2229,7 +2229,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	}
 
 	// upper walkway
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2254,7 +2254,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// workers break room
 	ItemNames.push_back("Gunpowder");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2282,7 +2282,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	if (character == RE2RREnums::Character::Leon)
 	{
 
-		if (difficulty == RE2RREnums::Difficulty::Hardcore)
+		if (difficulty == RE2RREnums::Difficulty::HARD)
 		{
 			ItemNames.push_back("Ink Ribbon x2");
 		}
@@ -2297,7 +2297,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	else
 	{
 
-		if (difficulty == RE2RREnums::Difficulty::Hardcore)
+		if (difficulty == RE2RREnums::Difficulty::HARD)
 		{
 			ItemNames.push_back("Ink Ribbon x2");
 		}
@@ -2325,13 +2325,13 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	}
 
 	// monitor room
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x2");
 	}
 	else
 	{
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2393,7 +2393,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	// work room
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Hip Pouch (REMOVED IN HARDCORE)");
 	}
@@ -2404,7 +2404,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ItemNames.push_back("Film - Hiding Place");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2440,7 +2440,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("Submachinegun Ammo");
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2465,7 +2465,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	// cafeteria
 	ItemNames.push_back("Hand Grenade");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2503,7 +2503,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Hip Pouch");
 
 	// lobby
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x2");
 	}
@@ -2580,7 +2580,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("White Gunpowder");
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2596,7 +2596,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Hand Grenade");
 	ItemNames.push_back("Blue Herb");
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Removed Item in Hardcore");
 	}
@@ -2625,7 +2625,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		ItemNames.push_back("White Gunpowder");
 	}
 
-	if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 		ItemNames.push_back("Ink Ribbon x1");
 	}
@@ -2635,7 +2635,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	}
 
 	// bioreactors room
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Top Left)");
 	}
@@ -2646,7 +2646,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	ItemNames.push_back("First Aid Spray");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Bottom Left)");
 	}
@@ -2678,7 +2678,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Hand Grenade");
 	ItemNames.push_back("Flash Grenade (Top Right)");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets (Bottom Right, Left)");
 		ItemNames.push_back("Handgun Bullets (Bottom Right, Right)");
@@ -2697,7 +2697,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	ItemNames.push_back("Blue Herb");
 	ItemNames.push_back("Green Herb");
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 		ItemNames.push_back("Handgun Bullets");
 	}
@@ -2711,7 +2711,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 
 	if (character == RE2RREnums::Character::Leon)
 	{
-		if (scenario == RE2RREnums::Scenario::A)
+		if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 		{
 			ItemNames.push_back("Handgun Bullets");
 		}
@@ -2751,7 +2751,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 	}
 
 	// hardcore extra ink ribbons, adding all these into the seed every time now.
-	// if (difficulty == RE2RREnums::Difficulty::Hardcore)
+	// if (difficulty == RE2RREnums::Difficulty::HARD)
 	{
 
 		ItemNames.push_back("Ink Ribbon x1"); // lab reception
@@ -2766,7 +2766,7 @@ void SeedGenerator::GenerateSeed(RE2RREnums::Character character, RE2RREnums::Sc
 		}
 	}
 
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 
 		ItemNames.push_back("ACP Ammo");     // stars office ammo, b scenario
@@ -3072,7 +3072,7 @@ void SeedGenerator::MixWeapons(RE2RREnums::Character character, RE2RREnums::Scen
 	namestoremove.push_back("ACP Ammo (Bottom Right, Right)");
 
 	// marvin knife in A scenario needs to not be shuffled!
-	if (scenario == RE2RREnums::Scenario::B)
+	if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 	{
 		namestoremove.push_back("Combat Knife");
 	}
@@ -3258,7 +3258,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 		{
 			finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RPD & SEWERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-			if (scenario == RE2RREnums::Scenario::B)
+			if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				finalCheatSheet.push_back("B SCENARIO ENTRANCE\n");
 				finalCheatSheet.push_back(CheatSheetItemToString(257).get()->c_str());
@@ -3415,7 +3415,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 		{
 			finalCheatSheet.push_back("INTERROGATION ROOM\n");
 
-			if (difficulty == RE2RREnums::Difficulty::Hardcore)
+			if (difficulty == RE2RREnums::Difficulty::HARD)
 			{
 				finalCheatSheet.push_back(CheatSheetItemToString(253).get()->c_str());
 			}
@@ -3495,7 +3495,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 			}
 			else
 			{
-				if (scenario == RE2RREnums::Scenario::B)
+				if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 				{
 					finalCheatSheet.push_back("GENERATOR ROOM\n");
 					finalCheatSheet.push_back(CheatSheetItemToString(146).get()->c_str());
@@ -3510,7 +3510,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 		}
 		else if (i == 134)
 		{
-			if (character == RE2RREnums::Character::Claire && scenario == RE2RREnums::Scenario::B)
+			if (character == RE2RREnums::Character::Claire && scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				finalCheatSheet.push_back("OUTSIDE BREAK ROOM\n");
 				finalCheatSheet.push_back(CheatSheetItemToString(261).get()->c_str());
@@ -3594,7 +3594,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 				finalCheatSheet.push_back("BUS\n");
 				finalCheatSheet.push_back(CheatSheetItemToString(142).get()->c_str());
 
-				if (difficulty == RE2RREnums::Difficulty::Hardcore)
+				if (difficulty == RE2RREnums::Difficulty::HARD)
 				{
 					finalCheatSheet.push_back("ORPHANAGE\n");
 					finalCheatSheet.push_back(CheatSheetItemToString(254).get()->c_str());
@@ -3608,7 +3608,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 				finalCheatSheet.push_back(CheatSheetItemToString(134).get()->c_str());
 				finalCheatSheet.push_back(CheatSheetItemToString(143).get()->c_str());
 
-				if (difficulty == RE2RREnums::Difficulty::Hardcore)
+				if (difficulty == RE2RREnums::Difficulty::HARD)
 				{
 					finalCheatSheet.push_back(CheatSheetItemToString(255).get()->c_str());
 				}
@@ -3690,7 +3690,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 		{
 			finalCheatSheet.push_back("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LAB AREA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-			if (difficulty == RE2RREnums::Difficulty::Hardcore)
+			if (difficulty == RE2RREnums::Difficulty::HARD)
 			{
 				finalCheatSheet.push_back("RECEPTION\n");
 				finalCheatSheet.push_back(CheatSheetItemToString(251).get()->c_str());
@@ -3773,7 +3773,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 		else if (i == 244)
 		{
 
-			if (difficulty == RE2RREnums::Difficulty::Hardcore)
+			if (difficulty == RE2RREnums::Difficulty::HARD)
 			{
 				finalCheatSheet.push_back(CheatSheetItemToString(252).get()->c_str());
 			}
@@ -3808,7 +3808,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 
 			bool condition = true;
 
-			if (scenario == RE2RREnums::Scenario::B)
+			if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 			{
 				condition = condition && (i != 4 && i != 71 && i != 131 && i != 213);
 			}
@@ -3826,7 +3826,7 @@ void SeedGenerator::CreateCheatSheetVector(RE2RREnums::Character character, RE2R
 
 				bool condition = (i != 87 && i != 88 && i != 118 && i != 119 && i != 120 && i != 121 && i != 131 && i != 132 && i != 133 && i != 134 && i != 135 && i != 136 && i != 137 && i != 138 && i != 139 && i != 140 && i != 142);
 
-				if (scenario == RE2RREnums::Scenario::B)
+				if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 				{
 					condition = condition && (i != 4 && i != 43 && i != 57 && i != 71 && i != 146 && i != 147 && i != 213);
 				}

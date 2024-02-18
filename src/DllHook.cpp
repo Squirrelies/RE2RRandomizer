@@ -180,6 +180,7 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 		return itemPickupFunc(param1, param2, param3, param4);
 
 	// logger->LogMessage("[RE2R-R] HookItemPickup(%p, %p, %p, %p) called.\n", param1, param2, param3, param4);
+	logger->LogMessage("[RE2R-R] HookItemPickup called. { %s, %s }\n", ((app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14))->ToString().c_str(), GUIDToString((GUID *)(param4 + 0x30)).c_str());
 
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70);
 	GUID *itemPositionGuid = (GUID *)(param4 + 0x30);

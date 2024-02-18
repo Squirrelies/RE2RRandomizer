@@ -60,6 +60,11 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 typedef uintptr_t(__stdcall *ItemPickup)(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 // typedef void(__stdcall *ItemPutDownKeep)(uintptr_t, uintptr_t, uintptr_t);
+typedef void(__stdcall *SetCurrentScenarioType)(uintptr_t, uintptr_t, uintptr_t);
+typedef void(__stdcall *SetCurrentDifficulty)(uintptr_t, uintptr_t, uintptr_t);
+typedef void(__stdcall *SetLoadLocation)(uintptr_t, uintptr_t, uintptr_t);
+typedef void(__stdcall *SetLoadArea)(uintptr_t, uintptr_t, uintptr_t);
+
 typedef HRESULT(__stdcall *Present)(IDXGISwapChain *, UINT, UINT);
 typedef HRESULT(__stdcall *GetDeviceState)(IDirectInputDevice8 *, DWORD, LPVOID);
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);

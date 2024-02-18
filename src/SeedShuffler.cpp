@@ -64,7 +64,7 @@ void SeedShuffler::ShuffleItems()
 
 		bool exceptions;
 
-		if (scenario == RE2RREnums::Scenario::B)
+		if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part, and dispersal cartridge
 
@@ -83,7 +83,7 @@ void SeedShuffler::ShuffleItems()
 			}
 		}
 
-		if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+		if (difficulty != RE2RREnums::Difficulty::HARD) // cut the hardcore items if not in hardcore
 		{
 			exceptions = exceptions && (i != 251 && i != 252 && i != 253 && i != 254 && i != 255);
 		}
@@ -94,13 +94,13 @@ void SeedShuffler::ShuffleItems()
 			if (i != tbarpos && i != sewerkeypos && i != chippos && i != rookpos)
 			{
 
-				if ((difficulty == RE2RREnums::Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::Hardcore)
+				if ((difficulty == RE2RREnums::Difficulty::HARD && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::HARD)
 				{
 
 					if (character == RE2RREnums::Character::Claire)
 					{
 
-						if (scenario == RE2RREnums::Scenario::B)
+						if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 						{
 
 							UniqueIDList.push_back(i);
@@ -135,7 +135,7 @@ void SeedShuffler::ShuffleItems()
 
 		bool exceptions;
 
-		if (scenario == RE2RREnums::Scenario::B)
+		if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			exceptions = (i != 204 && i != 120 && i != 208 && i != 75); // parking key exception and now 3rd level chip and boxed electronic part + dispersal cartridge
 
@@ -154,7 +154,7 @@ void SeedShuffler::ShuffleItems()
 			}
 		}
 
-		if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+		if (difficulty != RE2RREnums::Difficulty::HARD) // cut the hardcore items if not in hardcore
 		{
 			exceptions = exceptions && (i != 251 && i != 252 && i != 253 && i != 254 && i != 255);
 		}
@@ -162,7 +162,7 @@ void SeedShuffler::ShuffleItems()
 		if (exceptions)
 		{
 
-			if ((difficulty == RE2RREnums::Difficulty::Hardcore && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::Hardcore)
+			if ((difficulty == RE2RREnums::Difficulty::HARD && i != 57 && i != 180 && i != 225) || difficulty != RE2RREnums::Difficulty::HARD)
 			{
 
 				// tbar, chip and sewer key exceptions
@@ -172,7 +172,7 @@ void SeedShuffler::ShuffleItems()
 					if (character == RE2RREnums::Character::Claire)
 					{
 						// extra claire exceptions
-						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == RE2RREnums::Scenario::B)
+						if ((i != 144 && i != 145 && i != 146 && i != 147) || scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 						{
 
 							if (ItemNames[i] != "UNUSED")
@@ -228,7 +228,7 @@ void SeedShuffler::ShuffleItems()
 		m_FinalList[rookpos] = 151;
 	}
 
-	if (difficulty != RE2RREnums::Difficulty::Hardcore) // cut the hardcore items if not in hardcore
+	if (difficulty != RE2RREnums::Difficulty::HARD) // cut the hardcore items if not in hardcore
 	{
 		m_FinalList[251] = 251;
 		m_FinalList[252] = 252;
@@ -237,7 +237,7 @@ void SeedShuffler::ShuffleItems()
 		m_FinalList[255] = 255;
 	}
 
-	if (scenario == RE2RREnums::Scenario::A)
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A)
 	{
 
 		for (uint32_t i = 256; i < 266; ++i)
@@ -413,7 +413,7 @@ bool SeedShuffler::CheckSpadeKeyInArea()
 	for (uint32_t i = 46; i < 58; ++i)
 	{
 
-		if (scenario == RE2RREnums::Scenario::B)
+		if (scenario == RE2RREnums::Scenario::LEON_B || scenario == RE2RREnums::Scenario::CLAIRE_B)
 		{
 			if (i == 57) // skip over 57 in B scenario
 			{
@@ -444,7 +444,7 @@ void SeedShuffler::CheckItemValidity()
 
 	// special situations first
 
-	if (scenario == RE2RREnums::Scenario::A) // a scenario only
+	if (scenario == RE2RREnums::Scenario::LEON_A || scenario == RE2RREnums::Scenario::CLAIRE_A) // a scenario only
 	{
 
 		// is there a knife or a spade key in zone 1?
