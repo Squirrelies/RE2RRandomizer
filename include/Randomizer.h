@@ -1,6 +1,7 @@
 #ifndef RE2RR_RANDOMIZER_H
 #define RE2RR_RANDOMIZER_H
 
+#include "File.h"
 #include "Logging.h"
 #include "Types.h"
 #include <stdexcept>
@@ -39,11 +40,11 @@ public:
 		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
 		char *logFileName = (char *)malloc(logFileNameSize);
 		snprintf(logFileName, logFileNameSize, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str());
-		this->itemLog = new ImmediateLogger(fopen(logFileName, "w"));
+		this->itemLog = new ImmediateLogger(fopen(logFileName, "a"));
+		if (!FileExists(logFileName))
+			this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+			                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)", "MapPartsId", "MapId", "FloorId");
 		free(logFileName);
-
-		this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
-		                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)", "MapPartsId", "MapId", "FloorId");
 
 		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s) called.\n",
 		                   RE2RR_NAMEOF(logger), (void *)logger,

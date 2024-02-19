@@ -57,6 +57,7 @@ include_directories(include)
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED
 src/Types.cpp
+src/File.cpp
 src/DllHook.cpp
 src/UI.cpp
 src/SeedGenerator.cpp
