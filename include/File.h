@@ -5,6 +5,7 @@
 #include "sha-256.h"
 #include <memory>
 #include <stdio.h>
+#include <vector>
 
 #define RE2RRFILEAPI __declspec(dllexport)
 
@@ -29,6 +30,10 @@ extern "C"
 		/// @param filePath The file to calculate the SHA256 hash for.
 		/// @return The SHA256 hash as an uint8_t array. This array will always be 32-bytes or 256-bits.
 		RE2RRFILEAPI uint8_t *GetFileHashSHA256(const char *filePath);
+
+		RE2RRFILEAPI std::vector<uint8_t> HashSHA256ToVector(const uint8_t *hash);
+
+		RE2RRFILEAPI std::string VectorToHexString(std::vector<uint8_t> &vector);
 	};
 
 #ifdef __cplusplus

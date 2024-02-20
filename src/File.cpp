@@ -24,10 +24,6 @@ int64_t RE2RRFile::GetFileSize(const char *filePath)
 	return size;
 }
 
-// Test Hash for re2.exe
-// { 0xF2, 0x6C, 0xDE, 0xBF, 0xFE, 0x66, 0x55, 0xD0, 0x5B, 0xF0, 0x04, 0x7F, 0x79, 0x39, 0xEA, 0x5E, 0x38, 0x36, 0x08, 0xAF, 0xF4, 0x60, 0x3C, 0xA3, 0xF0, 0xF3, 0x6A, 0x12, 0xDC, 0x56, 0x23, 0xCA };
-// or
-// { 242, 108, 222, 191, 254, 102, 85, 208, 91, 240, 4, 127, 121, 57, 234, 94, 56, 54, 8, 175, 244, 96, 60, 163, 240, 243, 106, 18, 220, 86, 35, 202 };
 uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
 {
 	const int bufferSize = SIZE_OF_SHA_256_CHUNK * SIZE_OF_SHA_256_CHUNK;
@@ -44,15 +40,47 @@ uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
 	uint8_t *fileData = (uint8_t *)malloc(bufferSize);
 	size_t totalBytesRead = 0;
 	size_t bytesRead = 0;
+	int error = 0;
+	int eof = 0;
 	do
 	{
-		bytesRead += fread(fileData, sizeof(uint8_t), bufferSize, file);
+		bytesRead = fread(fileData, sizeof(uint8_t), bufferSize, file);
 		sha_256_write(&sha_256, fileData, bytesRead);
 		totalBytesRead += bytesRead;
-	} while ((totalBytesRead < fileSize) && ferror(file) && feof(file));
+		error = ferror(file);
+		eof = feof(file);
+		clearerr(file);
+	} while ((totalBytesRead < fileSize) && !error && !eof);
 	free(fileData);
 	fclose(file);
 	sha_256_close(&sha_256);
 
+	if (error)
+		return nullptr;
+
 	return hash;
+}
+
+std::vector<uint8_t> RE2RRFile::HashSHA256ToVector(const uint8_t *hash)
+{
+	return std::vector<uint8_t>(hash, hash + SIZE_OF_SHA_256_HASH);
+}
+
+std::string RE2RRFile::VectorToHexString(std::vector<uint8_t> &vector)
+{
+	int vectorSize = vector.size();
+	int bufferSize = (vectorSize * 6) - 2 + 1;
+	char *toString = (char *)malloc(bufferSize);
+	memset(toString, 0, bufferSize);
+	for (size_t i = 0; i < vectorSize; ++i)
+	{
+		if (i < vectorSize - 1)
+			snprintf(toString + (i * 6), 7, "0x%02X, ", vector[i]);
+		else
+			snprintf(toString + (i * 6), 5, "0x%02X", vector[i]);
+	}
+	std::string returnValue = std::string(toString);
+	free(toString);
+
+	return returnValue;
 }
