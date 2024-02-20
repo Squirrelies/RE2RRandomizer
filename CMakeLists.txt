@@ -74,6 +74,7 @@ src/UI.cpp
 src/SeedGenerator.cpp
 src/SeedShuffler.cpp
 src/Randomizer.cpp
+extern/amosnier/sha-2/sha-256.c
 )
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
@@ -85,5 +86,7 @@ add_executable(${PROJECT_NAME}
 src/ExeInjector.cpp
 src/Strings.cpp
 src/Process.cpp
+src/File.cpp
+extern/amosnier/sha-2/sha-256.c
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)

@@ -15,6 +15,7 @@
 
 #include <windows.h>
 
+#include "File.h"
 #include "Process.h"
 #include <filesystem>
 

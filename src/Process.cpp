@@ -23,15 +23,14 @@ DWORD GetProcessIdByName(const TCHAR *name)
 	return pid;
 }
 
-HMODULE GetProcessModuleByName(TCHAR moduleName[])
+HMODULE GetProcessModuleByName(HANDLE hProcess, TCHAR moduleName[])
 {
 	HMODULE hMods[1024];
-	HANDLE hProcess = GetCurrentProcess();
 	DWORD cbNeeded;
 	unsigned int i;
 
 	// Get a list of all the modules in this process.
-	if (EnumProcessModules(GetCurrentProcess(), hMods, sizeof(hMods), &cbNeeded))
+	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
 	{
 		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
 		{
@@ -48,26 +47,63 @@ HMODULE GetProcessModuleByName(TCHAR moduleName[])
 	return NULL;
 }
 
-bool TryGetModuleInfo(TCHAR *moduleName, MODULEINFO *moduleInfo)
+char *GetProcessModulePathByNameA(HANDLE hProcess, char moduleName[])
 {
-	HMODULE hModule;
-	if ((hModule = GetModuleHandle(moduleName)) == NULL)
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+	unsigned int i;
+
+	// Get a list of all the modules in this process.
+	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
 	{
-#ifdef UNICODE
-		printf("Module \"%ls\" not found!\n", moduleName);
-#else
-		printf("Module \"%s\" not found!\n", moduleName);
-#endif
-		return false;
+		size_t szModNameSize = (MAX_PATH * sizeof(char)) + sizeof(char);
+		char *szModName = (char *)malloc(szModNameSize);
+		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+		{
+			// Get the full path to the module's file.
+			if (GetModuleFileNameExA(hProcess, hMods[i], szModName, szModNameSize))
+			{
+				if (stricmp(szModName, moduleName))
+					return szModName;
+			}
+		}
+		free(szModName);
 	}
 
-	if (!GetModuleInformation(GetCurrentProcess(), hModule, moduleInfo, sizeof(MODULEINFO)))
+	return NULL;
+}
+
+wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, wchar_t moduleName[])
+{
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+	unsigned int i;
+
+	// Get a list of all the modules in this process.
+	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
 	{
-#ifdef UNICODE
-		printf("Failed to retrieve module information for \"%ls\"!\n", moduleName);
-#else
-		printf("Failed to retrieve module information for \"%s\"!\n", moduleName);
-#endif
+		size_t szModNameSize = (MAX_PATH * sizeof(wchar_t)) + sizeof(wchar_t);
+		wchar_t *szModName = (wchar_t *)malloc(szModNameSize);
+		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+		{
+			// Get the full path to the module's file.
+			if (GetModuleFileNameExW(hProcess, hMods[i], szModName, szModNameSize))
+			{
+				if (wcsicmp(szModName, moduleName))
+					return szModName;
+			}
+		}
+		free(szModName);
+	}
+
+	return NULL;
+}
+
+bool TryGetModuleInfo(HANDLE hProcess, HMODULE hModule, MODULEINFO *moduleInfo)
+{
+	if (!GetModuleInformation(hProcess, hModule, moduleInfo, sizeof(MODULEINFO)))
+	{
+		printf("Failed to retrieve module information!\n");
 		return false;
 	}
 
