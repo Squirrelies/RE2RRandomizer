@@ -71,7 +71,6 @@ extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
 src/File.cpp
 src/Hashes.cpp
-src/Hooking.cpp
 src/Process.cpp
 src/UI.cpp
 src/SeedGenerator.cpp
