@@ -51,13 +51,13 @@ extern "C"
 	/// @param hProcess The process to find the module in.
 	/// @param moduleName The module name to retrieve the path for.
 	/// @return The module's full path if found. Otherwise this will be NULL.
-	RE2RRPROCESSAPI char *GetProcessModulePathByNameA(HANDLE hProcess, char moduleName[]);
+	RE2RRPROCESSAPI char *GetProcessModulePathByNameA(HANDLE hProcess, const char moduleName[]);
 
 	/// @brief Gets the full path for the given module name within the provided process.
 	/// @param hProcess The process to find the module in.
 	/// @param moduleName The module name to retrieve the path for.
 	/// @return The module's full path if found. Otherwise this will be NULL.
-	RE2RRPROCESSAPI wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, wchar_t moduleName[]);
+	RE2RRPROCESSAPI wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, const wchar_t moduleName[]);
 
 	/// @brief Attempts to get the module info for the given module handle within the provided process.
 	/// @param hProcess The process to get the module info from.

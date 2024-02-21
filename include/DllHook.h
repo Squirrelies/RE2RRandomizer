@@ -29,6 +29,8 @@
 
 #include <windows.h>
 
+#include "File.h"
+#include "Hashes.h"
 #include "Hooking.h"
 #include "Logging.h"
 #include "Randomizer.h"

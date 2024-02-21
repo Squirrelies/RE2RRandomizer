@@ -57,8 +57,11 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 
 DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 {
-	logger->LogMessage("[RE2R-R] Menu called.\n");
+	logger->LogMessage("[RE2R-R] MainThread called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
+	const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
+	RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath);
 
 	MH_STATUS status;
 	do

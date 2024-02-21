@@ -42,6 +42,28 @@
 bool StringToGUIDA(const std::string &stringGUID, GUID &guid);
 bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 
+// Enum RE2RGameVersion
+#ifndef RE2RR_TYPES_H_RE2RGameVersion
+#define RE2RR_TYPES_H_RE2RGameVersion
+#define ENUM_NAME RE2RGameVersion
+#define ENUM_TYPE uint32_t
+#define ENUM_LIST                        \
+	ENUM_VALUE(Unknown, 0)               \
+	ENUM_VALUE(WW_DX11_20230421_1, 1)    \
+	ENUM_VALUE(WW_DX12_20230814_1, 2)    \
+	ENUM_VALUE(CEROZ_DX11_20230421_1, 3) \
+	ENUM_VALUE(CEROZ_DX12_20230814_1, 4)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
+#include "Types_Enum.h"
+#endif
+#undef ENUM_LIST
+#undef ENUM_TYPE
+#undef ENUM_NAME
+#endif
+//
+
 // Enum Scenario (app.ropeway.gamemastering.MainFlowManager.ScenarioType)
 #ifndef RE2RR_TYPES_H_Scenario
 #define RE2RR_TYPES_H_Scenario

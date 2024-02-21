@@ -67,14 +67,16 @@ include_directories(include extern/amosnier/sha-2)
 
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED
+extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
 src/File.cpp
-src/DllHook.cpp
+src/Hashes.cpp
+src/Process.cpp
 src/UI.cpp
 src/SeedGenerator.cpp
 src/SeedShuffler.cpp
 src/Randomizer.cpp
-extern/amosnier/sha-2/sha-256.c
+src/DllHook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
@@ -86,7 +88,5 @@ add_executable(${PROJECT_NAME}
 src/ExeInjector.cpp
 src/Strings.cpp
 src/Process.cpp
-src/File.cpp
-extern/amosnier/sha-2/sha-256.c
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)

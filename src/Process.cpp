@@ -47,7 +47,7 @@ HMODULE GetProcessModuleByName(HANDLE hProcess, TCHAR moduleName[])
 	return NULL;
 }
 
-char *GetProcessModulePathByNameA(HANDLE hProcess, char moduleName[])
+char *GetProcessModulePathByNameA(HANDLE hProcess, const char moduleName[])
 {
 	HMODULE hMods[1024];
 	DWORD cbNeeded;
