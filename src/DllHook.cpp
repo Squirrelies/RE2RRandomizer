@@ -60,22 +60,22 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	logger->LogMessage("[RE2R-R] MainThread called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
-	const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath);
+	// const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
+	// RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath);
 
 	MH_STATUS status;
 	do
 	{
 		SetVTables();
-	} while (!HookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
+	} while (!TryHookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)hkPresent, &oPresent, status));
 
-	if (!HookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &oGetDeviceState, status))
+	if (!TryHookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &oGetDeviceState, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookGetDeviceState): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
+	if (!TryHookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
 
-	if (!HookFunction<UIMapManagerUpdate>(uiMapManagerUpdateFuncTarget, (UIMapManagerUpdate)HookUIMapManagerUpdate, &uiMapManagerUpdateFunc, status))
+	if (!TryHookFunction<UIMapManagerUpdate>(uiMapManagerUpdateFuncTarget, (UIMapManagerUpdate)HookUIMapManagerUpdate, &uiMapManagerUpdateFunc, status))
 		logger->LogMessage("[RE2R-R] Hook failed (HookUIMapManagerUpdate): %s\n", MH_StatusToString(status));
 
 	logger->LogMessage("[RE2R-R] Hooked.\n");

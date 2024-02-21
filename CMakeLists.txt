@@ -8,9 +8,9 @@ set(FETCHCONTENT_QUIET off)
 
 FetchContent_Declare(
     SHA-2
-  GIT_REPOSITORY https://github.com/amosnier/sha-2.git
-  GIT_TAG        b29613850d6e54e7159197ef42c7d22d012b6367 # origin/master
-  SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/amosnier/sha-2
+    GIT_REPOSITORY https://github.com/amosnier/sha-2.git
+    GIT_TAG        b29613850d6e54e7159197ef42c7d22d012b6367 # origin/master
+    SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/amosnier/sha-2
 )
 FetchContent_MakeAvailable(SHA-2)
 
@@ -71,6 +71,7 @@ extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
 src/File.cpp
 src/Hashes.cpp
+src/Hooking.cpp
 src/Process.cpp
 src/UI.cpp
 src/SeedGenerator.cpp
