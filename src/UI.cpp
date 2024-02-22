@@ -89,6 +89,9 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 
 void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
 {
+	if (this->logger == nullptr)
+		return;
+
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
 	this->logger->GetUILog()->Draw("RE2RR Log", open);

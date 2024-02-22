@@ -62,10 +62,8 @@ public:
 		// this->seed = nullptr;
 		this->seed.clear();
 
-		delete this->difficulty;
 		this->difficulty = nullptr;
 
-		delete this->scenario;
 		this->scenario = nullptr;
 	}
 

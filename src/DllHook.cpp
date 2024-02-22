@@ -6,7 +6,6 @@ FILE *stdoutLogFile;
 UILog *uiLog;
 ImmediateLogger *logger;
 RE2RRUI::UI *ui;
-SeedGenerator *seedGenerator;
 bool allocedConsole = true;
 bool attachedConsole = true;
 void **vtableDXGISwapChain = nullptr;
@@ -115,7 +114,6 @@ bool Startup()
 	    (uiLog = new UILog()) != nullptr &&
 	    (logger = new ImmediateLogger(stdoutLogFile, uiLog)) != nullptr &&
 	    (ui = new RE2RRUI::UI(logger)) != nullptr &&
-	    (seedGenerator = new SeedGenerator(logger)) != nullptr &&
 	    MH_Initialize() == MH_OK;
 }
 
@@ -125,11 +123,7 @@ void Shutdown()
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
-	if (seedGenerator != nullptr)
-	{
-		delete seedGenerator;
-		seedGenerator = nullptr;
-	}
+	Sleep(100);
 	if (ui != nullptr)
 	{
 		delete ui;
@@ -178,7 +172,7 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	if ((void *)param4 == nullptr) // This happens for items that have non-predefined placement by the game such as a defensive item embedded in an enemy so skip it.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	Randomizer *randomizer = ui->GetRandomizer();
+	Randomizer *randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr;
 	if (randomizer == nullptr) // We're not randomizing this run yet. Skip.
 		return itemPickupFunc(param1, param2, param3, param4);
 
@@ -194,7 +188,7 @@ __stdcall void HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2)
 {
 	uiMapManagerUpdateFunc(param1, param2);
 
-	Randomizer *randomizer = ui->GetRandomizer();
+	Randomizer *randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr;
 	if (randomizer != nullptr)
 	{
 		RE2RREnums::MapPartsID mapPartsID = *(RE2RREnums::MapPartsID *)(param2 + 0xC8);
@@ -319,7 +313,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT f
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ui->DrawMainUI(&isUIOpen);
+	if (ui != nullptr)
+		ui->DrawMainUI(&isUIOpen);
 	// ImGui::ShowDemoWindow();
 
 	ImGui::Render();

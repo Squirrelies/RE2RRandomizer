@@ -28,9 +28,16 @@ namespace RE2RRUI
 		}
 		~UI()
 		{
+			this->logger = nullptr;
+
 			delete this->scenario;
+			this->scenario = nullptr;
+
 			delete this->difficulty;
+			this->difficulty = nullptr;
+
 			delete this->randomizer;
+			this->randomizer = nullptr;
 		}
 
 		void __stdcall DrawMainUI(bool *);
