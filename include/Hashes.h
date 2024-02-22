@@ -2,6 +2,7 @@
 #define RE2RR_HASHES_H
 
 #include "File.h"
+#include "Logging.h"
 #include "Types.h"
 #include <stdint.h>
 #include <vector>
@@ -10,8 +11,9 @@ namespace RE2RRHashes
 {
 	/// @brief Detects the game version using a SHA256 checksum hash.
 	/// @param filePath The path to the game executable.
+	/// @param logger The ImmediateLogger instance to log messages to. Default: nullptr.
 	/// @return A enumeration value representing the detected version of the game.
-	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath);
+	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger *logger = nullptr);
 }
 
 #endif

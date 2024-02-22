@@ -3,8 +3,9 @@
 HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
+UILog *uiLog;
 ImmediateLogger *logger;
-UI *ui;
+RE2RRUI::UI *ui;
 SeedGenerator *seedGenerator;
 bool allocedConsole = true;
 bool attachedConsole = true;
@@ -61,7 +62,7 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
 	const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath);
+	RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath, logger);
 
 	MH_STATUS status;
 	do
@@ -101,6 +102,7 @@ bool Startup()
 	allocedConsole = AllocConsole();
 	if (!allocedConsole)
 		attachedConsole = AttachConsole(ATTACH_PARENT_PROCESS);
+	SetConsoleTitleA("RE2R Randomizer");
 #endif
 	return
 #if RE2RRDEBUGWINDOW == 1
@@ -110,8 +112,9 @@ bool Startup()
 	    !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
 #endif
 	    !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
-	    (logger = new ImmediateLogger(stdoutLogFile)) != nullptr &&
-	    (ui = new UI(logger)) != nullptr &&
+	    (uiLog = new UILog()) != nullptr &&
+	    (logger = new ImmediateLogger(stdoutLogFile, uiLog)) != nullptr &&
+	    (ui = new RE2RRUI::UI(logger)) != nullptr &&
 	    (seedGenerator = new SeedGenerator(logger)) != nullptr &&
 	    MH_Initialize() == MH_OK;
 }
@@ -152,6 +155,11 @@ void Shutdown()
 	{
 		delete logger;
 		logger = nullptr;
+	}
+	if (uiLog != nullptr)
+	{
+		delete uiLog;
+		uiLog = nullptr;
 	}
 	fclose(stdoutLogFile);
 	fclose(stdin);

@@ -7,13 +7,14 @@ namespace RE2RRHashes
 	const static std::vector<uint8_t> CEROZ_DX11_20230421_1 = {};
 	const static std::vector<uint8_t> CEROZ_DX12_20230814_1 = {};
 
-	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath)
+	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger *logger)
 	{
 		uint8_t *gameExeSHA256Hash = RE2RRFile::GetFileHashSHA256(filePath);
 		std::vector<uint8_t> hashVector = RE2RRFile::HashSHA256ToVector(gameExeSHA256Hash);
 		free(gameExeSHA256Hash);
 
-		printf("[RE2R-R] Game hash: { %s }\n", RE2RRFile::VectorToHexString(hashVector).c_str());
+		if (logger)
+			logger->LogMessage("[RE2R-R] Game hash: { %s }\n", RE2RRFile::VectorToHexString(hashVector).c_str());
 
 		RE2RREnums::RE2RGameVersion returnValue = RE2RREnums::RE2RGameVersion::Unknown;
 		if (hashVector == WW_DX11_20230421_1)
@@ -25,7 +26,8 @@ namespace RE2RRHashes
 		else if (hashVector == CEROZ_DX12_20230814_1)
 			returnValue = RE2RREnums::RE2RGameVersion::CEROZ_DX12_20230814_1;
 
-		printf("[RE2R-R] Game version: %s\n", RE2RREnums::EnumRE2RGameVersionToString(returnValue).c_str());
+		if (logger)
+			logger->LogMessage("[RE2R-R] Game version: %s\n", RE2RREnums::EnumRE2RGameVersionToString(returnValue).c_str());
 
 		return returnValue;
 	}

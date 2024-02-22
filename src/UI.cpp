@@ -1,25 +1,28 @@
 #include "UI.h"
 
-void __stdcall UI::DrawMainUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 {
 	if (!*open)
 		return;
 
+	static bool show_Log = false;
 	static bool show_File_ImportSeed = false;
 	static bool show_File_ExportSeed = false;
 	static bool show_Help_AboutRE2RR = false;
 
-	// Specify a default position/size in case there's no data in the .ini file.
-	ImGuiIO &io = ImGui::GetIO();
-	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(330, 240), ImGuiCond_FirstUseEver);
-
-	if (show_File_ImportSeed)
+	if (show_Log)
+		DrawLogUI(&show_Log);
+	else if (show_File_ImportSeed)
 		DrawFileImportSeedUI(&show_File_ImportSeed);
 	else if (show_File_ExportSeed)
 		DrawFileExportSeedUI(&show_File_ExportSeed);
 	else if (show_Help_AboutRE2RR)
 		DrawHelpAboutRE2RRUI(&show_Help_AboutRE2RR);
+
+	// Specify a default position/size in case there's no data in the .ini file.
+	ImGuiIO &io = ImGui::GetIO();
+	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(330, 240), ImGuiCond_FirstUseEver);
 
 	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 	{
@@ -77,14 +80,21 @@ void __stdcall UI::DrawMainUI(bool *open)
 			delete randomizer;
 		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario);
 	}
-	// ImGui::SameLine();
-	// if (ImGui::Button("Enable Randomizer"))
-	// 	logger->LogMessage("Enable Randomizer clicked!\n");
+	ImGui::SameLine();
+	if (ImGui::Button("Show/Hide Log"))
+		show_Log = !show_Log;
 
 	ImGui::End();
 }
 
-void __stdcall UI::DrawFileImportSeedUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
+{
+	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
+	this->logger->GetUILog()->Draw("RE2RR Log", open);
+}
+
+void __stdcall RE2RRUI::UI::DrawFileImportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
@@ -100,7 +110,7 @@ void __stdcall UI::DrawFileImportSeedUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall UI::DrawFileExportSeedUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawFileExportSeedUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
@@ -116,7 +126,7 @@ void __stdcall UI::DrawFileExportSeedUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall UI::DrawHelpAboutRE2RRUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
@@ -193,7 +203,7 @@ void __stdcall UI::DrawHelpAboutRE2RRUI(bool *open)
 	ImGui::End();
 }
 
-Randomizer *UI::GetRandomizer(void)
+Randomizer *RE2RRUI::UI::GetRandomizer(void)
 {
 	return randomizer;
 }
