@@ -1552,18 +1552,18 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 
 	std::string ToString()
 	{
-		const char *toStringFormat = "{ \"%s\": %d (0x%X), \"%s\": %d (0x%X), \"%s\": %d, \"%s\": %d, \"%s\": %d }";
+		const char *toStringFormat = "{ \"%s\": %s (%d / 0x%X), \"%s\": %s (%d / 0x%X), \"%s\": %d, \"%s\": %d, \"%s\": %d }";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(ItemId), ItemId, ItemId,
-		                          RE2RR_NAMEOF(WeaponId), WeaponId, WeaponId,
+		                          RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(), ItemId, ItemId,
+		                          RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(), WeaponId, WeaponId,
 		                          RE2RR_NAMEOF(WeaponParts), WeaponParts,
 		                          RE2RR_NAMEOF(BulletId), BulletId,
 		                          RE2RR_NAMEOF(Count), Count);
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(ItemId), ItemId, ItemId,
-		         RE2RR_NAMEOF(WeaponId), WeaponId, WeaponId,
+		         RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(), ItemId, ItemId,
+		         RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(), WeaponId, WeaponId,
 		         RE2RR_NAMEOF(WeaponParts), WeaponParts,
 		         RE2RR_NAMEOF(BulletId), BulletId,
 		         RE2RR_NAMEOF(Count), Count);

@@ -3,29 +3,25 @@
 const static char *logItemFormat = "\"%s\",\"%d\",\"0x%X\",\"%s\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%s\",\"%s\",\"%s\",\"%s\"\n";
 void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
-	// TODO: Try to fix crash on picking up defensive item from enemy body after use. Possibly an access violation but try/catch didn't handle it.
-	try
-	{
-		logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
-		                   RE2RR_NAMEOF(itemToReplace), itemToReplace,
-		                   RE2RR_NAMEOF(currentItem), currentItem->ToString().c_str(),
-		                   RE2RR_NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-		itemLog->LogMessage(logItemFormat,
-		                    RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), currentItem->ItemId, currentItem->ItemId,
-		                    RE2RREnums::EnumWeaponTypeToString(currentItem->WeaponId).c_str(), currentItem->WeaponId, currentItem->WeaponId,
-		                    currentItem->WeaponParts, currentItem->WeaponParts,
-		                    currentItem->BulletId, currentItem->BulletId,
-		                    currentItem->Count, currentItem->Count,
-		                    GUIDToString(itemPositionGuid).c_str(),
-		                    RE2RREnums::EnumMapPartsIDToString(mapPartsId).c_str(),
-		                    RE2RREnums::EnumMapIDToString(mapId).c_str(),
-		                    RE2RREnums::EnumFloorIDToString(floorId).c_str());
-		// SetItemByGUID(currentItem, itemPositionGuid);
-	}
-	catch (std::runtime_error &ex)
-	{
-		logger->LogMessage("[RE2R-R] %s: An exception occurred!\n\t%s\n", RE2RR_NAMEOF(Randomizer::ItemPickup), ex.what());
-	}
+	if (logger == nullptr || itemLog == nullptr ||
+	    itemToReplace == nullptr || currentItem == nullptr || itemPositionGuid == nullptr)
+		return;
+
+	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
+	                   RE2RR_NAMEOF(itemToReplace), itemToReplace,
+	                   RE2RR_NAMEOF(currentItem), currentItem->ToString().c_str(),
+	                   RE2RR_NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
+	itemLog->LogMessage(logItemFormat,
+	                    RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), currentItem->ItemId, currentItem->ItemId,
+	                    RE2RREnums::EnumWeaponTypeToString(currentItem->WeaponId).c_str(), currentItem->WeaponId, currentItem->WeaponId,
+	                    currentItem->WeaponParts, currentItem->WeaponParts,
+	                    currentItem->BulletId, currentItem->BulletId,
+	                    currentItem->Count, currentItem->Count,
+	                    GUIDToString(itemPositionGuid).c_str(),
+	                    RE2RREnums::EnumMapPartsIDToString(mapPartsId).c_str(),
+	                    RE2RREnums::EnumMapIDToString(mapId).c_str(),
+	                    RE2RREnums::EnumFloorIDToString(floorId).c_str());
+	// SetItemByGUID(currentItem, itemPositionGuid);
 }
 
 bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID mapId, RE2RREnums::FloorID floorId)
@@ -42,6 +38,9 @@ bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)
 {
+	if (currentItem == nullptr)
+		return;
+
 	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n\t%s -> %s\n", currentItem->ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
 	//*currentItem = newItem;
 }
@@ -1139,6 +1138,9 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByTy
 
 void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
+	if (currentItem == nullptr || itemPositionGuid == nullptr)
+		return;
+
 	uint8_t *uniqueID = (uint8_t *)itemPositionGuid;
 
 	if (uniqueID[0] == 0x00)
@@ -3912,6 +3914,9 @@ void Randomizer::SetItemByGUID(app_ropeway_gamemastering_InventoryManager_Primit
 
 std::string GUIDToString(GUID *guid)
 {
+	if (guid == nullptr)
+		return {};
+
 	char guid_string[(sizeof(GUID) * 2) + 4 + 1]; // (16 bytes (4+2+2+8) * 2 for character representation) + 4 hyphens + 1 null terminator = 37 bytes/chars.
 
 	snprintf(

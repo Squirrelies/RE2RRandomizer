@@ -125,10 +125,25 @@ void Shutdown()
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
+	if (seedGenerator != nullptr)
+	{
+		delete seedGenerator;
+		seedGenerator = nullptr;
+	}
 	if (ui != nullptr)
 	{
 		delete ui;
 		ui = nullptr;
+	}
+	if (logger != nullptr)
+	{
+		delete logger;
+		logger = nullptr;
+	}
+	if (uiLog != nullptr)
+	{
+		delete uiLog;
+		uiLog = nullptr;
 	}
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -146,21 +161,6 @@ void Shutdown()
 	}
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)oWndProc);
 	Sleep(100);
-	if (seedGenerator != nullptr)
-	{
-		delete seedGenerator;
-		seedGenerator = nullptr;
-	}
-	if (logger != nullptr)
-	{
-		delete logger;
-		logger = nullptr;
-	}
-	if (uiLog != nullptr)
-	{
-		delete uiLog;
-		uiLog = nullptr;
-	}
 	fclose(stdoutLogFile);
 	fclose(stdin);
 	fclose(stdout);
@@ -175,11 +175,12 @@ void Shutdown()
 
 __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
 {
-	Randomizer *randomizer = ui->GetRandomizer();
-	if (randomizer == nullptr)
+	if ((void *)param4 == nullptr) // This happens for items that have non-predefined placement by the game such as a defensive item embedded in an enemy so skip it.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	logger->LogMessage("[RE2R-R] HookItemPickup called. { %s, %s }\n", ((app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14))->ToString().c_str(), GUIDToString((GUID *)(param4 + 0x30)).c_str());
+	Randomizer *randomizer = ui->GetRandomizer();
+	if (randomizer == nullptr) // We're not randomizing this run yet. Skip.
+		return itemPickupFunc(param1, param2, param3, param4);
 
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70); // Sometimes uninitialized data, only write here.
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14);   // This is where we want to read to get what the item is.

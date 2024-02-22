@@ -55,10 +55,18 @@ public:
 	~Randomizer()
 	{
 		delete this->itemLog;
+		this->itemLog = nullptr;
+
 		this->logger = nullptr;
+
+		// this->seed = nullptr;
 		this->seed.clear();
+
 		delete this->difficulty;
+		this->difficulty = nullptr;
+
 		delete this->scenario;
+		this->scenario = nullptr;
 	}
 
 	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
