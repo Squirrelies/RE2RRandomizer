@@ -48,12 +48,12 @@ add_compile_options(
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>,$<CONFIG:RELWITHDEBINFO>>:-O3> # Optimize.
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:-s> # Debug symbol stripping.
     $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-ggdb3> # Set symbol type. (GDB format)
-    #$<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-gcodeview> # Set symbol type. (MSVC++ format)
+    #$<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-gcodeview> # Set symbol type. (MSVC++ format) [Requires GCC 14+ or clang]
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
     )
 add_compile_definitions(
-    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:RELEASE>
-    $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:DEBUG>
+    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>,$<CONFIG:RELWITHDEBINFO>>:RELEASE>
+    $<$<CONFIG:DEBUG>:DEBUG>
     UNICODE
     _UNICODE
     WIN32_LEAD_AND_MEAN
