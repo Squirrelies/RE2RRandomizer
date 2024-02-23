@@ -75,11 +75,11 @@ void Shutdown(void);
 
 __stdcall uintptr_t HookItemPickup(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 __stdcall void HookUIMapManagerUpdate(uintptr_t, uintptr_t);
+HRESULT __stdcall HookPresent(IDXGISwapChain *, UINT, UINT);
+HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
+LRESULT __stdcall HookWndProc(const HWND, UINT, WPARAM, LPARAM);
 
 void InitImGui(IDXGISwapChain *, ID3D11Device *);
-LRESULT __stdcall WndProc(const HWND, UINT, WPARAM, LPARAM);
-HRESULT __stdcall hkPresent(IDXGISwapChain *, UINT, UINT);
-HRESULT __stdcall HookGetDeviceState(IDirectInputDevice8 *, DWORD, LPVOID);
 void __stdcall SetVTables(void);
 void CreateRenderTarget(IDXGISwapChain *);
 void CleanupRenderTarget(void);
