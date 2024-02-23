@@ -18,6 +18,7 @@ private:
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
+	FILE *itemLogFile;
 	ImmediateLogger *itemLog;
 
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
@@ -40,7 +41,8 @@ public:
 		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
 		char *logFileName = (char *)malloc(logFileNameSize);
 		snprintf(logFileName, logFileNameSize, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str());
-		this->itemLog = new ImmediateLogger(fopen(logFileName, "a"), this->logger->GetUILog());
+		this->itemLogFile = fopen(logFileName, "a");
+		this->itemLog = new ImmediateLogger(this->itemLogFile, this->logger->GetUILog());
 		if (!RE2RRFile::FileExists(logFileName))
 			this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
 			                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)", "MapPartsId", "MapId", "FloorId");
@@ -56,6 +58,9 @@ public:
 	{
 		delete this->itemLog;
 		this->itemLog = nullptr;
+
+		fclose(this->itemLogFile);
+		this->itemLogFile = nullptr;
 
 		this->logger = nullptr;
 
