@@ -1529,27 +1529,6 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	uint32_t BulletId;               // 0x1C-0x1F
 	uint32_t Count;                  // 0x20-0x23
 
-	// app_ropeway_gamemastering_InventoryManager_PrimitiveItem(uint32_t ItemId, uint32_t WeaponId, uint32_t WeaponParts, uint32_t BulletId, uint32_t Count)
-	// {
-	// 	this->ItemId = ItemId;
-	// 	this->WeaponId = WeaponId;
-	// 	this->WeaponParts = WeaponParts;
-	// 	this->BulletId = BulletId;
-	// 	this->Count = Count;
-	// }
-
-	template <typename... TInt>
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem(TInt &&...args)
-	{
-		static_assert(sizeof...(args) <= sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem), "Constructor requires less than or equal number of elements to the sizeof this struct.");
-		std::vector<uint8_t> argsArray = {static_cast<uint8_t>(args)...};
-
-		memset((void *)this, 0, sizeof(app_ropeway_gamemastering_InventoryManager_PrimitiveItem));
-
-		for (size_t i = 0; i < argsArray.size(); ++i)
-			*((uint8_t *)this + i) = argsArray[i];
-	}
-
 	std::string ToString()
 	{
 		const char *toStringFormat = "{ \"%s\": %s (%d / 0x%X), \"%s\": %s (%d / 0x%X), \"%s\": %d, \"%s\": %d, \"%s\": %d }";

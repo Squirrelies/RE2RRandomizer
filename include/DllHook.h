@@ -34,7 +34,6 @@
 #include "Hooking.h"
 #include "Logging.h"
 #include "Randomizer.h"
-#include "SeedGenerator.h"
 #include "Types.h"
 #include "UI.h"
 #include <MinHook.h>

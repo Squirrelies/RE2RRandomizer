@@ -24,7 +24,7 @@ extern "C"
 		/// @brief Gets the file size for the given file.
 		/// @param filePath The file to retrieve the size for.
 		/// @return The file size as an int64_t. Returns -1LL on failure to open or seek.
-		RE2RRFILEAPI int64_t GetFileSize(const char *filePath);
+		RE2RRFILEAPI size_t GetFileSize(const char *filePath);
 
 		/// @brief Calculates the SHA256 hash for a given file.
 		/// @param filePath The file to calculate the SHA256 hash for.

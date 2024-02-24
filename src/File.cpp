@@ -6,7 +6,7 @@ bool RE2RRFile::FileExists(const char *filePath)
 	return (file = fopen64(filePath, "rb")) && !fclose(file);
 }
 
-int64_t RE2RRFile::GetFileSize(const char *filePath)
+size_t RE2RRFile::GetFileSize(const char *filePath)
 {
 	FILE *file = fopen64(filePath, "rb");
 
@@ -19,7 +19,7 @@ int64_t RE2RRFile::GetFileSize(const char *filePath)
 		return -1LL; // Unable to seek!
 	}
 
-	uint64_t size = ftello64(file);
+	size_t size = ftello64(file);
 	fclose(file);
 	return size;
 }
@@ -36,7 +36,7 @@ uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
 	struct Sha_256 sha_256;
 	sha_256_init(&sha_256, hash);
 
-	int64_t fileSize = GetFileSize(filePath);
+	size_t fileSize = GetFileSize(filePath);
 	uint8_t *fileData = (uint8_t *)malloc(bufferSize);
 	size_t totalBytesRead = 0;
 	size_t bytesRead = 0;
@@ -68,8 +68,8 @@ std::vector<uint8_t> RE2RRFile::HashSHA256ToVector(const uint8_t *hash)
 
 std::string RE2RRFile::VectorToHexString(std::vector<uint8_t> &vector)
 {
-	int vectorSize = vector.size();
-	int bufferSize = (vectorSize * 6) - 2 + 1;
+	size_t vectorSize = vector.size();
+	size_t bufferSize = (vectorSize * 6) - 2 + 1;
 	char *toString = (char *)malloc(bufferSize);
 	memset(toString, 0, bufferSize);
 	for (size_t i = 0; i < vectorSize; ++i)

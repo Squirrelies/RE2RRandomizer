@@ -74,11 +74,9 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	{
 		logger->LogMessage("Generate Seed clicked!\n");
 
-		SeedGenerator seedGenerator(logger);
-		seedGenerator.GenerateSeed((RE2RREnums::Scenario)*scenario, (RE2RREnums::Difficulty)*difficulty, true);
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger, seedGenerator.GetSeed(), (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario);
+		randomizer = new Randomizer(logger, {}, (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Show/Hide Log"))

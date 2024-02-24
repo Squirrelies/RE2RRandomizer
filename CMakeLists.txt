@@ -73,8 +73,6 @@ src/File.cpp
 src/Hashes.cpp
 src/Process.cpp
 src/UI.cpp
-src/SeedGenerator.cpp
-src/SeedShuffler.cpp
 src/Randomizer.cpp
 src/DllHook.cpp
 )
