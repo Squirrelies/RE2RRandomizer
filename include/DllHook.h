@@ -1,8 +1,15 @@
 #ifndef RE2RR_DLLHOOK_H
 #define RE2RR_DLLHOOK_H
 
+#define GAMEEDITION_WW 0
+#define GAMEEDITION_CEROZ 1
+// The game edition we're targeting. (TODO: Add detection and support for both so this isn't needed.)
+#define GAMEEDITION GAMEEDITION_CEROZ
+
+#define DXVERSION_11 0
+#define DXVERSION_12 1
 // The DirectX version we're targeting. (TODO: Add detection and support for both so this isn't needed.)
-#define DXVERSION 11
+#define DXVERSION DXVERSION_11
 
 // Whether to show a debug console window on attach or not. Info is still logged to file either way.
 #define RE2RRDEBUGWINDOW 1
@@ -47,14 +54,22 @@
 #include <imgui_impl_win32.h>
 #include <memory>
 
-#if DXVERSION == 11
+#if (DXVERSION == DXVERSION_11 && GAMEEDITION == GAMEEDITION_WW)
 // DX11-WW as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;         // app.ropeway.gui.GUIMaster.openInventoryGetItemMode(app.ropeway.gamemastering.InventoryManager.StockItem, app.ropeway.gimmick.action.SetItem.SetItemSaveData)
+constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430; // app.ropeway.gamemastering.UIMapManager.update()
+#elif (DXVERSION == DXVERSION_12 && GAMEEDITION == GAMEEDITION_WW)
+// DX12-WW as of 20240102
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
 constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430;
-#elif DXVERSION == 12
-// DX12-WW as of 20240102
-constexpr uintptr_t ItemPickupFuncOffset = 0x1AD5070;
-constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x0000000;
+#elif (DXVERSION == DXVERSION_11 && GAMEEDITION == GAMEEDITION_CEROZ)
+// DX11-CeroZ as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
+constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430;
+#elif (DXVERSION == DXVERSION_12 && GAMEEDITION == GAMEEDITION_CEROZ)
+// DX12-CeroZ as of 20240102
+constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;
+constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430;
 #endif
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);

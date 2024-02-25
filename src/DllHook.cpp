@@ -25,7 +25,7 @@ bool initGetDeviceStateJ2 = false;
 bool isUIOpen = false;
 UINT resizeWidth = 0U;
 UINT resizeHeight = 0U;
-HWND window = FindWindow(L"via", L"RESIDENT EVIL 2");
+HWND window;
 Present presentFunc;
 GetDeviceState getDeviceStateFunc;
 WNDPROC wndProcFunc;
@@ -46,6 +46,15 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 			{
 				logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) called.\n");
 				dllInstance = hinstDLL;
+				window = FindWindow(L"via", L"RESIDENT EVIL 2");
+				if (window == nullptr)
+					window = FindWindow(L"via", L"BIOHAZARD RE:2 Z Version");
+				if (window == nullptr)
+				{
+					logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) unable to find game window handle!\n");
+					Shutdown();
+					return FALSE;
+				}
 				mainThreadHandle = CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
 			}
 			break;
