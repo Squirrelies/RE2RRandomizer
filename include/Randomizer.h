@@ -6,6 +6,7 @@
 #include "Types.h"
 #include <stdexcept>
 #include <stdint.h>
+#include <unordered_map>
 #include <vector>
 
 class Randomizer
@@ -21,6 +22,7 @@ private:
 	FILE *itemLogFile;
 	ImmediateLogger *itemLog;
 
+	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByPositionGuid(GUID *);
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByType(uint32_t);
 	void SetItemByGUID(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);

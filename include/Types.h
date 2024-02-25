@@ -35,12 +35,34 @@
 #include <vector>
 
 #ifdef UNICODE
+#define TryStringToGUID TryStringToGUIDW
+#else
+#define TryStringToGUID TryStringToGUIDA
+#endif
+bool TryStringToGUIDA(const std::string &stringGUID, GUID &guid);
+bool TryStringToGUIDW(const std::wstring &stringGUID, GUID &guid);
+
+#ifdef UNICODE
 #define StringToGUID StringToGUIDW
 #else
 #define StringToGUID StringToGUIDA
 #endif
-bool StringToGUIDA(const std::string &stringGUID, GUID &guid);
-bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
+GUID *StringToGUIDA(const std::string &stringGUID);
+GUID *StringToGUIDW(const std::wstring &stringGUID);
+
+namespace std
+{
+	template <>
+	struct hash<GUID>
+	{
+		size_t operator()(const GUID &guid) const noexcept
+		{
+			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
+			std::hash<uint64_t> hash;
+			return hash(p[0]) ^ hash(p[1]);
+		}
+	};
+}
 
 // Enum RE2RGameVersion
 #ifndef RE2RR_TYPES_H_RE2RGameVersion
@@ -1280,9 +1302,9 @@ bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 #ifndef RE2RR_TYPES_H_ItemType
 #define RE2RR_TYPES_H_ItemType
 #define ENUM_NAME ItemType
-#define ENUM_TYPE uint32_t
+#define ENUM_TYPE int32_t
 #define ENUM_LIST                                   \
-	ENUM_VALUE(None, 0)                             \
+	ENUM_VALUE(None, 0x00)                          \
 	ENUM_VALUE(FirstAidSpray, 0x01)                 \
 	ENUM_VALUE(Herb_Green1, 0x02)                   \
 	ENUM_VALUE(Herb_Red1, 0x03)                     \
@@ -1427,9 +1449,9 @@ bool StringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 #ifndef RE2RR_TYPES_H_WeaponType
 #define RE2RR_TYPES_H_WeaponType
 #define ENUM_NAME WeaponType
-#define ENUM_TYPE uint32_t
+#define ENUM_TYPE int32_t
 #define ENUM_LIST                                       \
-	ENUM_VALUE(None, 0xFFFFFFFFU)                       \
+	ENUM_VALUE(None, (int32_t)0xFFFFFFFF)               \
 	ENUM_VALUE(Handgun_Matilda, 0x01)                   \
 	ENUM_VALUE(Handgun_M19, 0x02)                       \
 	ENUM_VALUE(Handgun_JMB_Hp3, 0x03)                   \
@@ -1525,9 +1547,9 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	// uint8_t _Reserved[0x10]; // 0x00-0x0F
 	RE2RREnums::ItemType ItemId;     // 0x10-0x13
 	RE2RREnums::WeaponType WeaponId; // 0x14-0x17
-	uint32_t WeaponParts;            // 0x18-0x1B
-	uint32_t BulletId;               // 0x1C-0x1F
-	uint32_t Count;                  // 0x20-0x23
+	int32_t WeaponParts;             // 0x18-0x1B
+	int32_t BulletId;                // 0x1C-0x1F
+	int32_t Count;                   // 0x20-0x23
 
 	std::string ToString()
 	{
