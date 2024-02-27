@@ -5,7 +5,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	// Always shown items (shown even if the Main UI is hidden)
 	static bool show_Overlay = false;
 	if (show_Overlay)
-		DrawOverlay(&show_Overlay);
+		DrawOverlay(&show_Overlay, open);
 
 	// If the Main UI is hidden, exit here.
 	if (!*open)
@@ -102,13 +102,25 @@ void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
 	this->logger->GetUILog()->Draw("RE2RR Log", open);
 }
 
-void __stdcall RE2RRUI::UI::DrawOverlay(bool *p_open)
+void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+	if (mainUIOpen != nullptr && !*mainUIOpen)
+		window_flags |= ImGuiWindowFlags_NoMove;
 	ImGui::SetNextWindowPos(ImVec2(5, 5), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowBgAlpha(0.20f);
-	if (ImGui::Begin("RE2RR Overlay", p_open, window_flags))
+	if (ImGui::Begin("RE2RR Debug Overlay", open, window_flags))
 	{
+		ImFontConfig font_cfg;
+		font_cfg.OversampleH = font_cfg.OversampleV = 1;
+		font_cfg.PixelSnapH = true;
+		font_cfg.SizePixels = 16.0f;
+		font_cfg.EllipsisChar = (ImWchar)0x0085;
+		font_cfg.GlyphOffset.y = 1.0f; // Add +1 offset per 13 units
+
+		ImGuiIO &io = ImGui::GetIO();
+		ImFont *font = io.Fonts->AddFontDefault(&font_cfg);
+		ImGui::PushFont(font);
 		if (randomizer == nullptr)
 			ImGui::Text("Randomizer not initialized!");
 		else
@@ -118,7 +130,10 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *p_open)
 			ImGui::Text("Map Part: %s", RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str());
 			ImGui::Text("Map: %s", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
 			ImGui::Text("Floor: %s", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
+			ImGui::Text("Last Item: { %s }", randomizer->GetLastInteractedItem()->ToString().c_str());
+			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
 		}
+		ImGui::PopFont();
 	}
 	ImGui::End();
 }

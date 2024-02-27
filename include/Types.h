@@ -1500,7 +1500,7 @@ struct via_vec3
 
 	std::string ToString()
 	{
-		const char *toStringFormat = "{ \"%s\": %f, \"%s\": %f, \"%s\": %f }";
+		const char *toStringFormat = ".%s = %f, .%s = %f, .%s = %f";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
 		                          RE2RR_NAMEOF(x), x,
@@ -1526,15 +1526,15 @@ struct app_ropeway_MansionManager_MapIdentifier
 
 	std::string ToString()
 	{
-		const char *toStringFormat = "{ \"%s\": %s (%d (0x%X)), \"%s\": %s (%d (0x%X)) }";
+		const char *toStringFormat = ".%s = %s, .%s = %s";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(), ID, ID,
-		                          RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str(), Area, Area);
+		                          RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
+		                          RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(), ID, ID,
-		         RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str(), Area, Area);
+		         RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
+		         RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
 		std::string returnValue = std::string(toString);
 		free(toString);
 
@@ -1553,18 +1553,18 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 
 	std::string ToString()
 	{
-		const char *toStringFormat = "{ \"%s\": %s (%d / 0x%X), \"%s\": %s (%d / 0x%X), \"%s\": %d, \"%s\": %d, \"%s\": %d }";
+		const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(), ItemId, ItemId,
-		                          RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(), WeaponId, WeaponId,
+		                          RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
+		                          RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
 		                          RE2RR_NAMEOF(WeaponParts), WeaponParts,
 		                          RE2RR_NAMEOF(BulletId), BulletId,
 		                          RE2RR_NAMEOF(Count), Count);
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(), ItemId, ItemId,
-		         RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(), WeaponId, WeaponId,
+		         RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
+		         RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
 		         RE2RR_NAMEOF(WeaponParts), WeaponParts,
 		         RE2RR_NAMEOF(BulletId), BulletId,
 		         RE2RR_NAMEOF(Count), Count);

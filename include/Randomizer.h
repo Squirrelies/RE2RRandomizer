@@ -19,6 +19,8 @@ private:
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem;
+	GUID lastInteractedItemPositionGuid;
 	FILE *itemLogFile;
 	ImmediateLogger *itemLog;
 
@@ -26,6 +28,7 @@ private:
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByType(uint32_t);
 	void SetItemByGUID(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
+	void SetLastInteracted(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
 
 protected:
 public:
@@ -82,6 +85,8 @@ public:
 	RE2RREnums::MapPartsID GetMapPartsID();
 	RE2RREnums::MapID GetMapID();
 	RE2RREnums::FloorID GetFloorID();
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *GetLastInteractedItem();
+	GUID *GetLastInteractedItemPositionGuid();
 };
 
 std::string GUIDToString(GUID *);

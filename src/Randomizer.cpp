@@ -21,6 +21,23 @@ void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_Primitive
 	                    RE2RREnums::EnumMapPartsIDToString(mapPartsId).c_str(),
 	                    RE2RREnums::EnumMapIDToString(mapId).c_str(),
 	                    RE2RREnums::EnumFloorIDToString(floorId).c_str());
+	SetLastInteracted(currentItem, itemPositionGuid);
+}
+
+void Randomizer::SetLastInteracted(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *item, GUID *itemPositionGuid)
+{
+	this->lastInteractedItem = *item;
+	this->lastInteractedItemPositionGuid = *itemPositionGuid;
+}
+
+app_ropeway_gamemastering_InventoryManager_PrimitiveItem *Randomizer::GetLastInteractedItem()
+{
+	return &this->lastInteractedItem;
+}
+
+GUID *Randomizer::GetLastInteractedItemPositionGuid()
+{
+	return &this->lastInteractedItemPositionGuid;
 }
 
 bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID mapId, RE2RREnums::FloorID floorId)

@@ -45,7 +45,7 @@ namespace RE2RRUI
 		void __stdcall DrawFileImportSeedUI(bool *);
 		void __stdcall DrawFileExportSeedUI(bool *);
 		void __stdcall DrawHelpAboutRE2RRUI(bool *);
-		void __stdcall DrawOverlay(bool *);
+		void __stdcall DrawOverlay(bool *, bool *);
 		Randomizer *GetRandomizer(void);
 	};
 }
