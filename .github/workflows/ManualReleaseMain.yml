@@ -5,15 +5,30 @@ on: workflow_dispatch
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  msystem: MINGW64
   CMAKE_GENERATOR: MinGW Makefiles
   VCPKG_DEFAULT_TRIPLET: x64-mingw-static
+  #VCPKG_TARGET_TRIPLET: x64-mingw-static
+  #VCPKG_HOST_TRIPLET: x64-mingw-static
 
 jobs:
   build:
     runs-on: windows-latest
 
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          git
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+
+    - uses: actions/checkout@v4
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
