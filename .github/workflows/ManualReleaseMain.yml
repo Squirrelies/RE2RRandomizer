@@ -5,6 +5,7 @@ on: workflow_dispatch
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  CMAKE_GENERATOR: MinGW Makefiles
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
       working-directory: ${{github.workspace}}
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DVCPKG_TARGET_TRIPLET=x64-mingw-static -DVCPKG_HOST_TRIPLET=x64-mingw-static -S . -B build
+      run: cmake -G ${{env.CMAKE_GENERATOR}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DVCPKG_TARGET_TRIPLET=x64-mingw-static -DVCPKG_HOST_TRIPLET=x64-mingw-static -S . -B build
 
     - name: Build
       working-directory: ${{github.workspace}}
