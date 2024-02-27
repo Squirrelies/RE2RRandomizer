@@ -35,6 +35,37 @@ bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID
 	return returnValue;
 }
 
+RE2RREnums::Difficulty Randomizer::GetDifficulty()
+{
+	if (difficulty != nullptr)
+		return *difficulty;
+	else
+		return RE2RREnums::Difficulty::NORMAL;
+}
+
+RE2RREnums::Scenario Randomizer::GetScenario()
+{
+	if (scenario != nullptr)
+		return *scenario;
+	else
+		return RE2RREnums::Scenario::INVALID;
+}
+
+RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
+{
+	return mapPartsId;
+}
+
+RE2RREnums::MapID Randomizer::GetMapID()
+{
+	return mapId;
+}
+
+RE2RREnums::FloorID Randomizer::GetFloorID()
+{
+	return floorId;
+}
+
 app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByPositionGuid(GUID *itemPositionGuid)
 {
 	static std::unordered_map<GUID, app_ropeway_gamemastering_InventoryManager_PrimitiveItem> map =

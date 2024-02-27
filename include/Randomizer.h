@@ -77,6 +77,11 @@ public:
 
 	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
+	RE2RREnums::Difficulty GetDifficulty();
+	RE2RREnums::Scenario GetScenario();
+	RE2RREnums::MapPartsID GetMapPartsID();
+	RE2RREnums::MapID GetMapID();
+	RE2RREnums::FloorID GetFloorID();
 };
 
 std::string GUIDToString(GUID *);

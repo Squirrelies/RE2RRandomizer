@@ -22,7 +22,7 @@ bool initGetDeviceStateM1 = false;
 bool initGetDeviceStateM2 = false;
 bool initGetDeviceStateJ1 = false;
 bool initGetDeviceStateJ2 = false;
-bool isUIOpen = false;
+bool isUIOpen = true;
 UINT resizeWidth = 0U;
 UINT resizeHeight = 0U;
 HWND window;

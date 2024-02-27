@@ -2,14 +2,20 @@
 
 void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 {
+	// Always shown items (shown even if the Main UI is hidden)
+	static bool show_Overlay = false;
+	if (show_Overlay)
+		DrawOverlay(&show_Overlay);
+
+	// If the Main UI is hidden, exit here.
 	if (!*open)
 		return;
 
+	// Conditionally shown items (shown only if the Main UI is showing)
 	static bool show_Log = false;
 	static bool show_File_ImportSeed = false;
 	static bool show_File_ExportSeed = false;
 	static bool show_Help_AboutRE2RR = false;
-
 	if (show_Log)
 		DrawLogUI(&show_Log);
 	else if (show_File_ImportSeed)
@@ -37,6 +43,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 		{
 			ImGui::MenuItem("Import Seed", NULL, &show_File_ImportSeed);
 			ImGui::MenuItem("Export Seed", NULL, &show_File_ExportSeed);
+			ImGui::MenuItem("Overlay", NULL, &show_Overlay);
 			ImGui::EndMenu();
 		}
 
@@ -93,6 +100,27 @@ void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
 	this->logger->GetUILog()->Draw("RE2RR Log", open);
+}
+
+void __stdcall RE2RRUI::UI::DrawOverlay(bool *p_open)
+{
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+	ImGui::SetNextWindowPos(ImVec2(5, 5), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowBgAlpha(0.20f);
+	if (ImGui::Begin("RE2RR Overlay", p_open, window_flags))
+	{
+		if (randomizer == nullptr)
+			ImGui::Text("Randomizer not initialized!");
+		else
+		{
+			ImGui::Text("Scenario: %s", RE2RREnums::EnumScenarioToString(randomizer->GetScenario()).c_str());
+			ImGui::Text("Difficulty: %s", RE2RREnums::EnumDifficultyToString(randomizer->GetDifficulty()).c_str());
+			ImGui::Text("Map Part: %s", RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str());
+			ImGui::Text("Map: %s", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
+			ImGui::Text("Floor: %s", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
+		}
+	}
+	ImGui::End();
 }
 
 void __stdcall RE2RRUI::UI::DrawFileImportSeedUI(bool *open)
