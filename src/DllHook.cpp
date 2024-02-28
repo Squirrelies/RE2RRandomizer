@@ -364,7 +364,14 @@ void InitImGui(IDXGISwapChain *swapChain, ID3D11Device *device)
 	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
 	io.IniFilename = "RE2RR_ImGui.ini";
 	io.LogFilename = "RE2RR_ImGui.log";
-	ui->SetFont(io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Consola.ttf", 16.0f));
+
+	// Include default font AND Consolas.
+	// io.Fonts->AddFontDefault();
+	// ui->SetFont(io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Consola.ttf", 16.0f));
+
+	// Replace default font by adding Consolas as the first font.
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Consola.ttf", 16.0f);
+
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX11_Init(device, deviceContext);
 }

@@ -111,7 +111,8 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 	ImGui::SetNextWindowBgAlpha(0.20f);
 	if (ImGui::Begin("RE2RR Debug Overlay", open, window_flags))
 	{
-		ImGui::PushFont(font);
+		// if (font != nullptr)
+		// 	ImGui::PushFont(font);
 		if (randomizer == nullptr)
 			ImGui::Text("Randomizer not initialized!");
 		else
@@ -124,7 +125,8 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 			ImGui::Text("Last Item: { %s }", randomizer->GetLastInteractedItem()->ToString().c_str());
 			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
 		}
-		ImGui::PopFont();
+		// if (font != nullptr)
+		// 	ImGui::PopFont();
 	}
 	ImGui::End();
 }
