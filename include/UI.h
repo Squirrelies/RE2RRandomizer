@@ -16,6 +16,7 @@ namespace RE2RRUI
 		RE2RREnums::Scenario *scenario;
 		RE2RREnums::Difficulty *difficulty;
 		Randomizer *randomizer;
+		ImFont *font;
 
 	protected:
 	public:
@@ -25,6 +26,7 @@ namespace RE2RRUI
 			this->scenario = new RE2RREnums::Scenario(RE2RREnums::Scenario::LEON_A);
 			this->difficulty = new RE2RREnums::Difficulty(RE2RREnums::Difficulty::NORMAL);
 			this->randomizer = nullptr;
+			this->font = nullptr;
 		}
 		~UI()
 		{
@@ -38,6 +40,8 @@ namespace RE2RRUI
 
 			delete this->randomizer;
 			this->randomizer = nullptr;
+
+			this->font = nullptr;
 		}
 
 		void __stdcall DrawMainUI(bool *);
@@ -46,6 +50,7 @@ namespace RE2RRUI
 		void __stdcall DrawFileExportSeedUI(bool *);
 		void __stdcall DrawHelpAboutRE2RRUI(bool *);
 		void __stdcall DrawOverlay(bool *, bool *);
+		void __stdcall SetFont(ImFont *);
 		Randomizer *GetRandomizer(void);
 	};
 }

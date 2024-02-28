@@ -19,8 +19,8 @@ private:
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem;
-	GUID lastInteractedItemPositionGuid;
+	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem = {};
+	GUID lastInteractedItemPositionGuid = {};
 	FILE *itemLogFile;
 	ImmediateLogger *itemLog;
 

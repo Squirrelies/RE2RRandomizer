@@ -111,15 +111,6 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 	ImGui::SetNextWindowBgAlpha(0.20f);
 	if (ImGui::Begin("RE2RR Debug Overlay", open, window_flags))
 	{
-		ImFontConfig font_cfg;
-		font_cfg.OversampleH = font_cfg.OversampleV = 1;
-		font_cfg.PixelSnapH = true;
-		font_cfg.SizePixels = 16.0f;
-		font_cfg.EllipsisChar = (ImWchar)0x0085;
-		font_cfg.GlyphOffset.y = 1.0f; // Add +1 offset per 13 units
-
-		ImGuiIO &io = ImGui::GetIO();
-		ImFont *font = io.Fonts->AddFontDefault(&font_cfg);
 		ImGui::PushFont(font);
 		if (randomizer == nullptr)
 			ImGui::Text("Randomizer not initialized!");
@@ -245,6 +236,11 @@ void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
 	}
 
 	ImGui::End();
+}
+
+void RE2RRUI::UI::SetFont(ImFont *font)
+{
+	this->font = font;
 }
 
 Randomizer *RE2RRUI::UI::GetRandomizer(void)
