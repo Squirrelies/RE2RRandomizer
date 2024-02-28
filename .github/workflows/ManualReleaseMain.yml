@@ -1,10 +1,20 @@
 name: "Manual Release - Main"
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      workflowPreset: # Customize the CMake workflow type here (Release, RelWithDebInfo, MinSizeRel, Debug)
+        description: 'Configure/Build/Test/Package configuration'
+        required: false
+        default: 'Release' 
+        type: choice
+        options:
+        - 'Release'
+        - 'RelWithDebInfo'
+        - 'MinSizeRel'
+        - 'Debug'
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
   CMAKE_GENERATOR: MinGW Makefiles
   VCPKG_DEFAULT_TRIPLET: x64-mingw-static
 
@@ -21,21 +31,14 @@ jobs:
       with:
         msystem: MINGW64
         update: true
-        install: git mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+        install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
 
     - uses: actions/checkout@v4
-
-    - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgJsonGlob: '**/vcpkg.json'
 
     - name: Run CMake
       uses: lukka/run-cmake@v10
       with:
-        workflowPreset: '${{env.BUILD_TYPE}}'
-        VCPKG_DEFAULT_TRIPLET: ${{ env.VCPKG_DEFAULT_TRIPLET }}
-        VCPKG_DEFAULT_HOST_TRIPLET: ${{ env.VCPKG_DEFAULT_TRIPLET }}
+        workflowPreset: '${{inputs.workflowPreset}}'
 
     # Zip the publish artifacts
     - name: Zip the publish artifacts
@@ -57,9 +60,9 @@ jobs:
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "${{env.BUILD_TYPE}}-build"
+        automatic_release_tag: "${{inputs.workflowPreset}}-build"
         prerelease: true
         title: 'Manual Build [main] - v1.0.0 Release'
         files: |
-          RE2RRandomizer-v1.0.0-1234-${{env.BUILD_TYPE}}.zip
+          RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip
         # Name-Version String-Build Number-Build Type.zip

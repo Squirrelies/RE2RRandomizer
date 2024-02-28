@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.25)
 project (RE2RRandomizer)
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
 set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26

@@ -1,5 +1,10 @@
 {
-    "version": 3,
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
     "configurePresets": [
         {
             "name": "default",
@@ -45,6 +50,134 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Debug",
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release",
+            "configurePreset": "Release"
+        },
+        {
+            "name": "RelWithDebInfo",
+            "configurePreset": "RelWithDebInfo"
+        },
+        {
+            "name": "MinSizeRel",
+            "configurePreset": "MinSizeRel"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "Release"
+        },
+        {
+            "name": "RelWithDebInfo",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "RelWithDebInfo"
+        },
+        {
+            "name": "MinSizeRel",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "MinSizeRel"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "Debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Debug"
+                },
+                {
+                    "type": "build",
+                    "name": "Debug"
+                },
+                {
+                    "type": "test",
+                    "name": "Debug"
+                }
+            ]
+        },
+        {
+            "name": "Release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Release"
+                },
+                {
+                    "type": "build",
+                    "name": "Release"
+                },
+                {
+                    "type": "test",
+                    "name": "Release"
+                }
+            ]
+        },
+        {
+            "name": "RelWithDebInfo",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "RelWithDebInfo"
+                },
+                {
+                    "type": "build",
+                    "name": "RelWithDebInfo"
+                },
+                {
+                    "type": "test",
+                    "name": "RelWithDebInfo"
+                }
+            ]
+        },
+        {
+            "name": "MinSizeRel",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "MinSizeRel"
+                },
+                {
+                    "type": "build",
+                    "name": "MinSizeRel"
+                },
+                {
+                    "type": "test",
+                    "name": "MinSizeRel"
+                }
+            ]
         }
     ]
 }
