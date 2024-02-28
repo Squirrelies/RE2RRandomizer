@@ -5,6 +5,8 @@ on: workflow_dispatch
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  CMAKE_GENERATOR: MinGW Makefiles
+  VCPKG_DEFAULT_TRIPLET: x64-mingw-static
 
 jobs:
   build:
@@ -32,6 +34,8 @@ jobs:
       uses: lukka/run-cmake@v10
       with:
         workflowPreset: '${{env.BUILD_TYPE}}'
+        VCPKG_DEFAULT_TRIPLET: ${{ env.VCPKG_DEFAULT_TRIPLET }}
+        VCPKG_DEFAULT_HOST_TRIPLET: ${{ env.VCPKG_DEFAULT_TRIPLET }}
 
     # Zip the publish artifacts
     - name: Zip the publish artifacts
