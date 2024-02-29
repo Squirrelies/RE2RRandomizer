@@ -46,7 +46,7 @@ jobs:
       run: |
         Add-Type -assembly 'System.IO.Compression'
         Add-Type -assembly 'System.IO.Compression.FileSystem'
-        [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('Release.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+        [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
         $filesToZip = (Get-ChildItem -Path build/* -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
         foreach ($fileToZip in $filesToZip) {
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
