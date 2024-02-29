@@ -11,6 +11,7 @@
             "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
+                "CMAKE_GENERATOR": "MinGW Makefiles",
                 "CMAKE_PREFIX_PATH": "C:/msys64/mingw64",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static",

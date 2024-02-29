@@ -14,13 +14,6 @@ on:
         - 'MinSizeRel'
         - 'Debug'
 
-env:
-  CMAKE_GENERATOR: MinGW Makefiles
-  CMAKE_PREFIX_PATH: C:/msys64/mingw64
-  CMAKE_AR: C:/msys64/mingw64/bin/ar.exe
-  CMAKE_MAKE_PROGRAM: C:/msys64/usr/bin/make.exe
-  VCPKG_DEFAULT_TRIPLET: x64-mingw-static
-
 jobs:
   build:
     runs-on: windows-latest
