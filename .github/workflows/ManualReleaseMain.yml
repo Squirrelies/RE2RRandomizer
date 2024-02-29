@@ -16,6 +16,7 @@ on:
 
 env:
   CMAKE_GENERATOR: MinGW Makefiles
+  CMAKE_PREFIX_PATH: C:/msys64/mingw64
   VCPKG_DEFAULT_TRIPLET: x64-mingw-static
 
 jobs:
