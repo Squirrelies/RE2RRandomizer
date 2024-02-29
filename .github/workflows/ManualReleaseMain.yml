@@ -33,11 +33,9 @@ jobs:
 
     - name: Set PATH to include MinGW-W64 from MSYS2
       run: |
-        echo "C:/msys64/mingw64/bin" > tempPath
-        echo "C:/msys64/usr/bin" > tempPath
-        cat $GITHUB_PATH >> tempPath
-        cat tempPath > $GITHUB_PATH
-        rm tempPath
+        $path1 = "C:/msys64/mingw64/bin"
+        $path2 = "C:/msys64/usr/bin"
+        echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
         which cmake
         which gcc
         which g++
