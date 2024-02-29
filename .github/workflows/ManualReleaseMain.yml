@@ -35,6 +35,13 @@ jobs:
       run: |
         echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
         echo "C:/msys64/usr/bin" >> $GITHUB_PATH
+        which cmake
+        whereis cmake
+        which gcc
+        whereis gcc
+        which g++
+        whereis g++
+        
 
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
