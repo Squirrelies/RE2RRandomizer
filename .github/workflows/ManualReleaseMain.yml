@@ -36,8 +36,18 @@ jobs:
         $path1 = "C:/msys64/mingw64/bin"
         $path2 = "C:/msys64/usr/bin"
         echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
-        Get-ChildItem C:/msys64/mingw64/bin/*cmake*.exe
-        Get-ChildItem C:/msys64/mingw64/bin/*gcc*.exe
+
+    - name: Debug List Files 1
+      run: Get-ChildItem C:/msys64/mingw64/bin/*cmake*.exe
+
+    - name: Debug List Files 2
+      run: Get-ChildItem C:/msys64/mingw64/bin/*gcc*.exe
+
+    - name: Debug List Files 3
+      run: Get-ChildItem C:/msys64/mingw64/bin/*
+
+    - name: Debug List Files 4
+      run: Get-ChildItem C:/msys64/usr/bin/*
 
     - name: Check PATH
       run: |
