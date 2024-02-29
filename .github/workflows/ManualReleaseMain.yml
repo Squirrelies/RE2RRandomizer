@@ -3,7 +3,7 @@ name: "Manual Release - Main"
 on:
   workflow_dispatch:
     inputs:
-      workflowPreset: # Customize the CMake workflow type here (Release, RelWithDebInfo, MinSizeRel, Debug)
+      workflowPreset:
         description: 'Configure/Build/Test/Package configuration'
         required: false
         default: 'Release' 
@@ -40,7 +40,6 @@ jobs:
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
-    # Zip the publish artifacts
     - name: Zip the publish artifacts
       working-directory: ${{github.workspace}}
       shell: pwsh
@@ -55,9 +54,8 @@ jobs:
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'LICENSE', 'LICENSE')
         $zipFile.Dispose()
 
-    # Pushes the release
     - name: Publish release
-      uses: "marvinpinto/action-automatic-releases@latest"
+      uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "${{inputs.workflowPreset}}-build"
