@@ -1,9 +1,8 @@
 #include "Randomizer.h"
 
-const static char *logItemFormat = "\"%s\",\"%d\",\"0x%X\",\"%s\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%d\",\"0x%X\",\"%s\",\"%s\",\"%s\",\"%s\"\n";
 void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
 {
-	if (logger == nullptr || itemLog == nullptr ||
+	if (logger == nullptr ||
 	    itemToReplace == nullptr || currentItem == nullptr || itemPositionGuid == nullptr)
 		return;
 
@@ -11,16 +10,6 @@ void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_Primitive
 	                   RE2RR_NAMEOF(itemToReplace), itemToReplace,
 	                   RE2RR_NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   RE2RR_NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	itemLog->LogMessage(logItemFormat,
-	                    RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), currentItem->ItemId, currentItem->ItemId,
-	                    RE2RREnums::EnumWeaponTypeToString(currentItem->WeaponId).c_str(), currentItem->WeaponId, currentItem->WeaponId,
-	                    currentItem->WeaponParts, currentItem->WeaponParts,
-	                    currentItem->BulletId, currentItem->BulletId,
-	                    currentItem->Count, currentItem->Count,
-	                    GUIDToString(itemPositionGuid).c_str(),
-	                    RE2RREnums::EnumMapPartsIDToString(mapPartsId).c_str(),
-	                    RE2RREnums::EnumMapIDToString(mapId).c_str(),
-	                    RE2RREnums::EnumFloorIDToString(floorId).c_str());
 	SetLastInteracted(currentItem, itemPositionGuid);
 }
 

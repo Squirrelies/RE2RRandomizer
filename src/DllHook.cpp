@@ -70,7 +70,7 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
 	const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	RE2RREnums::RE2RGameVersion gameVersion = RE2RRHashes::DetectVersion(gameExePath, logger);
+	RE2RREnums::RE2RGameVersion UNUSED(gameVersion) = RE2RRHashes::DetectVersion(gameExePath, logger);
 
 	MH_STATUS status;
 	do

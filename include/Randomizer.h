@@ -21,8 +21,6 @@ private:
 	RE2RREnums::FloorID floorId;
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
-	FILE *itemLogFile;
-	ImmediateLogger *itemLog;
 
 	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByPositionGuid(GUID *);
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
@@ -42,18 +40,6 @@ public:
 		this->mapId = RE2RREnums::MapID::Invalid;
 		this->floorId = RE2RREnums::FloorID::None;
 
-		const char *logFileNameFormat = "RE2RRItemLog_%s%s.csv";
-		int logFileNameSize = snprintf(nullptr, 0, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str()) + sizeof(char);
-		char *logFileName = (char *)malloc(logFileNameSize);
-		snprintf(logFileName, logFileNameSize, logFileNameFormat, RE2RREnums::EnumScenarioToString(*scenario).c_str(), RE2RREnums::EnumDifficultyToString(*difficulty).c_str());
-		bool itemLogFileExists = RE2RRFile::FileExists(logFileName);
-		this->itemLogFile = fopen(logFileName, "a");
-		this->itemLog = new ImmediateLogger(this->itemLogFile, this->logger->GetUILog());
-		if (!itemLogFileExists)
-			this->itemLog->LogMessage("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
-			                          "ItemId (Name)", "ItemId (uint32_t)", "ItemId (hex)", "WeaponId (Name)", "WeaponId (uint32_t)", "WeaponId (hex)", "WeaponParts (uint32_t)", "WeaponParts (hex)", "BulletId (uint32_t)", "BulletId (hex)", "Count (uint32_t)", "Count (hex)", "ItemPositionGuid (Guid)", "MapPartsId", "MapId", "FloorId");
-		free(logFileName);
-
 		logger->LogMessage("[RE2R-R] Randomizer::ctor(%s: %p, %s: %p, %s: %s, %s: %s) called.\n",
 		                   RE2RR_NAMEOF(logger), (void *)logger,
 		                   RE2RR_NAMEOF(seed), (void *)&seed,
@@ -62,12 +48,6 @@ public:
 	}
 	~Randomizer()
 	{
-		delete this->itemLog;
-		this->itemLog = nullptr;
-
-		fclose(this->itemLogFile);
-		this->itemLogFile = nullptr;
-
 		this->logger = nullptr;
 
 		// this->seed = nullptr;
