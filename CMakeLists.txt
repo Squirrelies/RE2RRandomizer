@@ -19,26 +19,26 @@ find_package(minhook CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 # Required libraries we'll link for ImGUI.
-find_library(D3D11_LIBRARY d3d11 REQUIRED)
-find_library(D3D12_LIBRARY d3d12 REQUIRED)
-find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED)
-find_library(GDI32_LIBRARY Gdi32 REQUIRED)
-find_library(DWMAPI_LIBRARY dwmapi REQUIRED)
-find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED)
+find_library(D3D11_LIBRARY d3d11 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(D3D12_LIBRARY d3d12 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(GDI32_LIBRARY Gdi32 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(DWMAPI_LIBRARY dwmapi REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED PATHS C:/msys64/mingw64/lib)
 
 # Required libraries we'll link.
-find_library(DXGUID_LIBRARY dxguid REQUIRED)
-find_library(DINPUT8_LIBRARY dinput8 REQUIRED)
+find_library(DXGUID_LIBRARY dxguid REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(DINPUT8_LIBRARY dinput8 REQUIRED PATHS C:/msys64/mingw64/lib)
 
 include(CMakePrintHelpers)
 cmake_print_variables(
-    D3D11_LIBRARY,
-    D3D12_LIBRARY,
+    D3D11_LIBRARY
+    D3D12_LIBRARY
     DXGUID_LIBRARY
-    DINPUT8_LIBRARY,
-    D3DCOMPILER_LIBRARY,
-    GDI32_LIBRARY,
-    DWMAPI_LIBRARY,
+    DINPUT8_LIBRARY
+    D3DCOMPILER_LIBRARY
+    GDI32_LIBRARY
+    DWMAPI_LIBRARY
     RPCRT4_LIBRARY
 )
 
