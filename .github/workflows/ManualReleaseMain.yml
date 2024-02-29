@@ -36,8 +36,8 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: Configure and Build w/ CMake
-      run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh -S . -B build
+    - name: Run CMake
+      run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
     # Zip the publish artifacts
     - name: Zip the publish artifacts
