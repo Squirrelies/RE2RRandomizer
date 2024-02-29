@@ -13,17 +13,13 @@ on:
         - 'RelWithDebInfo'
         - 'MinSizeRel'
         - 'Debug'
-        
+
 env:
   VCPKG_ROOT: C:/vcpkg
 
 jobs:
   build:
     runs-on: windows-latest
-
-    # defaults:
-    #   run:
-    #     shell: msys2 {0}
 
     steps:
     - uses: msys2/setup-msys2@v2
@@ -40,16 +36,6 @@ jobs:
         $path1 = "C:/msys64/mingw64/bin"
         $path2 = "C:/msys64/usr/bin"
         echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
-
-    - name: Check PATH
-      run: echo $env:PATH
-
-    - name: Check binary locations
-      run: |
-        Get-Command make | Select-Object -ExpandProperty Source
-        Get-Command cmake | Select-Object -ExpandProperty Source
-        Get-Command gcc | Select-Object -ExpandProperty Source
-        Get-Command g++ | Select-Object -ExpandProperty Source
 
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
