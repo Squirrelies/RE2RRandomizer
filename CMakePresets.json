@@ -8,6 +8,7 @@
     "configurePresets": [
         {
             "name": "default",
+            "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
@@ -73,6 +74,7 @@
     "testPresets": [
         {
             "name": "default",
+            "hidden": true,
             "output": {
                 "outputOnFailure": true
             },

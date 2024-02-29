@@ -9,6 +9,7 @@
 
 On Windows, I used [MSYS2](https://www.msys2.org/) with the packages
 
+* [base-devel](https://packages.msys2.org/package/base-devel)
 * [mingw-w64-x86_64-toolchain](https://packages.msys2.org/groups/mingw-w64-x86_64-toolchain)
 * [mingw-w64-x86_64-cmake](https://packages.msys2.org/package/mingw-w64-x86_64-cmake)
 
@@ -32,7 +33,7 @@ winget install MSYS2.MSYS2
 open MSYS2 MINGW64 and enter:
 
 ```bash
-pacman -S git mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+pacman --needed -S git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
 git clone https://github.com/microsoft/vcpkg
 ./vcpkg/bootstrap-vcpkg.sh
 git clone https://github.com/Squirrelies/RE2RRandomizer
