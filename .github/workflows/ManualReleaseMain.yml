@@ -36,13 +36,14 @@ jobs:
         $path1 = "C:/msys64/mingw64/bin"
         $path2 = "C:/msys64/usr/bin"
         echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
+        Get-ChildItem C:/msys64/mingw64/bin/*cmake*.exe
+        Get-ChildItem C:/msys64/mingw64/bin/*gcc*.exe
 
     - name: Check PATH
       run: |
         echo $env:PATH
         which cmake
         which gcc
-        which g++
 
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
