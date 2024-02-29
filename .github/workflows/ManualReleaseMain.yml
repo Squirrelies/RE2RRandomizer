@@ -41,11 +41,12 @@ jobs:
     - name: Check PATH
       run: echo $env:PATH
 
-    - name: Check CMake, GCC, and G++
+    - name: Check binary locations
       run: |
-        which cmake
-        which gcc
-        which g++
+        Get-Command make | Select-Object -ExpandProperty Source
+        Get-Command cmake | Select-Object -ExpandProperty Source
+        Get-Command gcc | Select-Object -ExpandProperty Source
+        Get-Command g++ | Select-Object -ExpandProperty Source
 
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
