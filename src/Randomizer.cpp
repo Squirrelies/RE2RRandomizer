@@ -74,6 +74,7 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 
 app_ropeway_gamemastering_InventoryManager_PrimitiveItem Randomizer::GetItemByPositionGuid(GUID *itemPositionGuid)
 {
+	// static std::unordered_map<ItemMapKey, app_ropeway_gamemastering_InventoryManager_PrimitiveItem, ItemMapKeyComparer> map =
 	static std::unordered_map<GUID, app_ropeway_gamemastering_InventoryManager_PrimitiveItem> map =
 	    {
 	        {*StringToGUIDA("005BFE1F-456C-49D8-889D-602C4CC5A8EB"), app_ropeway_gamemastering_InventoryManager_PrimitiveItem{.ItemId = RE2RREnums::ItemType::Herb_Red1, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}},                     // st4_702_0 / st4_702_0 / RPD_E

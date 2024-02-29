@@ -1575,4 +1575,19 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	}
 };
 
+struct ItemMapKey
+{
+	GUID itemPositionGUID;
+	RE2RREnums::Scenario scenario;
+	RE2RREnums::Difficulty difficulty;
+};
+
+struct ItemMapKeyComparer
+{
+	bool operator()(const ItemMapKey &lhs, const ItemMapKey &rhs) const
+	{
+		return memcmp(&lhs, &rhs, sizeof(ItemMapKey)) < 0;
+	}
+};
+
 #endif
