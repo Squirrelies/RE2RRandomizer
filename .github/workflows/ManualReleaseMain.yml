@@ -36,6 +36,10 @@ jobs:
         $path1 = "C:/msys64/mingw64/bin"
         $path2 = "C:/msys64/usr/bin"
         echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
+
+    - name: Check PATH
+      run: |
+        echo $env:PATH
         which cmake
         which gcc
         which g++
