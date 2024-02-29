@@ -23,9 +23,6 @@ jobs:
         shell: msys2 {0}
 
     steps:
-    - name: Set PATH to include MinGW-W64 from MSYS2
-      run: echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
-
     - uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW64
@@ -33,6 +30,9 @@ jobs:
         install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
 
     - uses: actions/checkout@v4
+
+    - name: Set PATH to include MinGW-W64 from MSYS2
+      run: echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
 
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
