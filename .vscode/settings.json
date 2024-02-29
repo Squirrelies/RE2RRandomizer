@@ -100,9 +100,9 @@
     "C_Cpp.default.cppStandard": "gnu++20",
     "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe",
     "cmake.configureSettings": {
+        "CMAKE_PREFIX_PATH": "C:/msys64/mingw64",
         "CMAKE_AR": "C:/msys64/mingw64/bin/ar.exe",
-        "CMAKE_MAKE_PROGRAM": "C:/msys64/usr/bin/make.exe",
-        "CMAKE_PREFIX_PATH": "C:/msys64/mingw64"
+        "CMAKE_MAKE_PROGRAM": "C:/msys64/usr/bin/make.exe"
     },
     "cmake.environment": {
         "PATH": "C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
