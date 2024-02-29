@@ -13,6 +13,9 @@ on:
         - 'RelWithDebInfo'
         - 'MinSizeRel'
         - 'Debug'
+        
+env:
+  VCPKG_ROOT: C:/vcpkg
 
 jobs:
   build:
