@@ -2,6 +2,27 @@ cmake_minimum_required(VERSION 3.25)
 project (RE2RRandomizer)
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
 set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
+string(ASCII 169 COPYRIGHT)
+
+# VERSIONINFO properties (Ref: https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
+set(RC_PRODUCTNAME "Resident Evil 2 REmake Randomizer")
+set(RC_FILEDESCRIPTION "A randomizer for Resident Evil 2 (2019).")
+set(RC_COMPANYNAME "Travis J. Gutjahr")
+set(RC_LEGALCOPYRIGHT "Copyright ${COPYRIGHT} 2024 Travis J. Gutjahr")
+set(RC_INTERNALNAME "${PROJECT_NAME}")
+set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.exe")
+
+# Major.Minor.Build.Revision
+set(RC_VERSION_MAJOR 1)
+set(RC_VERSION_MINOR 0)
+set(RC_VERSION_BUILD 0)
+set(RC_VERSION_REVISION 0)
+
+# Compile the version information.
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoExe.rc @ONLY)
+set(RC_INTERNALNAME "lib${RC_INTERNALNAME}Hook")
+set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc @ONLY)
 
 include(FetchContent)
 set(FETCHCONTENT_QUIET off)
@@ -67,6 +88,7 @@ include_directories(include extern/amosnier/sha-2)
 
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED
+${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc
 extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
 src/File.cpp
@@ -83,6 +105,7 @@ add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}
 
 ### Executable
 add_executable(${PROJECT_NAME}
+${CMAKE_CURRENT_BINARY_DIR}/VersionInfoExe.rc
 src/ExeInjector.cpp
 src/Strings.cpp
 src/Process.cpp
