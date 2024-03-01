@@ -25,3 +25,10 @@ GUID *StringToGUIDW(const std::wstring &stringGUID)
 	UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)returnValue);
 	return returnValue;
 }
+
+bool operator==(const ItemMapKey &lhs, const ItemMapKey &rhs)
+{
+	return lhs.ItemPositionGUID == rhs.ItemPositionGUID &&
+	       lhs.Scenario == rhs.Scenario &&
+	       lhs.Difficulty == rhs.Difficulty;
+}

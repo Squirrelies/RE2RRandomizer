@@ -30,6 +30,7 @@
 #include <windows.h>
 
 #include <array>
+#include <functional>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -49,20 +50,6 @@ bool TryStringToGUIDW(const std::wstring &stringGUID, GUID &guid);
 #endif
 GUID *StringToGUIDA(const std::string &stringGUID);
 GUID *StringToGUIDW(const std::wstring &stringGUID);
-
-namespace std
-{
-	template <>
-	struct hash<GUID>
-	{
-		size_t operator()(const GUID &guid) const noexcept
-		{
-			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
-			std::hash<uint64_t> hash;
-			return hash(p[0]) ^ hash(p[1]);
-		}
-	};
-}
 
 // Enum RE2RGameVersion
 #ifndef RE2RR_TYPES_H_RE2RGameVersion
@@ -1577,17 +1564,37 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 
 struct ItemMapKey
 {
-	GUID itemPositionGUID;
-	RE2RREnums::Scenario scenario;
-	RE2RREnums::Difficulty difficulty;
+	GUID ItemPositionGUID;
+	RE2RREnums::Scenario Scenario;
+	RE2RREnums::Difficulty Difficulty;
 };
+bool operator==(const ItemMapKey &lhs, const ItemMapKey &rhs);
 
-struct ItemMapKeyComparer
+namespace std
 {
-	bool operator()(const ItemMapKey &lhs, const ItemMapKey &rhs) const
+	template <>
+	struct hash<GUID>
 	{
-		return memcmp(&lhs, &rhs, sizeof(ItemMapKey)) < 0;
-	}
-};
+		size_t operator()(const GUID &guid) const noexcept
+		{
+			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
+			std::hash<uint64_t> hash;
+			return hash(p[0]) ^ hash(p[1]);
+		}
+	};
+
+	template <>
+	struct hash<ItemMapKey>
+	{
+		size_t operator()(const ItemMapKey &key) const
+		{
+			size_t res = 17;
+			res = res * 31 + hash<GUID>()(key.ItemPositionGUID);
+			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Scenario));
+			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Difficulty));
+			return res;
+		}
+	};
+}
 
 #endif

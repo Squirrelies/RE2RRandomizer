@@ -22,7 +22,7 @@ private:
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
-	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByPositionGuid(GUID *);
+	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem &GetItemByItemMapKey(const ItemMapKey &itemMapKey);
 	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
 	app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByType(uint32_t);
 	void SetItemByGUID(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
