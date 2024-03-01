@@ -10,6 +10,8 @@ void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_Primitive
 	                   RE2RR_NAMEOF(itemToReplace), itemToReplace,
 	                   RE2RR_NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   RE2RR_NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
+	logger->LogMessage("[RE2R-R] GetItemByItemMapKey() returned: %s.\n",
+	                   GetItemByItemMapKey(ItemMapKey{.ItemPositionGUID = *itemPositionGuid, .Scenario = *this->scenario, .Difficulty = *this->difficulty}).ToString().c_str());
 	SetLastInteracted(currentItem, itemPositionGuid);
 }
 
@@ -74,6 +76,7 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 
 app_ropeway_gamemastering_InventoryManager_PrimitiveItem &Randomizer::GetItemByItemMapKey(const ItemMapKey &itemMapKey)
 {
+	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem defaultEntry = {.ItemId = RE2RREnums::ItemType::ErrorBox, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1};
 	static std::unordered_map<ItemMapKey, app_ropeway_gamemastering_InventoryManager_PrimitiveItem, std::hash<ItemMapKey>, std::equal_to<ItemMapKey>> map =
 	    {
 	        {ItemMapKey{.ItemPositionGUID = *StringToGUIDA("FF9122A6-7CCE-04E4-3317-103F06B2D2E5"), .Scenario = RE2RREnums::Scenario::CLAIRE_A, .Difficulty = RE2RREnums::Difficulty::NORMAL}, app_ropeway_gamemastering_InventoryManager_PrimitiveItem{.ItemId = RE2RREnums::ItemType::KeyStorageRoom, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}},                // st1_411_0 / st1_411_0 / None
@@ -2730,7 +2733,10 @@ app_ropeway_gamemastering_InventoryManager_PrimitiveItem &Randomizer::GetItemByI
 	        {ItemMapKey{.ItemPositionGUID = *StringToGUIDA("23C998F3-917B-4EFA-9E7E-169E022F955B"), .Scenario = RE2RREnums::Scenario::LEON_B, .Difficulty = RE2RREnums::Difficulty::HARD}, app_ropeway_gamemastering_InventoryManager_PrimitiveItem{.ItemId = RE2RREnums::ItemType::Herb_Green1, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}}                        // st8_408_0 / st8_408_0 / CityArea_A
 	    };
 
-	return map[itemMapKey];
+	if (map.contains(itemMapKey))
+		return map[itemMapKey];
+	else
+		return defaultEntry;
 }
 
 void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)
