@@ -47,3 +47,26 @@ cd RE2RRandomizer
 # Configure, build, test, package.
 cmake --workflow --preset Release --fresh
 ```
+
+## Example steps to build on a new Debian-based Linux installation w/o VSCode
+
+Note: Compiling MinGW-W64 manually because both Ubuntu 23.10 and Debian 13 contain older versions that are missing the typedef PFN_D3D12_SERIALIZE_ROOT_SIGNATURE in d3d12.h. We need MinGW-W64 newer than v11.x.
+
+```bash
+# Install required packages.
+sudo apt-get install git gcc g++ cmake curl zip unzip tar flex bison texinfo m4
+# Clone MinGW-W64
+git clone https://git.code.sf.net/p/mingw-w64/mingw-w64
+# Build MinGW-W64
+# Follow steps at https://sourceforge.net/p/mingw-w64/wiki2/Build%20a%20native%20Windows%2064-bit%20gcc%20from%20Linux%20%28including%20cross-compiler%29/
+# Clone vcpkg
+git clone https://github.com/microsoft/vcpkg
+# Setup vcpkg.
+./vcpkg/bootstrap-vcpkg.sh
+export VCPKG_ROOT=~/vcpkg
+# Clone repo.
+git clone https://github.com/Squirrelies/RE2RRandomizer
+cd RE2RRandomizer
+# Configure, build, test, package.
+cmake --workflow --preset Release --fresh
+```
