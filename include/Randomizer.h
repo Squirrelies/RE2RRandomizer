@@ -19,14 +19,14 @@ private:
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem lastInteractedItem = {};
+	RE2RItem lastInteractedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
-	static app_ropeway_gamemastering_InventoryManager_PrimitiveItem &GetItemByItemMapKey(const ItemMapKey &itemMapKey);
-	void RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem);
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem GetItemByType(uint32_t);
-	void SetItemByGUID(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
-	void SetLastInteracted(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
+	static RE2RItem &GetItemByItemMapKey(const ItemMapKey &itemMapKey);
+	void RandomizeItem(RE2RItem *, RE2RItem);
+	RE2RItem GetItemByType(uint32_t);
+	void SetItemByGUID(RE2RItem *, GUID *);
+	void SetLastInteracted(RE2RItem *, GUID *);
 
 protected:
 public:
@@ -58,14 +58,14 @@ public:
 		this->scenario = nullptr;
 	}
 
-	void ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *, GUID *);
+	void ItemPickup(RE2RItem *, RE2RItem *, GUID *);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 	RE2RREnums::Difficulty GetDifficulty();
 	RE2RREnums::Scenario GetScenario();
 	RE2RREnums::MapPartsID GetMapPartsID();
 	RE2RREnums::MapID GetMapID();
 	RE2RREnums::FloorID GetFloorID();
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *GetLastInteractedItem();
+	RE2RItem *GetLastInteractedItem();
 	GUID *GetLastInteractedItemPositionGuid();
 };
 

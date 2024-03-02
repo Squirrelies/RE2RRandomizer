@@ -1,6 +1,6 @@
 #include "Randomizer.h"
 
-void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace, app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, GUID *itemPositionGuid)
+void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID *itemPositionGuid)
 {
 	if (logger == nullptr ||
 	    itemToReplace == nullptr || currentItem == nullptr || itemPositionGuid == nullptr)
@@ -15,13 +15,13 @@ void Randomizer::ItemPickup(app_ropeway_gamemastering_InventoryManager_Primitive
 	SetLastInteracted(currentItem, itemPositionGuid);
 }
 
-void Randomizer::SetLastInteracted(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *item, GUID *itemPositionGuid)
+void Randomizer::SetLastInteracted(RE2RItem *item, GUID *itemPositionGuid)
 {
 	this->lastInteractedItem = *item;
 	this->lastInteractedItemPositionGuid = *itemPositionGuid;
 }
 
-app_ropeway_gamemastering_InventoryManager_PrimitiveItem *Randomizer::GetLastInteractedItem()
+RE2RItem *Randomizer::GetLastInteractedItem()
 {
 	return &this->lastInteractedItem;
 }
@@ -74,7 +74,7 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 	return floorId;
 }
 
-void Randomizer::RandomizeItem(app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem, app_ropeway_gamemastering_InventoryManager_PrimitiveItem newItem)
+void Randomizer::RandomizeItem(RE2RItem *currentItem, RE2RItem newItem)
 {
 	if (currentItem == nullptr)
 		return;

@@ -1561,6 +1561,7 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 		return returnValue;
 	}
 };
+typedef app_ropeway_gamemastering_InventoryManager_PrimitiveItem RE2RItem;
 
 struct ItemMapKey
 {

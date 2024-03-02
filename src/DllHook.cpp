@@ -184,8 +184,8 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	    (randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr) == nullptr) // If we're not randomizing, this will be null.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *itemToReplace = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param3 + 0x70); // Sometimes uninitialized data, only write here.
-	app_ropeway_gamemastering_InventoryManager_PrimitiveItem *currentItem = (app_ropeway_gamemastering_InventoryManager_PrimitiveItem *)(param4 + 0x14);   // This is where we want to read to get what the item is.
+	RE2RItem *itemToReplace = (RE2RItem *)(param3 + 0x70); // Sometimes uninitialized data, only write here.
+	RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);   // This is where we want to read to get what the item is.
 	GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
 
 	randomizer->ItemPickup(itemToReplace, currentItem, itemPositionGuid);
