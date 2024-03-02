@@ -96,6 +96,7 @@ src/Hashes.cpp
 src/Process.cpp
 src/UI.cpp
 src/Randomizer.cpp
+src/Randomizer_GetItemByItemMapKey.cpp
 src/DllHook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
