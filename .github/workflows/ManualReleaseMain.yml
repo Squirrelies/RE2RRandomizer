@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        ref: $GITHUB_REF
+        ref: ${{ github.ref }}
 
     - uses: msys2/setup-msys2@v2
       with:
@@ -59,7 +59,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        ref: $GITHUB_REF
+        ref: ${{ github.ref }}
 
     - name: Download all artifacts
       uses: actions/download-artifact@v4
