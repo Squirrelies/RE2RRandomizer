@@ -70,12 +70,22 @@ jobs:
       with:
         name: Build-Artifacts
     
-    - name: List all files
+    - name: List files 1
+      run: |
+        Get-ChildItem -Path 'build/'
+
+    - name: List files 2
       run: |
         Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll"
+
+    - name: List files 3
+      run: |
         foreach ($file in (Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname) {
             Write-Host $file
         }
+
+    - name: List files 4
+      run: |
         Get-ChildItem -Recurse
 
     # Decode the base 64 encoded pfx and save the code signing certificate
