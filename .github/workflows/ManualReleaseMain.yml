@@ -22,14 +22,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: $GITHUB_REF
+
     - uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW64
         release: false
         update: true
         install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
-
-    - uses: actions/checkout@v4
 
     - name: Set PATH to include MinGW-W64 from MSYS2
       run: |
@@ -40,6 +43,43 @@ jobs:
     - name: Run CMake
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
+    - name: Upload publish artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: |
+          build/RE2RRandomizer.exe
+          build/libRE2RRandomizerHook.dll
+          LICENSE
+          README.md
+
+  publish:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: $GITHUB_REF
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
+    # Decode the base 64 encoded pfx and save the code signing certificate
+    - name: Decode the pfx
+      run: |
+        Set-Content -Path 'CodeSign.txt' -Value '${{ secrets.CODE_SIGN_CERTIFICATE }}'
+        certutil -decode 'CodeSign.txt' 'CodeSign.pfx'
+        Remove-Item -Path 'CodeSign.txt'
+        
+    - name: Code sign the program
+      run: |
+        $filesToSign = (Get-ChildItem -Path 'artifact/' -Filter *RE2RRandomizer*.*).fullname
+        foreach ($fileToSign in $filesToSign) {
+            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA1 "$fileToSign"
+            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA256 /as "$fileToSign"
+            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA512 /as "$fileToSign"
+        }
+
     - name: Zip the publish artifacts
       working-directory: ${{github.workspace}}
       shell: pwsh
@@ -47,7 +87,7 @@ jobs:
         Add-Type -assembly 'System.IO.Compression'
         Add-Type -assembly 'System.IO.Compression.FileSystem'
         [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
-        $filesToZip = (Get-ChildItem -Path build/* -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
+        $filesToZip = (Get-ChildItem -Path artifact/build/* -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
         foreach ($fileToZip in $filesToZip) {
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
         }
