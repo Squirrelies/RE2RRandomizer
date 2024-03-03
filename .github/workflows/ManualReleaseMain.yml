@@ -69,33 +69,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: Build-Artifacts
-    
-    - name: List files 1
-      run: |
-        Get-ChildItem -Path 'build/'
 
-    - name: List files 2
-      run: |
-        Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*
-
-    - name: List files 3
-      run: |
-        foreach ($file in (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname) {
-            Write-Host $file
-        }
-
-    - name: List files 4
-      run: |
-        Get-ChildItem -Recurse
-
-    # Decode the base 64 encoded pfx and save the code signing certificate
-    - name: Decode the pfx
+    - name: Decode the code signing PFX
       run: |
         Set-Content -Path 'CodeSign.txt' -Value '${{ secrets.CODE_SIGN_CERTIFICATE }}'
         certutil -decode 'CodeSign.txt' 'CodeSign.pfx'
         Remove-Item -Path 'CodeSign.txt'
         
-    - name: Code sign the program
+    - name: Code sign the binaries
       run: |
         $filesToSign = (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname
         foreach ($fileToSign in $filesToSign) {
