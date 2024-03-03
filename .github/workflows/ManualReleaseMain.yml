@@ -19,6 +19,7 @@ env:
 
 jobs:
   Build:
+    name: "Build"
     runs-on: windows-latest
 
     steps:
@@ -53,7 +54,9 @@ jobs:
           README.md
 
   Package:
+    name: "Package"
     runs-on: windows-latest
+    needs: Build
 
     steps:
     - uses: actions/checkout@v4
