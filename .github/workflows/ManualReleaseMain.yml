@@ -18,7 +18,7 @@ env:
   VCPKG_ROOT: C:/vcpkg
 
 jobs:
-  build:
+  Build:
     runs-on: windows-latest
 
     steps:
@@ -52,7 +52,7 @@ jobs:
           LICENSE
           README.md
 
-  publish:
+  Package:
     runs-on: windows-latest
 
     steps:
