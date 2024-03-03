@@ -79,7 +79,7 @@ jobs:
         
     - name: Code sign the program
       run: |
-        $filesToSign = (Get-ChildItem -Path 'artifact/' -Filter *RE2RRandomizer*.*).fullname
+        $filesToSign = (Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
         foreach ($fileToSign in $filesToSign) {
             & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA1 "$fileToSign"
             & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA256 /as "$fileToSign"
@@ -93,7 +93,7 @@ jobs:
         Add-Type -assembly 'System.IO.Compression'
         Add-Type -assembly 'System.IO.Compression.FileSystem'
         [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
-        $filesToZip = (Get-ChildItem -Path artifact/build/* -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
+        $filesToZip = (Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname
         foreach ($fileToZip in $filesToZip) {
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
         }
