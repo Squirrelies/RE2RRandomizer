@@ -69,6 +69,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: Build-Artifacts
+    
+    - name: List all files
+      run: |
+        Get-ChildItem -Recurse
 
     # Decode the base 64 encoded pfx and save the code signing certificate
     - name: Decode the pfx
