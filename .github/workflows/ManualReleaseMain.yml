@@ -45,8 +45,9 @@ jobs:
       run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
     - name: Upload publish artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: Build-Artifacts
         path: |
           build/RE2RRandomizer.exe
           build/libRE2RRandomizerHook.dll
@@ -66,6 +67,8 @@ jobs:
 
     - name: Download all artifacts
       uses: actions/download-artifact@v4
+      with:
+        name: Build-Artifacts
 
     # Decode the base 64 encoded pfx and save the code signing certificate
     - name: Decode the pfx
