@@ -72,6 +72,10 @@ jobs:
     
     - name: List all files
       run: |
+        Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll"
+        foreach ($file in (Get-ChildItem -Path 'build/' -Include "RE2RRandomizer.exe", "libRE2RRandomizerHook.dll").fullname) {
+            Write-Host $file
+        }
         Get-ChildItem -Recurse
 
     # Decode the base 64 encoded pfx and save the code signing certificate
