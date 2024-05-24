@@ -23,22 +23,9 @@
 // Build number. This is defined at compile time so this is just a placeholder.
 #define RE2RR_VERSION_BUILD 1234
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
 #define DIRECTINPUT_VERSION 0x0800
 
-#include <windows.h>
-
+#include "Common.h"
 #include "File.h"
 #include "Hashes.h"
 #include "Hooking.h"
@@ -56,6 +43,7 @@
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #include <memory>
+#include <windows.h>
 
 #if (DXVERSION == DXVERSION_11 && GAMEEDITION == GAMEEDITION_WW)
 // DX11-WW as of 20240102

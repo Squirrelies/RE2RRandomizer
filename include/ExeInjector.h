@@ -1,21 +1,9 @@
 #ifndef RE2RR_EXEINJECTOR_H
 #define RE2RR_EXEINJECTOR_H
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
-#include <windows.h>
-
+#include "Common.h"
 #include "Process.h"
 #include <filesystem>
+#include <windows.h>
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef RE2RR_UI_H
 #define RE2RR_UI_H
 
+#include "Common.h"
 #include "DllHook.h"
 #include "Logging.h"
 #include <imgui.h>

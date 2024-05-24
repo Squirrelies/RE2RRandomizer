@@ -1,23 +1,10 @@
 #ifndef RE2RR_LOGGING_H
 #define RE2RR_LOGGING_H
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
+#include "Common.h"
 #include <imgui.h>
 #include <stdio.h>
 #include <windows.h>
-
-#define RE2RRLOGGINGAPI __declspec(dllexport)
 
 #ifdef __cplusplus
 extern "C"
@@ -137,7 +124,7 @@ extern "C"
 		}
 	};
 
-	class RE2RRLOGGINGAPI ImmediateLogger
+	class LIBRARY_EXPORT_API ImmediateLogger
 	{
 	private:
 		FILE *out;

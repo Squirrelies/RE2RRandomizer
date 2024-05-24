@@ -1,20 +1,7 @@
 #ifndef RE2RR_MEMORY_H
 #define RE2RR_MEMORY_H
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
-#include <windows.h>
-
+#include "Common.h"
 #include "Process.h"
 #include "Strings.h"
 #include <psapi.h>
@@ -22,8 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <vector>
-
-#define RE2RRMEMORYAPI __declspec(dllexport)
+#include <windows.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -36,7 +22,7 @@ extern "C"
 	/// @param offset The first offset, if found.
 	/// @param startOffset A starting offset, if supplied.
 	/// @return Whether or not we succeeded in finding the pattern.
-	RE2RRMEMORYAPI bool TryFindPatternOffset(TCHAR *moduleName, std::vector<char16_t> pattern, uint64_t *offset, uint64_t startOffset = 0ULL);
+	LIBRARY_EXPORT_API bool TryFindPatternOffset(TCHAR *moduleName, std::vector<char16_t> pattern, uint64_t *offset, uint64_t startOffset = 0ULL);
 
 	/// @brief Attempts to find the first memory address for the pattern in the given module.
 	/// @param moduleName The module to search the pattern within.
@@ -44,7 +30,7 @@ extern "C"
 	/// @param address The first address, if found.
 	/// @param startOffset A starting offset, if supplied.
 	/// @return Whether or not we succeeded in finding the pattern.
-	RE2RRMEMORYAPI bool TryFindPatternAddress(TCHAR *moduleName, std::vector<char16_t> pattern, uintptr_t *address, uint64_t startOffset = 0ULL);
+	LIBRARY_EXPORT_API bool TryFindPatternAddress(TCHAR *moduleName, std::vector<char16_t> pattern, uintptr_t *address, uint64_t startOffset = 0ULL);
 
 #ifdef __cplusplus
 }

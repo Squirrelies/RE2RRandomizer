@@ -4,37 +4,37 @@
 
 namespace RE2RREnums
 {
-#define ENUM_METHOD_NAME(name) std::string METHOD_NAME_STRINGIFIER(Enum,name,ToString)(METHOD_NAME_STRINGIFIER(,name,) enumValue)
-ENUM_METHOD_NAME(ENUM_NAME)
+#define ENUM_METHOD_NAME(name) std::string DEFINE_CONCATENATION(DEFINE_CONCATENATION(Enum, name), ToString)(DEFINE_CONCATENATION(, name) enumValue)
+	ENUM_METHOD_NAME(ENUM_NAME)
 #undef ENUM_METHOD_NAME
-{
-	switch (enumValue)
 	{
+		switch (enumValue)
+		{
 #define ENUM_VALUE(name, value) \
 	case ENUM_NAME::name:       \
 		return #name;
-		ENUM_LIST
+			ENUM_LIST
 #undef ENUM_VALUE
-		default:
-			return {};
+			default:
+				return {};
+		}
 	}
-}
 
-#define ENUM_METHOD_NAME(name,type) name METHOD_NAME_STRINGIFIER(Enum,name,FromValue)(METHOD_NAME_STRINGIFIER(,type,) enumValue)
-ENUM_METHOD_NAME(ENUM_NAME,ENUM_TYPE)
+#define ENUM_METHOD_NAME(name, type) name DEFINE_CONCATENATION(DEFINE_CONCATENATION(Enum, name), FromValue)(DEFINE_CONCATENATION(, type) enumValue)
+	ENUM_METHOD_NAME(ENUM_NAME, ENUM_TYPE)
 #undef ENUM_METHOD_NAME
-{
-	switch (enumValue)
 	{
+		switch (enumValue)
+		{
 #define ENUM_VALUE(name, value) \
 	case value:                 \
 		return ENUM_NAME::name;
-		ENUM_LIST
+			ENUM_LIST
 #undef ENUM_VALUE
-		default:
-			return {};
+			default:
+				return {};
+		}
 	}
-}
 }
 
 #endif

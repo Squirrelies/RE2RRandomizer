@@ -1,6 +1,7 @@
 #ifndef RE2RR_HASHES_H
 #define RE2RR_HASHES_H
 
+#include "Common.h"
 #include "File.h"
 #include "Logging.h"
 #include "Types.h"

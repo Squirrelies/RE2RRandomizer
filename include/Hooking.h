@@ -1,6 +1,7 @@
 #ifndef RE2RR_HOOKING_H
 #define RE2RR_HOOKING_H
 
+#include "Common.h"
 #include <MinHook.h>
 
 /// @brief Attempts to hook the target function, calling the hook function in its place.

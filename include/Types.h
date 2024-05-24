@@ -1,39 +1,14 @@
 #ifndef RE2RR_TYPES_H
 #define RE2RR_TYPES_H
 
-#ifdef __GNUC__
-#define UNUSED(x) UNUSED_##x __attribute__((__unused__))
-#else
-#define UNUSED(x) UNUSED_##x
-#endif
-
-#ifdef __GNUC__
-#define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_##x
-#else
-#define UNUSED_FUNCTION(x) UNUSED_##x
-#endif
-
-#define RE2RR_NAMEOF(name) #name
-
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
-#include <windows.h>
-
+#include "Common.h"
 #include <array>
 #include <functional>
+#include <rpc.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <windows.h>
 
 #ifdef UNICODE
 #define TryStringToGUID TryStringToGUIDW
@@ -1490,14 +1465,14 @@ struct via_vec3
 		const char *toStringFormat = ".%s = %f, .%s = %f, .%s = %f";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(x), x,
-		                          RE2RR_NAMEOF(y), y,
-		                          RE2RR_NAMEOF(z), z);
+		                          NAMEOF(x), x,
+		                          NAMEOF(y), y,
+		                          NAMEOF(z), z);
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(x), x,
-		         RE2RR_NAMEOF(y), y,
-		         RE2RR_NAMEOF(z), z);
+		         NAMEOF(x), x,
+		         NAMEOF(y), y,
+		         NAMEOF(z), z);
 		std::string returnValue = std::string(toString);
 		free(toString);
 
@@ -1516,12 +1491,12 @@ struct app_ropeway_MansionManager_MapIdentifier
 		const char *toStringFormat = ".%s = %s, .%s = %s";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
-		                          RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
+		                          NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
+		                          NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
-		         RE2RR_NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
+		         NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
+		         NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
 		std::string returnValue = std::string(toString);
 		free(toString);
 
@@ -1543,18 +1518,18 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 		const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
-		                          RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
-		                          RE2RR_NAMEOF(WeaponParts), WeaponParts,
-		                          RE2RR_NAMEOF(BulletId), BulletId,
-		                          RE2RR_NAMEOF(Count), Count);
+		                          NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
+		                          NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
+		                          NAMEOF(WeaponParts), WeaponParts,
+		                          NAMEOF(BulletId), BulletId,
+		                          NAMEOF(Count), Count);
 		char *toString = (char *)malloc(bufferSize + 1);
 		snprintf(toString, bufferSize + 1, toStringFormat,
-		         RE2RR_NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
-		         RE2RR_NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
-		         RE2RR_NAMEOF(WeaponParts), WeaponParts,
-		         RE2RR_NAMEOF(BulletId), BulletId,
-		         RE2RR_NAMEOF(Count), Count);
+		         NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
+		         NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
+		         NAMEOF(WeaponParts), WeaponParts,
+		         NAMEOF(BulletId), BulletId,
+		         NAMEOF(Count), Count);
 		std::string returnValue = std::string(toString);
 		free(toString);
 
@@ -1570,6 +1545,16 @@ struct ItemMapKey
 	RE2RREnums::Difficulty Difficulty;
 };
 bool operator==(const ItemMapKey &lhs, const ItemMapKey &rhs);
+
+typedef bool (*ItemPositionDependencyFn)(RE2RREnums::ItemType);
+struct ItemPositionDependency
+{
+	GUID ItemPositionGUID;
+	/// @brief Item conditional check to prevent impossible combinations. An example would be the KeyStorageRoom ItemPositionGUID cannot have the KeySpade randomized to it as you'd be soft locked to the Gas Station.
+	/// @example
+	ItemPositionDependencyFn PrerequisiteItems;
+};
+bool operator==(const ItemPositionDependency &lhs, const ItemPositionDependency &rhs);
 
 namespace std
 {
@@ -1590,9 +1575,25 @@ namespace std
 		size_t operator()(const ItemMapKey &key) const
 		{
 			size_t res = 17;
+
 			res = res * 31 + hash<GUID>()(key.ItemPositionGUID);
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Scenario));
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Difficulty));
+
+			return res;
+		}
+	};
+
+	template <>
+	struct hash<ItemPositionDependency>
+	{
+		size_t operator()(const ItemPositionDependency &key) const
+		{
+			size_t res = 17;
+
+			res = res * 31 + hash<GUID>()(key.ItemPositionGUID);
+			res = res * 31 + hash<ItemPositionDependencyFn>()(key.PrerequisiteItems);
+
 			return res;
 		}
 	};

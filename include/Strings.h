@@ -1,21 +1,8 @@
 #ifndef RE2RR_STRINGS_H
 #define RE2RR_STRINGS_H
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
-#ifndef WIN32_LEAD_AND_MEAN
-#define WIN32_LEAD_AND_MEAN
-#endif
-
+#include "Common.h"
 #include <string>
-
-#define RE2RRSTRINGSAPI __declspec(dllexport)
 
 #ifdef __cplusplus
 extern "C"
@@ -54,9 +41,9 @@ extern "C"
 #endif
 #endif
 
-	RE2RRSTRINGSAPI size_t GetStringSizeA(std::string string);
+	LIBRARY_EXPORT_API size_t GetStringSizeA(std::string string);
 
-	RE2RRSTRINGSAPI size_t GetStringSizeW(std::wstring string);
+	LIBRARY_EXPORT_API size_t GetStringSizeW(std::wstring string);
 
 #ifdef __cplusplus
 }

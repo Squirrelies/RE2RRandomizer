@@ -1,5 +1,10 @@
 #include "Randomizer.h"
 
+/*
+RE2RItem{.ItemId = RE2RREnums::ItemType::None, .WeaponId = RE2RREnums::WeaponType::CombatKnife, .WeaponParts = 0, .BulletId = 0, .Count = 1000}
+*/
+static std::unordered_map<RE2RREnums::Scenario, RE2RItem, std::hash<RE2RREnums::Scenario>, std::equal_to<RE2RREnums::Scenario>> rawr = {};
+
 RE2RItem &Randomizer::GetItemByItemMapKey(const ItemMapKey &itemMapKey)
 {
 	static RE2RItem defaultEntry = {.ItemId = RE2RREnums::ItemType::ErrorBox, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1};

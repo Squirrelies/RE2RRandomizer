@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.25)
 project (RE2RRandomizer)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
+if(BUILD_SHARED_LIBS)
+    add_definitions(-DBUILD_SHARED_LIBS)
+else()
+    add_definitions(-DBUILD_STATIC_LIBS)
+endif()
+
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
 set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
 string(ASCII 169 COPYRIGHT)
@@ -43,23 +55,23 @@ find_package(imgui CONFIG REQUIRED)
 find_library(D3D11_LIBRARY d3d11 REQUIRED PATHS C:/msys64/mingw64/lib)
 find_library(D3D12_LIBRARY d3d12 REQUIRED PATHS C:/msys64/mingw64/lib)
 find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(GDI32_LIBRARY Gdi32 REQUIRED PATHS C:/msys64/mingw64/lib)
 find_library(DWMAPI_LIBRARY dwmapi REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(GDI32_LIBRARY Gdi32 REQUIRED PATHS C:/msys64/mingw64/lib)
 
 # Required libraries we'll link.
 find_library(DXGUID_LIBRARY dxguid REQUIRED PATHS C:/msys64/mingw64/lib)
 find_library(DINPUT8_LIBRARY dinput8 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED PATHS C:/msys64/mingw64/lib)
 
 include(CMakePrintHelpers)
 cmake_print_variables(
     D3D11_LIBRARY
     D3D12_LIBRARY
+    D3DCOMPILER_LIBRARY
+    DWMAPI_LIBRARY
+    GDI32_LIBRARY
     DXGUID_LIBRARY
     DINPUT8_LIBRARY
-    D3DCOMPILER_LIBRARY
-    GDI32_LIBRARY
-    DWMAPI_LIBRARY
     RPCRT4_LIBRARY
 )
 
@@ -77,7 +89,7 @@ add_compile_definitions(
     $<$<CONFIG:DEBUG>:DEBUG>
     UNICODE
     _UNICODE
-    WIN32_LEAD_AND_MEAN
+    WIN32_LEAN_AND_MEAN
     )
 add_link_options(
     -municode -static-libgcc -static-libstdc++ -static
@@ -87,7 +99,7 @@ target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} $
 include_directories(include extern/amosnier/sha-2)
 
 ### Library
-add_library(${PROJECT_NAME}Hook SHARED
+add_library(${PROJECT_NAME}Hook
 ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc
 extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
@@ -97,6 +109,7 @@ src/Process.cpp
 src/UI.cpp
 src/Randomizer.cpp
 src/Randomizer_GetItemByItemMapKey.cpp
+src/Randomizer_ItemDependencies.cpp
 src/DllHook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook

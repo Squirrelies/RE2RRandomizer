@@ -83,7 +83,8 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger, {}, (RE2RREnums::Difficulty *)difficulty, (RE2RREnums::Scenario *)scenario);
+		randomizer = new Randomizer(logger);
+		randomizer->GenerateSeed(difficulty, scenario);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Show/Hide Log"))
