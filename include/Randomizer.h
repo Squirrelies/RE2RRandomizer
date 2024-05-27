@@ -27,7 +27,7 @@ private:
 	RE2RItem lastInteractedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
-	static RE2RItem &GetItemByItemMapKey(const ItemMapKey &itemMapKey);
+	static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, const GUID &);
 	void RandomizeItem(RE2RItem *, RE2RItem);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);

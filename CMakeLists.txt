@@ -92,7 +92,7 @@ add_compile_definitions(
     WIN32_LEAN_AND_MEAN
     )
 add_link_options(
-    -municode -static-libgcc -static-libstdc++ -static
+    -municode -static
 )
 
 target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY})

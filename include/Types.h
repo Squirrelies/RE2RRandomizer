@@ -1538,23 +1538,12 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 };
 typedef app_ropeway_gamemastering_InventoryManager_PrimitiveItem RE2RItem;
 
-struct ItemMapKey
+struct GameModeKey
 {
-	GUID ItemPositionGUID;
 	RE2RREnums::Scenario Scenario;
 	RE2RREnums::Difficulty Difficulty;
 };
-bool operator==(const ItemMapKey &lhs, const ItemMapKey &rhs);
-
-typedef bool (*ItemPositionDependencyFn)(RE2RREnums::ItemType);
-struct ItemPositionDependency
-{
-	GUID ItemPositionGUID;
-	/// @brief Item conditional check to prevent impossible combinations. An example would be the KeyStorageRoom ItemPositionGUID cannot have the KeySpade randomized to it as you'd be soft locked to the Gas Station.
-	/// @example
-	ItemPositionDependencyFn PrerequisiteItems;
-};
-bool operator==(const ItemPositionDependency &lhs, const ItemPositionDependency &rhs);
+bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
 
 namespace std
 {
@@ -1570,29 +1559,14 @@ namespace std
 	};
 
 	template <>
-	struct hash<ItemMapKey>
+	struct hash<GameModeKey>
 	{
-		size_t operator()(const ItemMapKey &key) const
+		size_t operator()(const GameModeKey &key) const
 		{
 			size_t res = 17;
 
-			res = res * 31 + hash<GUID>()(key.ItemPositionGUID);
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Scenario));
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Difficulty));
-
-			return res;
-		}
-	};
-
-	template <>
-	struct hash<ItemPositionDependency>
-	{
-		size_t operator()(const ItemPositionDependency &key) const
-		{
-			size_t res = 17;
-
-			res = res * 31 + hash<GUID>()(key.ItemPositionGUID);
-			res = res * 31 + hash<ItemPositionDependencyFn>()(key.PrerequisiteItems);
 
 			return res;
 		}
