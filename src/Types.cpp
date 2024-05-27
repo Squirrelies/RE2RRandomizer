@@ -26,9 +26,8 @@ GUID *StringToGUIDW(const std::wstring &stringGUID)
 	return returnValue;
 }
 
-bool operator==(const ItemMapKey &lhs, const ItemMapKey &rhs)
+bool operator==(const GameModeKey &lhs, const GameModeKey &rhs)
 {
-	return lhs.ItemPositionGUID == rhs.ItemPositionGUID &&
-	       lhs.Scenario == rhs.Scenario &&
+	return lhs.Scenario == rhs.Scenario &&
 	       lhs.Difficulty == rhs.Difficulty;
 }

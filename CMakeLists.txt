@@ -108,7 +108,7 @@ src/Hashes.cpp
 src/Process.cpp
 src/UI.cpp
 src/Randomizer.cpp
-src/Randomizer_GetItemByItemMapKey.cpp
+src/Randomizer_GetItemByGameModeKeyAndGUID.cpp
 src/Randomizer_ItemDependencies.cpp
 src/DllHook.cpp
 )

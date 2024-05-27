@@ -1,10 +1,9 @@
 #include "Randomizer.h"
 
-// ItemPositionDependency{.ItemPositionGUID = *StringToGUIDA("00000000-0000-0000-0000-000000000000"), .PrerequisiteItems = [](RE2RREnums::ItemType item) { return item != RE2RREnums::ItemType::KeyStorageRoom; }},
-std::list<ItemPositionDependency> itemPositionDependencies =
+static std::unordered_map<int32_t, std::list<GUID>, std::hash<int32_t>, std::equal_to<int32_t>> zoneItemGUIDs =
     {
-        ItemPositionDependency{.ItemPositionGUID = *StringToGUIDA("00000000-0000-0000-0000-000000000000"), .PrerequisiteItems = [](RE2RREnums::ItemType item)
-                                                                                                           { return item != RE2RREnums::ItemType::KeyStorageRoom; }},
+
 };
 
-// static auto itemPositionsWithNoDependencies = itemPositionDependencies | std::views::filter([](const auto &pair) { return pair.PrerequisiteItemCount == 0; });
+// ZoneItemDependencyKey - int32_t ZoneId, RE2RItem[n] ItemsRequired (to exist in this zone to progress)
+// std::list<GUID> - List of item position GUIDs that one or more of the zone items must exist in.

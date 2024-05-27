@@ -10,8 +10,8 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	                   NAMEOF(itemToReplace), itemToReplace,
 	                   NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	logger->LogMessage("[RE2R-R] GetItemByItemMapKey() returned: %s.\n",
-	                   GetItemByItemMapKey(ItemMapKey{.ItemPositionGUID = *itemPositionGuid, .Scenario = this->scenario, .Difficulty = this->difficulty}).ToString().c_str());
+	logger->LogMessage("[RE2R-R] GetItemByGameModeKeyAndGUID() returned: %s.\n",
+	                   GetItemByGameModeKeyAndGUID(GameModeKey{.Scenario = this->scenario, .Difficulty = this->difficulty}, *itemPositionGuid).ToString().c_str());
 	SetLastInteracted(currentItem, itemPositionGuid);
 }
 
