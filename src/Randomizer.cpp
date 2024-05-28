@@ -10,9 +10,11 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	                   NAMEOF(itemToReplace), itemToReplace,
 	                   NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	logger->LogMessage("[RE2R-R] GetItemByGameModeKeyAndGUID() returned: %s.\n",
-	                   GetItemByGameModeKeyAndGUID(GameModeKey{.Scenario = this->scenario, .Difficulty = this->difficulty}, *itemPositionGuid).ToString().c_str());
 	SetLastInteracted(currentItem, itemPositionGuid);
+	logger->LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
+	                   this->originalItemMapping[this->seed.gameMode][*itemPositionGuid].ToString().c_str());
+	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
+	                   this->seed.seedData[*itemPositionGuid].ToString().c_str());
 }
 
 void Randomizer::SetLastInteracted(RE2RItem *item, GUID *itemPositionGuid)
@@ -45,12 +47,12 @@ bool Randomizer::ChangeArea(RE2RREnums::MapPartsID mapPartsId, RE2RREnums::MapID
 
 RE2RREnums::Difficulty Randomizer::GetDifficulty()
 {
-	return difficulty;
+	return seed.gameMode.Difficulty;
 }
 
 RE2RREnums::Scenario Randomizer::GetScenario()
 {
-	return scenario;
+	return seed.gameMode.Scenario;
 }
 
 RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
@@ -101,29 +103,27 @@ void Randomizer::GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Sc
 	                   NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(*difficulty).c_str(),
 	                   NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str());
 
-	this->difficulty = *difficulty;
-	this->scenario = *scenario;
+	seed = Seed{.gameMode = GameModeKey{.Scenario = *scenario, .Difficulty = *difficulty}, .seedData = {}};
 
-	auto SeedGenerator = [this](unsigned int threadNumber) -> std::vector<uint32_t>
+	std::vector<RE2RItem> values;
+	for (const auto &[_, value] : originalItemMapping[seed.gameMode])
 	{
-		logger->LogMessage("[RE2R-R] SeedGenerator(%s: %d) called.",
-		                   NAMEOF(threadNumber), threadNumber);
-
-		return {};
-	};
-
-	std::vector<std::future<std::vector<uint32_t>>> potentialSeeds;
-	unsigned int threadCount = std::thread::hardware_concurrency();
-	for (unsigned int threadNumber = 0; threadNumber < threadCount; ++threadNumber)
-	{
-		potentialSeeds.push_back(std::async(SeedGenerator, threadNumber));
+		values.push_back(value);
 	}
 
-	// Check async status...
-	//
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::shuffle(values.begin(), values.end(), gen);
+
+	auto value = values.begin();
+	for (const auto &[key, _] : originalItemMapping[seed.gameMode])
+	{
+		seed.seedData[key] = *value++;
+	}
 }
 
-std::vector<uint32_t> &Randomizer::GetSeed(void)
+Seed &Randomizer::GetSeed(void)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::GetSeed() called.");
 	return this->seed;

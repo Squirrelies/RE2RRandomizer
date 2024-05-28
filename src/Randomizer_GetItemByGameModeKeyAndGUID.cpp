@@ -1,7 +1,7 @@
 #include "Randomizer.h"
 
-static RE2RItem defaultItemEntry = {.ItemId = RE2RREnums::ItemType::ErrorBox, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1};
-static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping =
+RE2RItem Randomizer::defaultItemEntry = {.ItemId = RE2RREnums::ItemType::ErrorBox, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1};
+std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> Randomizer::originalItemMapping =
     {
         {GameModeKey{.Scenario = RE2RREnums::Scenario::CLAIRE_A, .Difficulty = RE2RREnums::Difficulty::NORMAL},
          {

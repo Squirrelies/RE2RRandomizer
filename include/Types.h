@@ -1537,6 +1537,7 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	}
 };
 typedef app_ropeway_gamemastering_InventoryManager_PrimitiveItem RE2RItem;
+bool operator==(const RE2RItem &lhs, const RE2RItem &rhs);
 
 struct GameModeKey
 {
@@ -1559,6 +1560,18 @@ namespace std
 	};
 
 	template <>
+	struct equal_to<GUID>
+	{
+		bool operator()(const GUID &lhs, const GUID &rhs) const noexcept
+		{
+			return lhs.Data1 == rhs.Data1 &&
+			       lhs.Data2 == rhs.Data2 &&
+			       lhs.Data3 == rhs.Data3 &&
+			       std::equal(std::begin(lhs.Data4), std::end(lhs.Data4), std::begin(rhs.Data4));
+		}
+	};
+
+	template <>
 	struct hash<GameModeKey>
 	{
 		size_t operator()(const GameModeKey &key) const
@@ -1572,5 +1585,12 @@ namespace std
 		}
 	};
 }
+
+struct Seed
+{
+	GameModeKey gameMode;
+	std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
+};
+bool operator==(const Seed &lhs, const Seed &rhs);
 
 #endif

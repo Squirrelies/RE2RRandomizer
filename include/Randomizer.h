@@ -5,8 +5,10 @@
 #include "File.h"
 #include "Logging.h"
 #include "Types.h"
+#include <algorithm>
 #include <future>
 #include <list>
+#include <random>
 #include <ranges>
 #include <stdexcept>
 #include <stdint.h>
@@ -18,9 +20,9 @@ class Randomizer
 {
 private:
 	ImmediateLogger *logger;
-	std::vector<uint32_t> seed;
-	RE2RREnums::Difficulty difficulty;
-	RE2RREnums::Scenario scenario;
+	static RE2RItem defaultItemEntry;
+	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
+	Seed seed;
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
@@ -39,8 +41,6 @@ public:
 	{
 		this->logger = logger;
 		this->seed = {};
-		this->difficulty = RE2RREnums::Difficulty::EASY;
-		this->scenario = RE2RREnums::Scenario::INVALID;
 		this->mapPartsId = RE2RREnums::MapPartsID::Invalid;
 		this->mapId = RE2RREnums::MapID::Invalid;
 		this->floorId = RE2RREnums::FloorID::None;
@@ -51,7 +51,6 @@ public:
 	~Randomizer(void)
 	{
 		this->logger = nullptr;
-		this->seed.clear();
 	}
 
 	void ItemPickup(RE2RItem *, RE2RItem *, GUID *);
@@ -64,7 +63,7 @@ public:
 	RE2RItem *GetLastInteractedItem(void);
 	GUID *GetLastInteractedItemPositionGuid(void);
 	void GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario);
-	std::vector<uint32_t> &GetSeed(void);
+	Seed &GetSeed(void);
 };
 
 std::string GUIDToString(GUID *);
