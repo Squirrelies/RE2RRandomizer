@@ -10,7 +10,7 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	                   NAMEOF(itemToReplace), itemToReplace,
 	                   NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	SetLastInteracted(currentItem, itemPositionGuid);
+	SetLast(currentItem, &this->seed.seedData[*itemPositionGuid], itemPositionGuid);
 	logger->LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
 	                   this->originalItemMapping[this->seed.gameMode][*itemPositionGuid].ToString().c_str());
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
@@ -18,15 +18,21 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	RandomizeItem(itemToReplace, this->seed.seedData[*itemPositionGuid]);
 }
 
-void Randomizer::SetLastInteracted(RE2RItem *item, GUID *itemPositionGuid)
+void Randomizer::SetLast(RE2RItem *item, RE2RItem *randomizedItem, GUID *itemPositionGuid)
 {
 	this->lastInteractedItem = *item;
+	this->lastRandomizedItem = *randomizedItem;
 	this->lastInteractedItemPositionGuid = *itemPositionGuid;
 }
 
 RE2RItem *Randomizer::GetLastInteractedItem()
 {
 	return &this->lastInteractedItem;
+}
+
+RE2RItem *Randomizer::GetLastRandomizedItem()
+{
+	return &this->lastRandomizedItem;
 }
 
 GUID *Randomizer::GetLastInteractedItemPositionGuid()

@@ -3,9 +3,9 @@
 void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 {
 	// Always shown items (shown even if the Main UI is hidden)
-	static bool show_Overlay = false;
-	if (show_Overlay)
-		DrawOverlay(&show_Overlay, open);
+	static bool show_DebugOverlay = false;
+	if (show_DebugOverlay)
+		DrawDebugOverlay(&show_DebugOverlay, open);
 
 	// If the Main UI is hidden, exit here.
 	if (!*open)
@@ -36,7 +36,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			ImGui::MenuItem("Overlay", NULL, &show_Overlay);
+			ImGui::MenuItem("Debug Overlay", NULL, &show_DebugOverlay);
 			ImGui::EndMenu();
 		}
 
@@ -103,7 +103,7 @@ void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
 	this->logger->GetUILog()->Draw("RE2RR Log", open);
 }
 
-void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
+void __stdcall RE2RRUI::UI::DrawDebugOverlay(bool *open, bool *mainUIOpen)
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 	if (mainUIOpen != nullptr && !*mainUIOpen)
@@ -123,8 +123,9 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 			ImGui::Text("Map Part: %s", RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str());
 			ImGui::Text("Map: %s", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
 			ImGui::Text("Floor: %s", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
-			ImGui::Text("Last Item: { %s }", randomizer->GetLastInteractedItem()->ToString().c_str());
 			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
+			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem()->ToString().c_str());
+			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem()->ToString().c_str());
 		}
 		// if (font != nullptr)
 		// 	ImGui::PopFont();

@@ -27,13 +27,14 @@ private:
 	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
 	RE2RItem lastInteractedItem = {};
+	RE2RItem lastRandomizedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
 	static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, const GUID &);
 	void RandomizeItem(RE2RItem *, RE2RItem);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);
-	void SetLastInteracted(RE2RItem *, GUID *);
+	void SetLast(RE2RItem *, RE2RItem *, GUID *);
 
 protected:
 public:
@@ -61,6 +62,7 @@ public:
 	RE2RREnums::MapID GetMapID(void);
 	RE2RREnums::FloorID GetFloorID(void);
 	RE2RItem *GetLastInteractedItem(void);
+	RE2RItem *GetLastRandomizedItem(void);
 	GUID *GetLastInteractedItemPositionGuid(void);
 	void Randomize(RE2RREnums::Difficulty *, RE2RREnums::Scenario *, int_fast32_t);
 	Seed &GetSeed(void);

@@ -49,7 +49,7 @@ namespace RE2RRUI
 		void __stdcall DrawMainUI(bool *);
 		void __stdcall DrawLogUI(bool *);
 		void __stdcall DrawHelpAboutRE2RRUI(bool *);
-		void __stdcall DrawOverlay(bool *, bool *);
+		void __stdcall DrawDebugOverlay(bool *, bool *);
 		void __stdcall SetFont(ImFont *);
 		Randomizer *GetRandomizer(void);
 	};
