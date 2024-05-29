@@ -23,7 +23,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
 	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(330, 240), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(400, 260), ImGuiCond_FirstUseEver);
 
 	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 	{
@@ -71,13 +71,12 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	ImGui::Spacing();
 
 	ImGui::InputInt("Seed", &randomSeed, 1, 1000);
-	ImGui::SameLine();
-	if (ImGui::Button("Generate Seed"))
+	if (ImGui::Button("Generate New Seed"))
 	{
-		logger->LogMessage("Generate Seed clicked!\n");
+		logger->LogMessage("Generate New Seed clicked!\n");
 		randomSeed = randomDevice();
 	}
-
+	ImGui::SameLine();
 	if (ImGui::Button("Randomize"))
 	{
 		logger->LogMessage("Randomize clicked!\n");
@@ -85,7 +84,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 		if (randomizer != nullptr)
 			delete randomizer;
 		randomizer = new Randomizer(logger);
-		randomizer->GenerateSeed(difficulty, scenario, randomSeed);
+		randomizer->Randomize(difficulty, scenario, randomSeed);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Show/Hide Log"))
