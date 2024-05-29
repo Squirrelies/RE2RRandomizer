@@ -18,6 +18,7 @@ namespace RE2RRUI
 		RE2RREnums::Difficulty *difficulty;
 		Randomizer *randomizer;
 		ImFont *font;
+		std::random_device randomDevice;
 
 	protected:
 	public:
@@ -47,8 +48,6 @@ namespace RE2RRUI
 
 		void __stdcall DrawMainUI(bool *);
 		void __stdcall DrawLogUI(bool *);
-		void __stdcall DrawFileImportSeedUI(bool *);
-		void __stdcall DrawFileExportSeedUI(bool *);
 		void __stdcall DrawHelpAboutRE2RRUI(bool *);
 		void __stdcall DrawOverlay(bool *, bool *);
 		void __stdcall SetFont(ImFont *);

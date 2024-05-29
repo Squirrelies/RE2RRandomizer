@@ -62,7 +62,7 @@ public:
 	RE2RREnums::FloorID GetFloorID(void);
 	RE2RItem *GetLastInteractedItem(void);
 	GUID *GetLastInteractedItemPositionGuid(void);
-	void GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario);
+	void GenerateSeed(RE2RREnums::Difficulty *, RE2RREnums::Scenario *, int_fast32_t);
 	Seed &GetSeed(void);
 };
 

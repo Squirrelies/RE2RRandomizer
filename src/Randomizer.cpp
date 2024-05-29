@@ -98,11 +98,12 @@ std::string GUIDToString(GUID *guid)
 	return std::string(guid_string);
 }
 
-void Randomizer::GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario)
+void Randomizer::GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario, int_fast32_t initialSeed)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::GenerateSeed(%s: %s, %s: %s) called.",
+	logger->LogMessage("[RE2R-R] Randomizer::GenerateSeed(%s: %s, %s: %s, %s: %d) called.\n",
 	                   NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(*difficulty).c_str(),
-	                   NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str());
+	                   NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str(),
+	                   NAMEOF(initialSeed), initialSeed);
 
 	seed = Seed{.gameMode = GameModeKey{.Scenario = *scenario, .Difficulty = *difficulty}, .seedData = {}};
 
@@ -112,9 +113,7 @@ void Randomizer::GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Sc
 		values.push_back(value);
 	}
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
-
+	std::mt19937 gen(initialSeed);
 	std::shuffle(values.begin(), values.end(), gen);
 
 	auto value = values.begin();
@@ -126,6 +125,6 @@ void Randomizer::GenerateSeed(RE2RREnums::Difficulty *difficulty, RE2RREnums::Sc
 
 Seed &Randomizer::GetSeed(void)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::GetSeed() called.");
+	logger->LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n");
 	return this->seed;
 }

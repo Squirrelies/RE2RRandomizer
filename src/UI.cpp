@@ -12,16 +12,11 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 		return;
 
 	// Conditionally shown items (shown only if the Main UI is showing)
+	static int_fast32_t randomSeed = randomDevice();
 	static bool show_Log = false;
-	static bool show_File_ImportSeed = false;
-	static bool show_File_ExportSeed = false;
 	static bool show_Help_AboutRE2RR = false;
 	if (show_Log)
 		DrawLogUI(&show_Log);
-	else if (show_File_ImportSeed)
-		DrawFileImportSeedUI(&show_File_ImportSeed);
-	else if (show_File_ExportSeed)
-		DrawFileExportSeedUI(&show_File_ExportSeed);
 	else if (show_Help_AboutRE2RR)
 		DrawHelpAboutRE2RRUI(&show_Help_AboutRE2RR);
 
@@ -41,8 +36,6 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			ImGui::MenuItem("Import Seed", NULL, &show_File_ImportSeed);
-			ImGui::MenuItem("Export Seed", NULL, &show_File_ExportSeed);
 			ImGui::MenuItem("Overlay", NULL, &show_Overlay);
 			ImGui::EndMenu();
 		}
@@ -77,14 +70,22 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	ImGui::Spacing();
 	ImGui::Spacing();
 
+	ImGui::InputInt("Seed", &randomSeed, 1, 1000);
+	ImGui::SameLine();
 	if (ImGui::Button("Generate Seed"))
 	{
 		logger->LogMessage("Generate Seed clicked!\n");
+		randomSeed = randomDevice();
+	}
+
+	if (ImGui::Button("Randomize"))
+	{
+		logger->LogMessage("Randomize clicked!\n");
 
 		if (randomizer != nullptr)
 			delete randomizer;
 		randomizer = new Randomizer(logger);
-		randomizer->GenerateSeed(difficulty, scenario);
+		randomizer->GenerateSeed(difficulty, scenario, randomSeed);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Show/Hide Log"))
@@ -129,38 +130,6 @@ void __stdcall RE2RRUI::UI::DrawOverlay(bool *open, bool *mainUIOpen)
 		// if (font != nullptr)
 		// 	ImGui::PopFont();
 	}
-	ImGui::End();
-}
-
-void __stdcall RE2RRUI::UI::DrawFileImportSeedUI(bool *open)
-{
-	// Specify a default position/size in case there's no data in the .ini file.
-	ImGuiIO &io = ImGui::GetIO();
-	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
-
-	if (!ImGui::Begin("RE2RR: Import Seed", open, ImGuiWindowFlags_NoCollapse))
-	{
-		ImGui::End();
-		return;
-	}
-
-	ImGui::End();
-}
-
-void __stdcall RE2RRUI::UI::DrawFileExportSeedUI(bool *open)
-{
-	// Specify a default position/size in case there's no data in the .ini file.
-	ImGuiIO &io = ImGui::GetIO();
-	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(380, 280), ImGuiCond_FirstUseEver);
-
-	if (!ImGui::Begin("RE2RR: Export Seed", open, ImGuiWindowFlags_NoCollapse))
-	{
-		ImGui::End();
-		return;
-	}
-
 	ImGui::End();
 }
 
