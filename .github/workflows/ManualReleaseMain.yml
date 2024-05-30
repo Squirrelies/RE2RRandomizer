@@ -58,7 +58,7 @@ jobs:
 
       - name: Get new build number
         id: build-number
-        run: echo 'current_build_number=$(( secrets.BUILD_NUMBER + 1))' >> $env:GITHUB_OUTPUT
+        run: echo 'current_build_number=$(( vars.BUILD_NUMBER + 1))' >> $env:GITHUB_OUTPUT
 
       - name: Run CMake
         env:
@@ -71,7 +71,7 @@ jobs:
       - name: Update build number secret
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh secret set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
+        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
 
       - name: Upload publish artifacts
         uses: actions/upload-artifact@v4
