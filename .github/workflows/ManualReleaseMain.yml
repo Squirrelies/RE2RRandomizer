@@ -68,7 +68,7 @@ jobs:
           RC_VERSION_REV: ${{steps.build-number.outputs.current_build_number}}
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
-      - name: Update build number secret
+      - name: Update build number variable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
