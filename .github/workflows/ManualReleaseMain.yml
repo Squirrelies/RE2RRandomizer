@@ -58,7 +58,9 @@ jobs:
 
       - name: Get new build number
         id: build-number
-        run: echo "current_build_number=$(( ${{ vars.BUILD_NUMBER }} + 1))" >> "$GITHUB_OUTPUT"
+        run: |
+          $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
+          echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
       - name: Run CMake
         env:
