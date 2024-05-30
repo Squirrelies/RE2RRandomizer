@@ -38,6 +38,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Get new build number
+        id: build-number
+        run: |
+          $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
+          echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -56,12 +62,6 @@ jobs:
           $path2 = "C:/msys64/usr/bin"
           echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
 
-      - name: Get new build number
-        id: build-number
-        run: |
-          $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
-          echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
-
       - name: Run CMake
         env:
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
@@ -69,11 +69,6 @@ jobs:
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
           RC_VERSION_REV: ${{steps.build-number.outputs.current_build_number}}
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
-
-      - name: Update build number variable
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
 
       - name: Upload publish artifacts
         uses: actions/upload-artifact@v4
@@ -84,6 +79,11 @@ jobs:
             build/RE2RRandomizerHook.dll
             LICENSE
             README.md
+
+      - name: Update build number variable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
 
   Package:
     name: "Package"

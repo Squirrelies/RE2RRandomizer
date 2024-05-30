@@ -49,12 +49,22 @@
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 
-// Version. This is defined at compile time so this is just a placeholder.
-#ifndef RE2RR_VERSION
-#define RE2RR_VERSION "0.1.0"
+// Major version number. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_MAJOR
+#define RE2RR_VERSION_MAJOR 0
 #endif
 
-// Build number. This is defined at compile time so this is just a placeholder.
-#ifndef RE2RR_VERSION_BUILD
-#define RE2RR_VERSION_BUILD 0
+// Minor version number. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_MINOR
+#define RE2RR_VERSION_MINOR 1
+#endif
+
+// Patch version number. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_PATCH
+#define RE2RR_VERSION_PATCH 0
+#endif
+
+// Revision version number. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_REV
+#define RE2RR_VERSION_REV 0
 #endif

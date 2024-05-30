@@ -47,8 +47,10 @@ set(RC_INTERNALNAME "${RC_INTERNALNAME}Hook")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc @ONLY)
 
-add_definitions("-DRE2RR_VERSION=\"${RC_VERSION_MAJOR}.${RC_VERSION_MINOR}.${RC_VERSION_PATCH}\"")
-add_definitions("-DRE2RR_VERSION_BUILD=${RC_VERSION_REV}")
+add_definitions("-DRE2RR_VERSION_MAJOR=${RC_VERSION_MAJOR}")
+add_definitions("-DRE2RR_VERSION_MINOR=${RC_VERSION_MINOR}")
+add_definitions("-DRE2RR_VERSION_PATCH=${RC_VERSION_PATCH}")
+add_definitions("-DRE2RR_VERSION_REV=${RC_VERSION_REV}")
 
 include(FetchContent)
 set(FETCHCONTENT_QUIET off)

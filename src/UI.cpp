@@ -146,7 +146,7 @@ void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
 	}
 
 	ImGui::Text("Resident Evil 2 (2019) Randomizer");
-	ImGui::Text("v%s (%d)", RE2RR_VERSION, RE2RR_VERSION_BUILD);
+	ImGui::Text("v%d.%d.%d (%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_REV);
 	ImGui::Separator();
 	ImGui::BulletText("Contributors\n\tBenn Powell\n\tSquirrelies");
 	ImGui::Spacing();
@@ -162,7 +162,7 @@ void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
 		}
 
 		ImGui::Text("Resident Evil 2 (2019) Randomizer");
-		ImGui::Text("v%s (%d)", RE2RR_VERSION, RE2RR_VERSION_BUILD);
+		ImGui::Text("v%d.%d.%d (%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_REV);
 		ImGui::Separator();
 		ImGui::Text("Build datetime: %s %s", __DATE__, __TIME__);
 		ImGui::Text("sizeof(void *): %d", (int)sizeof(void *));
