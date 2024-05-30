@@ -17,12 +17,6 @@
 // ImGUI configuration options.
 #define IMGUI_USER_CONFIG "ImGUIConfig.h"
 
-// Version. This is defined at compile time so this is just a placeholder.
-#define RE2RR_VERSION "1.0.0"
-
-// Build number. This is defined at compile time so this is just a placeholder.
-#define RE2RR_VERSION_BUILD 202405281
-
 #define DIRECTINPUT_VERSION 0x0800
 
 #include "Common.h"

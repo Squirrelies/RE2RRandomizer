@@ -10,11 +10,11 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	                   NAMEOF(itemToReplace), itemToReplace,
 	                   NAMEOF(currentItem), currentItem->ToString().c_str(),
 	                   NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	SetLast(currentItem, &this->seed.seedData[*itemPositionGuid], itemPositionGuid);
 	logger->LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
 	                   this->originalItemMapping[this->seed.gameMode][*itemPositionGuid].ToString().c_str());
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
 	                   this->seed.seedData[*itemPositionGuid].ToString().c_str());
+	SetLast(&this->originalItemMapping[this->seed.gameMode][*itemPositionGuid], &this->seed.seedData[*itemPositionGuid], itemPositionGuid);
 	RandomizeItem(itemToReplace, this->seed.seedData[*itemPositionGuid]);
 }
 

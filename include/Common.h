@@ -48,3 +48,13 @@
 #else
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
+
+// Version. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION
+#define RE2RR_VERSION "0.1.0"
+#endif
+
+// Build number. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_BUILD
+#define RE2RR_VERSION_BUILD 0
+#endif

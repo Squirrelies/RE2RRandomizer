@@ -7,7 +7,7 @@ int wmain(void)
 	if (pid == 0)
 		return 1;
 
-	std::wstring dllPath = std::filesystem::current_path().native() + L"\\libRE2RRandomizerHook.dll";
+	std::wstring dllPath = std::filesystem::current_path().native() + L"\\RE2RRandomizerHook.dll";
 	size_t dllPathSize = GetStringSize(dllPath);
 	HANDLE handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pid);
 

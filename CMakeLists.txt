@@ -1,11 +1,22 @@
 cmake_minimum_required(VERSION 3.25)
 project (RE2RRandomizer)
 
+function(set_from_env var_name default_value var_type var_desc)
+  if(DEFINED ENV{${var_name}})
+    set(${var_name} $ENV{${var_name}} CACHE ${var_type} ${var_desc})
+  else()
+    set(${var_name} ${default_value} CACHE ${var_type} ${var_desc})
+  endif()
+endfunction()
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_LIBRARY_SUFFIX ".dll")
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
+set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-
 if(BUILD_SHARED_LIBS)
     add_definitions(-DBUILD_SHARED_LIBS)
 else()
@@ -24,17 +35,20 @@ set(RC_LEGALCOPYRIGHT "Copyright ${COPYRIGHT} 2024 Travis J. Gutjahr")
 set(RC_INTERNALNAME "${PROJECT_NAME}")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.exe")
 
-# Major.Minor.Build.Revision
-set(RC_VERSION_MAJOR 1)
-set(RC_VERSION_MINOR 0)
-set(RC_VERSION_BUILD 0)
-set(RC_VERSION_REVISION 0)
+# Major.Minor.Patch.Rev
+set_from_env(RC_VERSION_MAJOR 0 STRING "Version (major) of the product.")
+set_from_env(RC_VERSION_MINOR 0 STRING "Version (minor) of the product.")
+set_from_env(RC_VERSION_PATCH 0 STRING "Version (patch) of the product.")
+set_from_env(RC_VERSION_REV 0 STRING "Version (revision) of the product.") # Auto-increment in build CI/CD.
 
 # Compile the version information.
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoExe.rc @ONLY)
-set(RC_INTERNALNAME "lib${RC_INTERNALNAME}Hook")
+set(RC_INTERNALNAME "${RC_INTERNALNAME}Hook")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc @ONLY)
+
+add_definitions("-DRE2RR_VERSION=\"${RC_VERSION_MAJOR}.${RC_VERSION_MINOR}.${RC_VERSION_PATCH}\"")
+add_definitions("-DRE2RR_VERSION_BUILD=${RC_VERSION_REV}")
 
 include(FetchContent)
 set(FETCHCONTENT_QUIET off)
@@ -115,7 +129,7 @@ src/DllHook.cpp
 target_link_libraries(${PROJECT_NAME}Hook
 PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
 )
-add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all lib${PROJECT_NAME}Hook.dll)
+add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}Hook.dll)
 
 ### Executable
 add_executable(${PROJECT_NAME}

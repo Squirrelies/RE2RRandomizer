@@ -4,15 +4,30 @@ on:
   workflow_dispatch:
     inputs:
       workflowPreset:
-        description: 'Configure/Build/Test/Package configuration'
+        description: "Configure/Build/Test/Package configuration"
         required: false
-        default: 'Release' 
+        default: "Release"
         type: choice
         options:
-        - 'Release'
-        - 'RelWithDebInfo'
-        - 'MinSizeRel'
-        - 'Debug'
+          - "Release"
+          - "RelWithDebInfo"
+          - "MinSizeRel"
+          - "Debug"
+      versionMajor:
+        description: "Major Version"
+        required: false
+        default: 0
+        type: number
+      versionMinor:
+        description: "Minor Version"
+        required: false
+        default: 1
+        type: number
+      versionPatch:
+        description: "Patch Version"
+        required: false
+        default: 0
+        type: number
 
 env:
   VCPKG_ROOT: C:/vcpkg
@@ -23,36 +38,50 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        ref: ${{ github.ref }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
 
-    - uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        release: false
-        update: true
-        install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          release: false
+          update: true
+          install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
 
-    - name: Set PATH to include MinGW-W64 from MSYS2
-      run: |
-        $path1 = "C:/msys64/mingw64/bin"
-        $path2 = "C:/msys64/usr/bin"
-        echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
+      - name: Set PATH to include MinGW-W64 from MSYS2
+        run: |
+          $path1 = "C:/msys64/mingw64/bin"
+          $path2 = "C:/msys64/usr/bin"
+          echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
 
-    - name: Run CMake
-      run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
+      - name: Get new build number
+        id: build-number
+        run: echo 'current_build_number=$(( secrets.BUILD_NUMBER + 1))' >> $env:GITHUB_OUTPUT
 
-    - name: Upload publish artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Build-Artifacts
-        path: |
-          build/RE2RRandomizer.exe
-          build/libRE2RRandomizerHook.dll
-          LICENSE
-          README.md
+      - name: Run CMake
+        env:
+          RC_VERSION_MAJOR: ${{inputs.versionMajor}}
+          RC_VERSION_MINOR: ${{inputs.versionMinor}}
+          RC_VERSION_PATCH: ${{inputs.versionPatch}}
+          RC_VERSION_REV: ${{steps.build-number.outputs.current_build_number}}
+        run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
+
+      - name: Update build number secret
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh secret set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
+
+      - name: Upload publish artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-Artifacts
+          path: |
+            build/RE2RRandomizer.exe
+            build/RE2RRandomizerHook.dll
+            LICENSE
+            README.md
 
   Package:
     name: "Package"
@@ -60,53 +89,38 @@ jobs:
     needs: Build
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        ref: ${{ github.ref }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
 
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: Build-Artifacts
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Build-Artifacts
 
-    - name: Decode the code signing PFX
-      run: |
-        Set-Content -Path 'CodeSign.txt' -Value '${{ secrets.CODE_SIGN_CERTIFICATE }}'
-        certutil -decode 'CodeSign.txt' 'CodeSign.pfx'
-        Remove-Item -Path 'CodeSign.txt'
-        
-    - name: Code sign the binaries
-      run: |
-        $filesToSign = (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname
-        foreach ($fileToSign in $filesToSign) {
-            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA1 "$fileToSign"
-            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA256 /as "$fileToSign"
-            & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/signtool.exe" sign /tr "http://timestamp.digicert.com" /td SHA1 /f "CodeSign.pfx" /p "${{secrets.CODE_SIGN_CERTIFICATE_PASS}}" /fd SHA512 /as "$fileToSign"
-        }
+      - name: Zip the publish artifacts
+        working-directory: ${{github.workspace}}
+        shell: pwsh
+        run: |
+          Add-Type -assembly 'System.IO.Compression'
+          Add-Type -assembly 'System.IO.Compression.FileSystem'
+          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v0.1.0-0-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+          $filesToZip = (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname
+          foreach ($fileToZip in $filesToZip) {
+              [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
+          }
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'LICENSE', 'LICENSE')
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'README.md', 'README.md')
+          $zipFile.Dispose()
 
-    - name: Zip the publish artifacts
-      working-directory: ${{github.workspace}}
-      shell: pwsh
-      run: |
-        Add-Type -assembly 'System.IO.Compression'
-        Add-Type -assembly 'System.IO.Compression.FileSystem'
-        [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
-        $filesToZip = (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname
-        foreach ($fileToZip in $filesToZip) {
-            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
-        }
-        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'LICENSE', 'LICENSE')
-        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'README.md', 'README.md')
-        $zipFile.Dispose()
-
-    - name: Publish release
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "${{inputs.workflowPreset}}-build"
-        prerelease: true
-        title: 'Manual Build [main] - v1.0.0 Release'
-        files: |
-          RE2RRandomizer-v1.0.0-1234-${{inputs.workflowPreset}}.zip
-        # Name-Version String-Build Number-Build Type.zip
+      - name: Publish release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{inputs.workflowPreset}}-build"
+          prerelease: true
+          title: "Manual Build [main] - v0.1.0-0 Release"
+          files: |
+            RE2RRandomizer-v0.1.0-0-${{inputs.workflowPreset}}.zip
+          # Name-Version String-Build Number-Build Type.zip
