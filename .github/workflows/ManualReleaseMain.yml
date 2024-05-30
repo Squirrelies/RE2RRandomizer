@@ -82,7 +82,7 @@ jobs:
 
       - name: Update build number variable
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
         run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
 
   Package:
