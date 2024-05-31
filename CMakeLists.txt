@@ -3,9 +3,9 @@ project (RE2RRandomizer)
 
 function(set_from_env var_name default_value var_type var_desc)
   if(DEFINED ENV{${var_name}})
-    set(${var_name} $ENV{${var_name}} CACHE ${var_type} ${var_desc})
+    set(${var_name} $ENV{${var_name}} CACHE ${var_type} ${var_desc} FORCE)
   else()
-    set(${var_name} ${default_value} CACHE ${var_type} ${var_desc})
+    set(${var_name} ${default_value} CACHE ${var_type} ${var_desc} FORCE)
   endif()
 endfunction()
 
@@ -16,6 +16,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_SHARED_LIBRARY_SUFFIX ".dll")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
+set(CMAKE_EXECUTABLE_ENABLE_EXPORTS TRUE)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 if(BUILD_SHARED_LIBS)
     add_definitions(-DBUILD_SHARED_LIBS)
@@ -37,9 +38,9 @@ set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.exe")
 
 # Major.Minor.Patch.Rev
 set_from_env(RC_VERSION_MAJOR 0 STRING "Version (major) of the product.")
-set_from_env(RC_VERSION_MINOR 0 STRING "Version (minor) of the product.")
+set_from_env(RC_VERSION_MINOR 1 STRING "Version (minor) of the product.")
 set_from_env(RC_VERSION_PATCH 0 STRING "Version (patch) of the product.")
-set_from_env(RC_VERSION_REV 0 STRING "Version (revision) of the product.") # Auto-increment in build CI/CD.
+set_from_env(RC_VERSION_BUILD 1 STRING "Version (build) of the product.") # Auto-increment in build CI/CD.
 
 # Compile the version information.
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoExe.rc @ONLY)
@@ -50,7 +51,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT
 add_definitions("-DRE2RR_VERSION_MAJOR=${RC_VERSION_MAJOR}")
 add_definitions("-DRE2RR_VERSION_MINOR=${RC_VERSION_MINOR}")
 add_definitions("-DRE2RR_VERSION_PATCH=${RC_VERSION_PATCH}")
-add_definitions("-DRE2RR_VERSION_REV=${RC_VERSION_REV}")
+add_definitions("-DRE2RR_VERSION_BUILD=${RC_VERSION_BUILD}")
 
 include(FetchContent)
 set(FETCHCONTENT_QUIET off)
@@ -141,3 +142,28 @@ src/Strings.cpp
 src/Process.cpp
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
+
+
+### Unit Tests
+include(CTest)
+enable_testing()
+
+include(GoogleTest)
+find_package(GTest REQUIRED)
+
+add_executable(${PROJECT_NAME}Tests
+tests/test_Strings.cpp
+)
+target_link_libraries(${PROJECT_NAME}Tests
+GTest::gtest_main
+${PROJECT_NAME}
+${PROJECT_NAME}Hook
+)
+
+gtest_discover_tests(${PROJECT_NAME}Tests
+PROPERTIES
+DISCOVERY_TIMEOUT 30
+TEST_LIST discovered_tests
+)
+
+message(STATUS "Discovered tests: ${discovered_tests}")

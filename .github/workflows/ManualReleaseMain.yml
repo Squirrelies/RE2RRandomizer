@@ -67,8 +67,11 @@ jobs:
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
-          RC_VERSION_REV: ${{steps.build-number.outputs.current_build_number}}
+          RC_VERSION_BUILD: ${{steps.build-number.outputs.current_build_number}}
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
+
+      - name: Run CTest
+        run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
       - name: Upload publish artifacts
         uses: actions/upload-artifact@v4
