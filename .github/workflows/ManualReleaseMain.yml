@@ -73,36 +73,10 @@ jobs:
       - name: Run CTest
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
-      - name: Upload publish artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Build-Artifacts
-          path: |
-            build/RE2RRandomizer.exe
-            build/RE2RRandomizerHook.dll
-            LICENSE
-            README.md
-
       - name: Update build number variable
         env:
           GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
         run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
-
-  Package:
-    name: "Package"
-    runs-on: windows-latest
-    needs: Build
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.ref }}
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: Build-Artifacts
 
       - name: Zip the publish artifacts
         working-directory: ${{github.workspace}}
@@ -110,11 +84,9 @@ jobs:
         run: |
           Add-Type -assembly 'System.IO.Compression'
           Add-Type -assembly 'System.IO.Compression.FileSystem'
-          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v0.1.0-0-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
-          $filesToZip = (Get-ChildItem -Path 'build/' -Filter *RE2RRandomizer*.*).fullname
-          foreach ($fileToZip in $filesToZip) {
-              [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, $fileToZip, (Split-Path $fileToZip -Leaf))
-          }
+          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.exe', 'RE2RRandomizer.exe')
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizerHook.dll', 'RE2RRandomizerHook.dll')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'LICENSE', 'LICENSE')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'README.md', 'README.md')
           $zipFile.Dispose()
@@ -125,7 +97,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{inputs.workflowPreset}}-build"
           prerelease: true
-          title: "Manual Build [main] - v0.1.0-0 Release"
+          title: "Manual Build [main] - v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}} Release"
           files: |
-            RE2RRandomizer-v0.1.0-0-${{inputs.workflowPreset}}.zip
-          # Name-Version String-Build Number-Build Type.zip
+            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip
