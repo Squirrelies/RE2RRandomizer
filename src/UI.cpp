@@ -84,7 +84,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 		if (randomizer != nullptr)
 			delete randomizer;
 		randomizer = new Randomizer(logger);
-		randomizer->Randomize(difficulty, scenario, randomSeed);
+		randomizer->Randomize(*difficulty, *scenario, randomSeed);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Show/Hide Log"))
@@ -124,8 +124,8 @@ void __stdcall RE2RRUI::UI::DrawDebugOverlay(bool *open, bool *mainUIOpen)
 			ImGui::Text("Map: %s", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
 			ImGui::Text("Floor: %s", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
 			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
-			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem()->ToString().c_str());
-			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem()->ToString().c_str());
+			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().c_str());
+			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().c_str());
 		}
 		// if (font != nullptr)
 		// 	ImGui::PopFont();

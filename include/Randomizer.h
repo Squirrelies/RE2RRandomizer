@@ -31,11 +31,11 @@ private:
 	GUID lastInteractedItemPositionGuid = {};
 
 	static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, const GUID &);
-	void RandomizeItem(RE2RItem *, RE2RItem);
+	void RandomizeItem(RE2RItem *, const RE2RItem &);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);
-	void SetLast(RE2RItem *, RE2RItem *, GUID *);
-	void HandleSoftLocks(RE2RREnums::Difficulty *, RE2RREnums::Scenario *, std::mt19937 *);
+	void SetLast(const RE2RItem &, const RE2RItem &, const GUID &);
+	void HandleSoftLocks(const RE2RREnums::Difficulty &, const RE2RREnums::Scenario &, std::mt19937 &);
 
 protected:
 public:
@@ -55,20 +55,20 @@ public:
 		this->logger = nullptr;
 	}
 
-	void ItemPickup(RE2RItem *, RE2RItem *, GUID *);
+	void ItemPickup(RE2RItem *, const RE2RItem &, const GUID &);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 	RE2RREnums::Difficulty GetDifficulty(void);
 	RE2RREnums::Scenario GetScenario(void);
 	RE2RREnums::MapPartsID GetMapPartsID(void);
 	RE2RREnums::MapID GetMapID(void);
 	RE2RREnums::FloorID GetFloorID(void);
-	RE2RItem *GetLastInteractedItem(void);
-	RE2RItem *GetLastRandomizedItem(void);
-	GUID *GetLastInteractedItemPositionGuid(void);
-	void Randomize(RE2RREnums::Difficulty *, RE2RREnums::Scenario *, int_fast32_t);
-	Seed &GetSeed(void);
+	const RE2RItem &GetLastInteractedItem(void);
+	const RE2RItem &GetLastRandomizedItem(void);
+	const GUID &GetLastInteractedItemPositionGuid(void);
+	void Randomize(const RE2RREnums::Difficulty &, const RE2RREnums::Scenario &, int_fast32_t);
+	const Seed &GetSeed(void);
 };
 
-std::string GUIDToString(GUID *);
+std::string GUIDToString(const GUID &);
 
 #endif

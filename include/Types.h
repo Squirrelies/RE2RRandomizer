@@ -1504,7 +1504,7 @@ struct app_ropeway_MansionManager_MapIdentifier
 	}
 };
 
-struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
+typedef struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 {
 	// uint8_t _Reserved[0x10]; // 0x00-0x0F
 	RE2RREnums::ItemType ItemId;     // 0x10-0x13
@@ -1513,7 +1513,7 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	int32_t BulletId;                // 0x1C-0x1F
 	int32_t Count;                   // 0x20-0x23
 
-	std::string ToString()
+	std::string &ToString() const
 	{
 		const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
 
@@ -1530,14 +1530,13 @@ struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 		         NAMEOF(WeaponParts), WeaponParts,
 		         NAMEOF(BulletId), BulletId,
 		         NAMEOF(Count), Count);
-		std::string returnValue = std::string(toString);
+		std::string *returnValue = new std::string(toString);
 		free(toString);
 
-		return returnValue;
+		return *returnValue;
 	}
-};
-typedef app_ropeway_gamemastering_InventoryManager_PrimitiveItem RE2RItem;
-bool operator==(const RE2RItem &lhs, const RE2RItem &rhs);
+} RE2RItem;
+bool operator==(const RE2RItem &, const RE2RItem &);
 
 struct GameModeKey
 {
@@ -1545,18 +1544,6 @@ struct GameModeKey
 	RE2RREnums::Difficulty Difficulty;
 };
 bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
-
-/// @brief A key structure for map classes identifying required items for the randomizer to prevent soft locks.
-struct ZoneItemDependencyKey
-{
-	/// @brief The zone identifier. This is arbitrary and not tied to any in-game value.
-	int32_t ZoneId;
-	/// @brief The game modes this zone is applicable for. We match any one of these zones.
-	std::vector<GameModeKey> GameModes;
-	/// @brief The items that are required to exist by the time this zone and previous zones are exhausted of items.
-	std::vector<RE2RItem> DependencyItems;
-};
-bool operator==(const ZoneItemDependencyKey &lhs, const ZoneItemDependencyKey &rhs);
 
 namespace std
 {
@@ -1618,33 +1605,6 @@ namespace std
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Difficulty));
 
 			return res;
-		}
-	};
-
-	template <>
-	struct hash<ZoneItemDependencyKey>
-	{
-		size_t operator()(const ZoneItemDependencyKey &key) const noexcept
-		{
-			size_t res = 17;
-
-			res = res * 31 + hash<int32_t>()(key.ZoneId);
-			for (GameModeKey gameMode : key.GameModes)
-				res = res * 31 + hash<GameModeKey>()(gameMode);
-			for (RE2RItem dependencyItem : key.DependencyItems)
-				res = res * 31 + hash<RE2RItem>()(dependencyItem);
-
-			return res;
-		}
-	};
-
-	template <>
-	struct equal_to<ZoneItemDependencyKey>
-	{
-		bool operator()(const ZoneItemDependencyKey &lhs, const ZoneItemDependencyKey &rhs) const noexcept
-		{
-			return lhs.ZoneId == rhs.ZoneId &&
-			       lhs.GameModes == rhs.GameModes;
 		}
 	};
 }
