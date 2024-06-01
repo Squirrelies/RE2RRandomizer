@@ -15,7 +15,7 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, RE2RItem *currentItem, GUID
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
 	                   this->seed.seedData[*itemPositionGuid].ToString().c_str());
 	SetLast(&this->originalItemMapping[this->seed.gameMode][*itemPositionGuid], &this->seed.seedData[*itemPositionGuid], itemPositionGuid);
-	// RandomizeItem(itemToReplace, this->seed.seedData[*itemPositionGuid]);
+	RandomizeItem(itemToReplace, this->seed.seedData[*itemPositionGuid]);
 }
 
 void Randomizer::SetLast(RE2RItem *item, RE2RItem *randomizedItem, GUID *itemPositionGuid)
@@ -112,21 +112,71 @@ void Randomizer::Randomize(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scena
 	                   NAMEOF(initialSeed), initialSeed);
 
 	seed = Seed{.gameMode = GameModeKey{.Scenario = *scenario, .Difficulty = *difficulty}, .seedData = {}};
+	std::mt19937 gen(initialSeed);
+
+	HandleSoftLocks(difficulty, scenario, &gen);
 
 	std::vector<RE2RItem> values;
-	for (const auto &[_, value] : originalItemMapping[seed.gameMode])
+	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
-		values.push_back(value);
+		if (!seed.seedData.contains(key))
+			values.push_back(value);
 	}
 
-	std::mt19937 gen(initialSeed);
 	std::shuffle(values.begin(), values.end(), gen);
 
 	auto value = values.begin();
 	for (const auto &[key, _] : originalItemMapping[seed.gameMode])
 	{
-		seed.seedData[key] = *value++;
+		if (!seed.seedData.contains(key))
+			seed.seedData.insert(std::make_pair(key, *value++));
 	}
+}
+
+/// @brief
+/// @param difficulty The difficulty of the playthrough we're randomizing. This parameter is unused at this time.
+/// @param scenario The scenario of the playthrough we're randomizing.
+/// @param initialSeed The initial seed to feed to the randomizer.
+void Randomizer::HandleSoftLocks(RE2RREnums::Difficulty *difficulty, RE2RREnums::Scenario *scenario, std::mt19937 *gen)
+{
+	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %s, %s: %s, %s: %p) called.\n",
+	                   NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(*difficulty).c_str(),
+	                   NAMEOF(scenario), RE2RREnums::EnumScenarioToString(*scenario).c_str(),
+	                   NAMEOF(gen), gen);
+
+	std::vector<GUID> candidates;
+	if (*scenario == RE2RREnums::Scenario::CLAIRE_A || *scenario == RE2RREnums::Scenario::LEON_A) // A scenarios
+	{
+		logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
+
+		// KeyStorageRoom
+		candidates = {*StringToGUIDA("FF9122A6-7CCE-04E4-3317-103F06B2D2E5")};
+		std::shuffle(candidates.begin(), candidates.end(), *gen);
+		seed.seedData.insert(std::make_pair(candidates[0], originalItemMapping[seed.gameMode][*StringToGUIDA("FF9122A6-7CCE-04E4-3317-103F06B2D2E5")]));
+
+		// Knife
+		candidates = {*StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"), *StringToGUIDA("17761516-0B95-0710-16D2-EDDF56F1866D"), *StringToGUIDA("F1E708F9-318D-4D29-8351-EB1AA8218188"), *StringToGUIDA("0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91"), *StringToGUIDA("59F3E4BF-ACB0-40B5-B7B6-01480EEC855F"), *StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"), *StringToGUIDA("6A098F7F-81A3-4B2C-9144-8C28C9506C90"), *StringToGUIDA("C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"), *StringToGUIDA("1FABF80A-A8B2-44CA-A8B6-D9DC1BC8BC4D"), *StringToGUIDA("03659087-CCD3-4032-A375-5DCCA3C339EE"), *StringToGUIDA("8AE2134C-5EFD-0227-3A61-0462F2C5CC5D"), *StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C")};
+		std::shuffle(candidates.begin(), candidates.end(), *gen);
+		seed.seedData.insert(std::make_pair(candidates[0], originalItemMapping[seed.gameMode][*StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630")]));
+	}
+	else // B scenarios
+	{
+		logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
+	}
+
+	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
+	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+	{
+		if (value.ItemId == RE2RREnums::ItemType::PlugBishop ||
+		    value.ItemId == RE2RREnums::ItemType::PlugKing ||
+		    value.ItemId == RE2RREnums::ItemType::PlugKnight ||
+		    value.ItemId == RE2RREnums::ItemType::PlugPawn ||
+		    value.ItemId == RE2RREnums::ItemType::PlugQueen ||
+		    value.ItemId == RE2RREnums::ItemType::PlugRook)
+			seed.seedData.insert(std::make_pair(key, value));
+	}
+
+	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
 }
 
 Seed &Randomizer::GetSeed(void)
