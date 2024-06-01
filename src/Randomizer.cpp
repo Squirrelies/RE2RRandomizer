@@ -14,7 +14,7 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
 	                   this->seed.seedData[itemPositionGuid].ToString().c_str());
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid], itemPositionGuid);
-	RandomizeItem(itemToReplace, this->seed.seedData[itemPositionGuid]);
+	RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid]);
 }
 
 void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, const GUID &itemPositionGuid)
@@ -76,10 +76,10 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 	return floorId;
 }
 
-void Randomizer::RandomizeItem(RE2RItem *currentItem, const RE2RItem &newItem)
+void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld: %s.\n\tNew: %s.\n\t%s -> %s\n", currentItem->ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(currentItem->ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
-	*currentItem = newItem;
+	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
+	*itemToReplace = newItem;
 }
 
 std::string GUIDToString(const GUID &guid)
