@@ -1546,6 +1546,18 @@ struct GameModeKey
 };
 bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
 
+/// @brief A key structure for map classes identifying required items for the randomizer to prevent soft locks.
+struct ZoneItemDependencyKey
+{
+	/// @brief The zone identifier. This is arbitrary and not tied to any in-game value.
+	int32_t ZoneId;
+	/// @brief The game modes this zone is applicable for. We match any one of these zones.
+	std::vector<GameModeKey> GameModes;
+	/// @brief The items that are required to exist by the time this zone and previous zones are exhausted of items.
+	std::vector<RE2RItem> DependencyItems;
+};
+bool operator==(const ZoneItemDependencyKey &lhs, const ZoneItemDependencyKey &rhs);
+
 namespace std
 {
 	template <>
@@ -1572,6 +1584,30 @@ namespace std
 	};
 
 	template <>
+	struct hash<RE2RItem>
+	{
+		size_t operator()(const RE2RItem &item) const noexcept
+		{
+			const int32_t *p = reinterpret_cast<const int32_t *>(&item);
+			std::hash<int32_t> hash;
+			return hash(p[0]) ^ hash(p[1]) ^ hash(p[2]) ^ hash(p[3]) ^ hash(p[4]);
+		}
+	};
+
+	template <>
+	struct equal_to<RE2RItem>
+	{
+		bool operator()(const RE2RItem &lhs, const RE2RItem &rhs) const noexcept
+		{
+			return lhs.ItemId == rhs.ItemId &&
+			       lhs.WeaponId == rhs.WeaponId &&
+			       lhs.WeaponParts == rhs.WeaponParts &&
+			       lhs.BulletId == rhs.BulletId &&
+			       lhs.Count == rhs.Count;
+		}
+	};
+
+	template <>
 	struct hash<GameModeKey>
 	{
 		size_t operator()(const GameModeKey &key) const
@@ -1582,6 +1618,33 @@ namespace std
 			res = res * 31 + hash<int32_t>()(static_cast<int32_t>(key.Difficulty));
 
 			return res;
+		}
+	};
+
+	template <>
+	struct hash<ZoneItemDependencyKey>
+	{
+		size_t operator()(const ZoneItemDependencyKey &key) const noexcept
+		{
+			size_t res = 17;
+
+			res = res * 31 + hash<int32_t>()(key.ZoneId);
+			for (GameModeKey gameMode : key.GameModes)
+				res = res * 31 + hash<GameModeKey>()(gameMode);
+			for (RE2RItem dependencyItem : key.DependencyItems)
+				res = res * 31 + hash<RE2RItem>()(dependencyItem);
+
+			return res;
+		}
+	};
+
+	template <>
+	struct equal_to<ZoneItemDependencyKey>
+	{
+		bool operator()(const ZoneItemDependencyKey &lhs, const ZoneItemDependencyKey &rhs) const noexcept
+		{
+			return lhs.ZoneId == rhs.ZoneId &&
+			       lhs.GameModes == rhs.GameModes;
 		}
 	};
 }

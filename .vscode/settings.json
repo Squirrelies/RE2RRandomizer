@@ -96,7 +96,9 @@
         "chrono": "cpp",
         "future": "cpp",
         "stdfloat": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "any": "cpp",
+        "set": "cpp"
     },
     "C_Cpp.default.cppStandard": "gnu++20",
     "cmake.environment": {

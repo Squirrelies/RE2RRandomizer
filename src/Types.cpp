@@ -35,6 +35,12 @@ bool operator==(const RE2RItem &lhs, const RE2RItem &rhs)
 	       lhs.Count == rhs.Count;
 }
 
+bool operator==(const ZoneItemDependencyKey &lhs, const ZoneItemDependencyKey &rhs)
+{
+	return lhs.ZoneId == rhs.ZoneId &&
+	       lhs.GameModes == rhs.GameModes;
+}
+
 bool operator==(const GameModeKey &lhs, const GameModeKey &rhs)
 {
 	return lhs.Scenario == rhs.Scenario &&

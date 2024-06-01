@@ -21,7 +21,6 @@ class Randomizer
 private:
 	ImmediateLogger *logger;
 	static RE2RItem defaultItemEntry;
-	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
 	Seed seed;
 	RE2RREnums::MapPartsID mapPartsId;
 	RE2RREnums::MapID mapId;
@@ -53,6 +52,8 @@ public:
 	{
 		this->logger = nullptr;
 	}
+
+	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
 
 	void ItemPickup(RE2RItem *, RE2RItem *, GUID *);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
