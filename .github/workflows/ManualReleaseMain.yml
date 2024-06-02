@@ -54,11 +54,11 @@ jobs:
           msystem: MINGW64
           release: false
           update: true
-          install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+          install: git base-devel mingw-w64-clang-x86_64-toolchain mingw-w64-x86_64-cmake
 
-      - name: Set PATH to include MinGW-W64 from MSYS2
+      - name: Set PATH to include Clang64 from MSYS2
         run: |
-          $path1 = "C:/msys64/mingw64/bin"
+          $path1 = "C:/msys64/clang64/bin"
           $path2 = "C:/msys64/usr/bin"
           echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
 
