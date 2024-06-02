@@ -64,6 +64,8 @@ jobs:
 
       - name: Run CMake
         env:
+          CC: clang
+          CXX: clang++
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
@@ -71,6 +73,9 @@ jobs:
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
       - name: Run CTest
+        env:
+          CC: clang
+          CXX: clang++
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
       - name: Update build number variable
