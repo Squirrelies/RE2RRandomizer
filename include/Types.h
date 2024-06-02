@@ -1454,7 +1454,7 @@ GUID &StringToGUIDW(const std::wstring &stringGUID);
 #endif
 //
 
-struct via_vec3
+struct PACKED_DATA via_vec3
 {
 	float x; // 0x00-0x0F
 	float y; // 0x10-0x13
@@ -1480,7 +1480,7 @@ struct via_vec3
 	}
 };
 
-struct app_ropeway_MansionManager_MapIdentifier
+struct PACKED_DATA app_ropeway_MansionManager_MapIdentifier
 {
 	uint8_t _Reserved[0x10];  // 0x00-0x0F
 	RE2RREnums::MapID ID;     // 0x10-0x13
@@ -1504,7 +1504,7 @@ struct app_ropeway_MansionManager_MapIdentifier
 	}
 };
 
-typedef struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
+typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 {
 	// uint8_t _Reserved[0x10]; // 0x00-0x0F
 	RE2RREnums::ItemType ItemId;     // 0x10-0x13
@@ -1538,7 +1538,7 @@ typedef struct app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 } RE2RItem;
 bool operator==(const RE2RItem &, const RE2RItem &);
 
-struct GameModeKey
+struct PACKED_DATA GameModeKey
 {
 	RE2RREnums::Scenario Scenario;
 	RE2RREnums::Difficulty Difficulty;

@@ -25,6 +25,10 @@
 #endif
 #endif
 
+#ifndef PACKED_DATA
+#define PACKED_DATA __attribute__((packed))
+#endif
+
 #ifndef CONCATENATION
 #define CONCATENATION(left, right) left##right
 #endif

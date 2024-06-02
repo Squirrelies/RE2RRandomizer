@@ -36,7 +36,11 @@ private:
 	void SetItemByGUID(RE2RItem *, GUID *);
 	void SetLast(const RE2RItem &, const RE2RItem &, GUID &);
 	void HandleSoftLocks(std::mt19937 &);
-	void AddRandomItem(GUID &, std::vector<GUID> &&, std::mt19937 &);
+	/// @brief Adds a key item to a random one of the item drop candidates.
+	/// @param original The original item's drop location.
+	/// @param destinations The candidate item drop locations we want this item to potentially be placed.
+	/// @param gen The random number generator instance.
+	void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &&destinations, std::mt19937 &gen);
 
 protected:
 public:
