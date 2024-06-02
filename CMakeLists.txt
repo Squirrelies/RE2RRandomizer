@@ -154,11 +154,10 @@ include_directories(${GTest_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME}Tests
 tests/test_Strings.cpp
 )
-target_link_libraries(${PROJECT_NAME}Tests PRIVATE
-${PROJECT_NAME}
-${PROJECT_NAME}Hook
-GTest::gtest
-GTest::gtest_main
+target_link_libraries(${PROJECT_NAME}Tests
+PRIVATE GTest::gtest GTest::gtest_main
+PRIVATE ${PROJECT_NAME}
+PRIVATE ${PROJECT_NAME}Hook
 )
 
 gtest_discover_tests(${PROJECT_NAME}Tests
