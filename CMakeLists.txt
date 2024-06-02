@@ -149,6 +149,8 @@ enable_testing()
 include(GoogleTest)
 find_package(GTest REQUIRED)
 
+include_directories(${GTest_INCLUDE_DIRS})
+
 add_executable(${PROJECT_NAME}Tests
 tests/test_Strings.cpp
 )
