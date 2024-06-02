@@ -25,14 +25,6 @@ extern "C"
 	/// @return The module handle if found. Otherwise this will be NULL.
 	LIBRARY_EXPORT_API HMODULE GetProcessModuleByName(HANDLE hProcess, TCHAR moduleName[]);
 
-#ifndef GetProcessModulePathByName
-#ifdef UNICODE
-#define GetProcessModulePathByName GetProcessModulePathByNameW
-#else
-#define GetProcessModulePathByName GetProcessModulePathByNameA
-#endif
-#endif
-
 	/// @brief Gets the full path for the given module name within the provided process.
 	/// @param hProcess The process to find the module in.
 	/// @param moduleName The module name to retrieve the path for.
@@ -44,6 +36,14 @@ extern "C"
 	/// @param moduleName The module name to retrieve the path for.
 	/// @return The module's full path if found. Otherwise this will be NULL.
 	LIBRARY_EXPORT_API wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, const wchar_t moduleName[]);
+
+#ifndef GetProcessModulePathByName
+#ifdef UNICODE
+#define GetProcessModulePathByName GetProcessModulePathByNameW
+#else
+#define GetProcessModulePathByName GetProcessModulePathByNameA
+#endif
+#endif
 
 	/// @brief Attempts to get the module info for the given module handle within the provided process.
 	/// @param hProcess The process to get the module info from.

@@ -25,7 +25,7 @@ else()
 endif()
 
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
-set(CMAKE_CXX_STANDARD 20)  # 98, 11, 14, 17, 20, 23, 26
+set(CMAKE_CXX_STANDARD 23)  # 98, 11, 14, 17, 20, 23, 26
 string(ASCII 169 COPYRIGHT)
 
 # VERSIONINFO properties (Ref: https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
@@ -96,8 +96,8 @@ add_compile_options(
     -Wall -Wextra -Wpedantic
     -m64 -masm=intel
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>,$<CONFIG:RELWITHDEBINFO>>:-O3> # Optimize.
-    $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:-s> # Debug symbol stripping.
-    $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-ggdb3> # Set symbol type. (GDB format)
+    #$<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:-s> # Debug symbol stripping. [Requires GCC]
+    $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-g> # Set symbol type.
     #$<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-gcodeview> # Set symbol type. (MSVC++ format) [Requires GCC 14+ or clang]
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
     )

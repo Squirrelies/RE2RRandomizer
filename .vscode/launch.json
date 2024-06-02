@@ -5,8 +5,8 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
+            "name": "(lldb) Launch",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/RE2RRandomizer.exe",
             "args": [],
@@ -14,37 +14,37 @@
             "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+            "MIMode": "lldb",
+            "miDebuggerPath": "C:/msys64/clang64/bin/lldb.exe",
             "setupCommands": [
                 {
-                    "description": "Enable pretty-printing for gdb",
+                    "description": "Enable pretty-printing for lldb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 },
                 {
                     "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
+                    "text": "-lldb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
             ]
         },
         {
-            "name": "(gdb) Attach",
-            "type": "cppdbg",
+            "name": "(lldb) Attach",
+            "type": "lldb",
             "request": "attach",
             "program": "${workspaceFolder}/build/RE2RRandomizer.exe",
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+            "MIMode": "lldb",
+            "miDebuggerPath": "C:/msys64/clang64/bin/lldb.exe",
             "setupCommands": [
                 {
-                    "description": "Enable pretty-printing for gdb",
+                    "description": "Enable pretty-printing for lldb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 },
                 {
                     "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
+                    "text": "-lldb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
             ]

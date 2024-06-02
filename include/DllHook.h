@@ -24,6 +24,7 @@
 #include "Hashes.h"
 #include "Hooking.h"
 #include "Logging.h"
+#include "Process.h"
 #include "Randomizer.h"
 #include "Types.h"
 #include "UI.h"

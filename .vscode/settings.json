@@ -100,9 +100,9 @@
         "any": "cpp",
         "set": "cpp"
     },
-    "C_Cpp.default.cppStandard": "gnu++20",
+    "C_Cpp.default.cppStandard": "c++23",
     "cmake.environment": {
-        "PATH": "C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+        "PATH": "C:\\msys64\\clang64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
     },
     "cmake.generator": "MSYS Makefiles"
 }

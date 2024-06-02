@@ -6,7 +6,7 @@ bool RE2RRFile::FileExists(const char *filePath)
 	return (file = fopen64(filePath, "rb")) && !fclose(file);
 }
 
-size_t RE2RRFile::GetFileSize(const char *filePath)
+size_t RE2RRFile::GetFileSizeT(const char *filePath)
 {
 	FILE *file = fopen64(filePath, "rb");
 
@@ -36,7 +36,7 @@ uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
 	struct Sha_256 sha_256;
 	sha_256_init(&sha_256, hash);
 
-	size_t fileSize = GetFileSize(filePath);
+	size_t fileSize = GetFileSizeT(filePath);
 	uint8_t *fileData = (uint8_t *)malloc(bufferSize);
 	size_t totalBytesRead = 0;
 	size_t bytesRead = 0;
