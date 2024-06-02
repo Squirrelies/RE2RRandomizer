@@ -15,16 +15,16 @@
 #else
 #define TryStringToGUID TryStringToGUIDA
 #endif
-bool TryStringToGUIDA(const std::string &stringGUID, GUID &guid);
-bool TryStringToGUIDW(const std::wstring &stringGUID, GUID &guid);
+bool TryStringToGUIDA(const std::string &stringGUID, const GUID &guid);
+bool TryStringToGUIDW(const std::wstring &stringGUID, const GUID &guid);
 
 #ifdef UNICODE
 #define StringToGUID StringToGUIDW
 #else
 #define StringToGUID StringToGUIDA
 #endif
-GUID *StringToGUIDA(const std::string &stringGUID);
-GUID *StringToGUIDW(const std::wstring &stringGUID);
+GUID &StringToGUIDA(const std::string &stringGUID);
+GUID &StringToGUIDW(const std::wstring &stringGUID);
 
 // Enum RE2RGameVersion
 #ifndef RE2RR_TYPES_H_RE2RGameVersion

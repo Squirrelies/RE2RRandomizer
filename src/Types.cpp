@@ -2,28 +2,28 @@
 #include "Types.h"
 #undef RE2RR_TYPES_CPP
 
-bool TryStringToGUIDA(const std::string &stringGUID, GUID &guid)
+bool TryStringToGUIDA(const std::string &stringGUID, const GUID &guid)
 {
 	return UuidFromStringA((unsigned char *)stringGUID.c_str(), (UUID *)&guid) == RPC_S_OK;
 }
 
-bool TryStringToGUIDW(const std::wstring &stringGUID, GUID &guid)
+bool TryStringToGUIDW(const std::wstring &stringGUID, const GUID &guid)
 {
 	return UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)&guid) == RPC_S_OK;
 }
 
-GUID *StringToGUIDA(const std::string &stringGUID)
+GUID &StringToGUIDA(const std::string &stringGUID)
 {
 	GUID *returnValue = new GUID();
 	UuidFromStringA((unsigned char *)stringGUID.c_str(), (UUID *)returnValue);
-	return returnValue;
+	return *returnValue;
 }
 
-GUID *StringToGUIDW(const std::wstring &stringGUID)
+GUID &StringToGUIDW(const std::wstring &stringGUID)
 {
 	GUID *returnValue = new GUID();
 	UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)returnValue);
-	return returnValue;
+	return *returnValue;
 }
 
 bool operator==(const RE2RItem &lhs, const RE2RItem &rhs)
