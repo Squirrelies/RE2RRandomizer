@@ -142,7 +142,6 @@ src/Process.cpp
 )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
 
-
 ### Unit Tests
 include(CTest)
 enable_testing()
@@ -153,10 +152,11 @@ find_package(GTest REQUIRED)
 add_executable(${PROJECT_NAME}Tests
 tests/test_Strings.cpp
 )
-target_link_libraries(${PROJECT_NAME}Tests
-GTest::gtest_main
+target_link_libraries(${PROJECT_NAME}Tests PRIVATE
 ${PROJECT_NAME}
 ${PROJECT_NAME}Hook
+GTest::gtest
+GTest::gtest_main
 )
 
 gtest_discover_tests(${PROJECT_NAME}Tests
