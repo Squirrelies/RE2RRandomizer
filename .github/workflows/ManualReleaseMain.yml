@@ -51,7 +51,7 @@ jobs:
 
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: CLANG64
           release: false
           update: true
           install: git base-devel mingw-w64-clang-x86_64-toolchain mingw-w64-clang-x86_64-cmake
