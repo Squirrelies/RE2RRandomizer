@@ -54,19 +54,16 @@ jobs:
           msystem: CLANG64
           release: false
           update: true
-          install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-clang-x86_64-toolchain mingw-w64-clang-x86_64-cmake
+          install: git base-devel mingw-w64-clang-x86_64-toolchain mingw-w64-clang-x86_64-cmake
 
       - name: Set PATH to include Clang64 from MSYS2
         run: |
           $path1 = "C:/msys64/clang64/bin"
-          $path2 = "C:/msys64/mingw64/bin"
-          $path3 = "C:/msys64/usr/bin"
-          echo "$path1`n$path2`n$path3`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
+          $path2 = "C:/msys64/usr/bin"
+          echo "$path1`n$path2`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
 
       - name: Run CMake
         env:
-          CC: clang
-          CXX: clang++
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
@@ -74,9 +71,6 @@ jobs:
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
       - name: Run CTest
-        env:
-          CC: clang
-          CXX: clang++
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
       - name: Update build number variable
