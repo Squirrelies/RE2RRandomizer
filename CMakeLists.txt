@@ -164,7 +164,8 @@ add_executable(${PROJECT_NAME}Tests
 tests/test_Strings.cpp
 )
 target_link_libraries(${PROJECT_NAME}Tests
-PRIVATE GTest::gtest GTest::gtest_main
+PRIVATE GTest::gtest
+PRIVATE GTest::gtest_main
 PRIVATE ${PROJECT_NAME}
 PRIVATE ${PROJECT_NAME}Hook
 )
