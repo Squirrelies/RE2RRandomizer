@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
+set(CMAKE_C_COMPILER "C:/msys64/clang64/bin/clang.exe" CACHE FILEPATH "" FORCE)
+set(CMAKE_CXX_COMPILER "C:/msys64/clang64/bin/clang++.exe" CACHE FILEPATH "" FORCE)
 project (RE2RRandomizer)
 
 function(set_from_env var_name default_value var_type var_desc)
@@ -24,20 +26,10 @@ else()
     add_definitions(-DBUILD_STATIC_LIBS)
 endif()
 
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
-
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
 #set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 23)  # 98, 11, 14, 17, 20, 23, 26
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-
-set(CMAKE_CXX_FLAGS_INIT "-stdlib=libc++")
-set(CMAKE_STATIC_LINKER_FLAGS_INIT "-lc++ -lc++abi")
-set(CMAKE_SHARED_LINKER_FLAGS_INIT "-lc++ -lc++abi")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-lc++ -lc++abi")
-set(CMAKE_MODULE_LINKER_FLAGS_INIT "-lc++ -lc++abi")
-
 string(ASCII 169 COPYRIGHT)
 
 # VERSIONINFO properties (Ref: https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
@@ -121,7 +113,12 @@ add_compile_definitions(
     WIN32_LEAN_AND_MEAN
     )
 add_link_options(
-    -municode -static
+    -municode -static -stdlib=libc++ -lc++ -lc++abi
+)
+
+cmake_print_variables(
+    CMAKE_C_COMPILER
+    CMAKE_CXX_COMPILER
 )
 
 target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY})

@@ -40,7 +40,7 @@ private:
 	/// @param original The original item's drop location.
 	/// @param destinations The candidate item drop locations we want this item to potentially be placed.
 	/// @param gen The random number generator instance.
-	void AddKeyItem(GUID &original, std::vector<GUID> &&destinations, std::mt19937 &gen);
+	void AddKeyItem(GUID &original, std::vector<GUID> &destinations, std::mt19937 &gen);
 
 protected:
 public:
