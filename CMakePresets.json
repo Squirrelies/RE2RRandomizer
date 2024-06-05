@@ -124,10 +124,6 @@
                 {
                     "type": "build",
                     "name": "Debug"
-                },
-                {
-                    "type": "test",
-                    "name": "Debug"
                 }
             ]
         },
@@ -140,10 +136,6 @@
                 },
                 {
                     "type": "build",
-                    "name": "Release"
-                },
-                {
-                    "type": "test",
                     "name": "Release"
                 }
             ]
@@ -158,10 +150,6 @@
                 {
                     "type": "build",
                     "name": "RelWithDebInfo"
-                },
-                {
-                    "type": "test",
-                    "name": "RelWithDebInfo"
                 }
             ]
         },
@@ -174,10 +162,6 @@
                 },
                 {
                     "type": "build",
-                    "name": "MinSizeRel"
-                },
-                {
-                    "type": "test",
                     "name": "MinSizeRel"
                 }
             ]

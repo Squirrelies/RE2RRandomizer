@@ -31,42 +31,41 @@ on:
 
 env:
   VCPKG_ROOT: C:/vcpkg
+  SYS: clang64
+  ARCH: clang-x86_64
 
 jobs:
   Build:
-    name: "Build"
+    name: Build w/ MSYS2
     runs-on: windows-latest
 
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
+      - name: Setup MSYS2 ${{ env.SYS }} (${{ env.ARCH }})
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ env.SYS }}
+          release: false
+          update: true
+          install: git base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
       - name: Get new build number
         id: build-number
         run: |
           $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.ref }}
-
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: CLANG64
-          release: false
-          update: true
-          install: git base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-clang-x86_64-toolchain mingw-w64-clang-x86_64-cmake
-
-      - name: Set PATH to include Clang64 from MSYS2
-        run: |
-          $path1 = "C:/msys64/clang64/bin"
-          $path2 = "C:/msys64/mingw64/bin"
-          $path3 = "C:/msys64/usr/bin"
-          echo "$path1`n$path2`n$path3`n$(Get-Content $env:GITHUB_PATH)" | Set-Content $env:GITHUB_PATH
-
       - name: Run CMake
         env:
-          CC: C:\msys64\clang64\bin\clang.exe
-          CXX: C:\msys64\clang64\bin\clang++.exe
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}

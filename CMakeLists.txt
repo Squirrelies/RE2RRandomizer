@@ -26,6 +26,11 @@ else()
     add_definitions(-DBUILD_STATIC_LIBS)
 endif()
 
+include(CTest)
+enable_testing()
+include(GoogleTest)
+find_package(GTest CONFIG REQUIRED)
+
 #set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
 #set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 23)  # 98, 11, 14, 17, 20, 23, 26
@@ -73,16 +78,16 @@ find_package(minhook CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 # Required libraries we'll link for ImGUI.
-find_library(D3D11_LIBRARY d3d11 REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(D3D12_LIBRARY d3d12 REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(DWMAPI_LIBRARY dwmapi REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(GDI32_LIBRARY Gdi32 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(D3D11_LIBRARY d3d11 REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(D3D12_LIBRARY d3d12 REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(D3DCOMPILER_LIBRARY d3dcompiler REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(DWMAPI_LIBRARY dwmapi REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(GDI32_LIBRARY Gdi32 REQUIRED PATHS C:/msys64/clang64/lib)
 
 # Required libraries we'll link.
-find_library(DXGUID_LIBRARY dxguid REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(DINPUT8_LIBRARY dinput8 REQUIRED PATHS C:/msys64/mingw64/lib)
-find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED PATHS C:/msys64/mingw64/lib)
+find_library(DXGUID_LIBRARY dxguid REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(DINPUT8_LIBRARY dinput8 REQUIRED PATHS C:/msys64/clang64/lib)
+find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED PATHS C:/msys64/clang64/lib)
 
 include(CMakePrintHelpers)
 cmake_print_variables(
@@ -152,12 +157,6 @@ src/Process.cpp
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
 
 ### Unit Tests
-include(CTest)
-enable_testing()
-
-include(GoogleTest)
-find_package(GTest CONFIG REQUIRED)
-
 include_directories(${GTest_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}Tests
