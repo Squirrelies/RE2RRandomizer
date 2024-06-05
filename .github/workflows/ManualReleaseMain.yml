@@ -65,7 +65,7 @@ jobs:
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
       - name: Run CMake
-        shell: msys2
+        shell: msys2 {0}
         env:
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
@@ -74,7 +74,7 @@ jobs:
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
       - name: Run CTest
-        shell: msys2
+        shell: msys2 {0}
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
       - name: Update build number variable
