@@ -178,18 +178,16 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 
 void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std::mt19937 &gen)
 {
-	std::shuffle(destinations.begin(), destinations.end(), gen);
-	size_t i;
-	for (i = 0; i < destinations.size() && !seed.seedData.insert(std::make_pair(destinations[i], originalItemMapping[seed.gameMode][original])).second; ++i)
-		;
+	size_t index = std::uniform_int_distribution<size_t>(0, destinations.size() - 1)(gen);
 
 	logger->LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
-	                   i,
-	                   originalItemMapping[seed.gameMode][destinations[i]].ToString().c_str(),
-	                   GUIDToString(destinations[i]).c_str(),
+	                   index,
+	                   originalItemMapping[seed.gameMode][destinations[index]].ToString().c_str(),
+	                   GUIDToString(destinations[index]).c_str(),
 	                   originalItemMapping[seed.gameMode][original].ToString().c_str(),
 	                   GUIDToString(original).c_str());
-	destinations.erase(destinations.begin() + i); // Remove this entry as a candidate since we're using it now.
+
+	destinations.erase(destinations.begin() + index); // Remove this entry as a candidate since we're using it now.
 }
 
 const Seed &Randomizer::GetSeed(void)
