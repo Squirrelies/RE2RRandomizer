@@ -31,7 +31,7 @@ on:
 
 env:
   VCPKG_ROOT: C:/vcpkg
-  SYS: clang64
+  MSYSTEM: clang64
   ARCH: clang-x86_64
 
 jobs:
@@ -41,13 +41,13 @@ jobs:
 
     defaults:
       run:
-        shell: msys2 {0}
+        shell: pwsh
 
     steps:
-      - name: Setup MSYS2 ${{ env.SYS }} (${{ env.ARCH }})
+      - name: Setup MSYS2 ${{ env.MSYSTEM }} (${{ env.ARCH }})
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ env.SYS }}
+          msystem: ${{ env.MSYSTEM }}
           release: false
           update: true
           install: git base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
@@ -65,6 +65,7 @@ jobs:
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
       - name: Run CMake
+        shell: msys2
         env:
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
@@ -73,6 +74,7 @@ jobs:
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
       - name: Run CTest
+        shell: msys2
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
       - name: Update build number variable
@@ -82,7 +84,6 @@ jobs:
 
       - name: Zip the publish artifacts
         working-directory: ${{github.workspace}}
-        shell: pwsh
         run: |
           Add-Type -assembly 'System.IO.Compression'
           Add-Type -assembly 'System.IO.Compression.FileSystem'
