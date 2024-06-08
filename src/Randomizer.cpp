@@ -68,7 +68,7 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 
 const std::string &Randomizer::GetFloorName()
 {
-	return GetFloorNameById(RE2RREnums::EnumFloorIDToString(floorId));
+	return GetFloorNameById(floorId);
 }
 
 RE2RREnums::MapID Randomizer::GetMapID()
@@ -78,7 +78,7 @@ RE2RREnums::MapID Randomizer::GetMapID()
 
 const std::string &Randomizer::GetMapName()
 {
-	return GetMapNameById(RE2RREnums::EnumMapIDToString(mapId));
+	return GetMapNameById(mapId);
 }
 
 RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
@@ -88,7 +88,7 @@ RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
 
 const std::string &Randomizer::GetMapPartsName()
 {
-	return GetMapPartsNameById(RE2RREnums::EnumMapPartsIDToString(mapPartsId));
+	return GetMapPartsNameById(mapPartsId);
 }
 
 void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)

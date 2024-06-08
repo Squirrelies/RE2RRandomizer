@@ -22,9 +22,9 @@ private:
 	ImmediateLogger *logger;
 	static RE2RItem defaultItemEntry;
 	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
-	static std::unordered_map<std::string, std::string> floorIdToName;
-	static std::unordered_map<std::string, std::string> mapIdToName;
-	static std::unordered_map<std::string, std::string> mapPartsIdToName;
+	static std::unordered_map<RE2RREnums::FloorID, std::string> floorIdToName;
+	static std::unordered_map<RE2RREnums::MapID, std::string> mapIdToName;
+	static std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartsIdToName;
 	Seed seed;
 	RE2RREnums::FloorID floorId;
 	RE2RREnums::MapID mapId;
@@ -34,9 +34,9 @@ private:
 	GUID lastInteractedItemPositionGuid = {};
 
 	// static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, GUID &);
-	static const std::string &GetFloorNameById(const std::string &);
-	static const std::string &GetMapNameById(const std::string &);
-	static const std::string &GetMapPartsNameById(const std::string &);
+	static const std::string &GetFloorNameById(const RE2RREnums::FloorID &);
+	static const std::string &GetMapNameById(const RE2RREnums::MapID &);
+	static const std::string &GetMapPartsNameById(const RE2RREnums::MapPartsID &);
 	void RandomizeItem(RE2RItem *, const RE2RItem &, const RE2RItem &);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);
