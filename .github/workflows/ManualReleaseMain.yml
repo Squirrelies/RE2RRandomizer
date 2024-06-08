@@ -50,6 +50,7 @@ jobs:
           msystem: ${{ env.MSYSTEM }}
           release: false
           update: true
+          cache: true
           install: git base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
 
       - name: Checkout code

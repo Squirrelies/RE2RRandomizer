@@ -2680,10 +2680,10 @@ std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUI
              {StringToGUIDA("23C998F3-917B-4EFA-9E7E-169E022F955B"), RE2RItem{.ItemId = RE2RREnums::ItemType::Herb_Green1, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}},                  // st8_408_0 / st8_408_0 / CityArea_A
          }}};
 
-RE2RItem &Randomizer::GetItemByGameModeKeyAndGUID(const GameModeKey &gameModeKey, GUID &guid)
-{
-	if (originalItemMapping.contains(gameModeKey) && originalItemMapping[gameModeKey].contains(guid))
-		return originalItemMapping[gameModeKey][guid];
-	else
-		return defaultItemEntry;
-}
+// RE2RItem &Randomizer::GetItemByGameModeKeyAndGUID(const GameModeKey &gameModeKey, GUID &guid)
+// {
+// 	if (originalItemMapping.contains(gameModeKey) && originalItemMapping[gameModeKey].contains(guid))
+// 		return originalItemMapping[gameModeKey][guid];
+// 	else
+// 		return defaultItemEntry;
+// }

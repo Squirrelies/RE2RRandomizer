@@ -22,20 +22,28 @@ private:
 	ImmediateLogger *logger;
 	static RE2RItem defaultItemEntry;
 	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
+	static std::unordered_map<std::string, std::string> floorIdToName;
+	static std::unordered_map<std::string, std::string> mapIdToName;
+	static std::unordered_map<std::string, std::string> mapPartsIdToName;
 	Seed seed;
-	RE2RREnums::MapPartsID mapPartsId;
-	RE2RREnums::MapID mapId;
 	RE2RREnums::FloorID floorId;
+	RE2RREnums::MapID mapId;
+	RE2RREnums::MapPartsID mapPartsId;
 	RE2RItem lastInteractedItem = {};
 	RE2RItem lastRandomizedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
-	static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, GUID &);
+	// static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, GUID &);
+	static const std::string &GetFloorNameById(const std::string &);
+	static const std::string &GetMapNameById(const std::string &);
+	static const std::string &GetMapPartsNameById(const std::string &);
 	void RandomizeItem(RE2RItem *, const RE2RItem &, const RE2RItem &);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);
 	void SetLast(const RE2RItem &, const RE2RItem &, GUID &);
-	void HandleSoftLocks(std::mt19937 &);
+	/// @brief
+	/// @param gen
+	void HandleSoftLocks(std::mt19937 &gen);
 	/// @brief Adds a key item to a random one of the item drop candidates.
 	/// @param original The original item's drop location.
 	/// @param destinations The candidate item drop locations we want this item to potentially be placed.
@@ -64,9 +72,13 @@ public:
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 	RE2RREnums::Difficulty GetDifficulty(void);
 	RE2RREnums::Scenario GetScenario(void);
-	RE2RREnums::MapPartsID GetMapPartsID(void);
-	RE2RREnums::MapID GetMapID(void);
+
 	RE2RREnums::FloorID GetFloorID(void);
+	const std::string &GetFloorName(void);
+	RE2RREnums::MapID GetMapID(void);
+	const std::string &GetMapName(void);
+	RE2RREnums::MapPartsID GetMapPartsID(void);
+	const std::string &GetMapPartsName(void);
 	const RE2RItem &GetLastInteractedItem(void);
 	const RE2RItem &GetLastRandomizedItem(void);
 	GUID &GetLastInteractedItemPositionGuid(void);

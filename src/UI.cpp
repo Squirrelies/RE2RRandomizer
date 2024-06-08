@@ -120,9 +120,9 @@ void __stdcall RE2RRUI::UI::DrawDebugOverlay(bool *open, bool *mainUIOpen)
 		{
 			ImGui::Text("Scenario: %s", RE2RREnums::EnumScenarioToString(randomizer->GetScenario()).c_str());
 			ImGui::Text("Difficulty: %s", RE2RREnums::EnumDifficultyToString(randomizer->GetDifficulty()).c_str());
-			ImGui::Text("Floor: %s", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
-			ImGui::Text("Map: %s", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
-			ImGui::Text("Map Part: %s", RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str());
+			ImGui::Text("Floor: %s (%s)", RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str(), randomizer->GetFloorName().c_str());
+			ImGui::Text("Map: %s (%s)", RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str(), randomizer->GetMapName().c_str());
+			ImGui::Text("Map Part: %s (%s)", RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str(), randomizer->GetMapPartsName().c_str());
 			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
 			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().c_str());
 			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().c_str());

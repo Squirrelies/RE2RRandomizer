@@ -139,7 +139,8 @@ src/Hashes.cpp
 src/Process.cpp
 src/UI.cpp
 src/Randomizer.cpp
-src/Randomizer_GetItemByGameModeKeyAndGUID.cpp
+src/Randomizer_OriginalItemMapping.cpp
+src/Randomizer_Locations.cpp
 src/DllHook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook

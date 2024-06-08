@@ -14,7 +14,7 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
 	                   this->seed.seedData[itemPositionGuid].ToString().c_str());
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid], itemPositionGuid);
-	RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid]);
+	// RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid]);
 }
 
 void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, GUID &itemPositionGuid)
@@ -61,9 +61,14 @@ RE2RREnums::Scenario Randomizer::GetScenario()
 	return seed.gameMode.Scenario;
 }
 
-RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
+RE2RREnums::FloorID Randomizer::GetFloorID()
 {
-	return mapPartsId;
+	return floorId;
+}
+
+const std::string &Randomizer::GetFloorName()
+{
+	return GetFloorNameById(RE2RREnums::EnumFloorIDToString(floorId));
 }
 
 RE2RREnums::MapID Randomizer::GetMapID()
@@ -71,9 +76,19 @@ RE2RREnums::MapID Randomizer::GetMapID()
 	return mapId;
 }
 
-RE2RREnums::FloorID Randomizer::GetFloorID()
+const std::string &Randomizer::GetMapName()
 {
-	return floorId;
+	return GetMapNameById(RE2RREnums::EnumMapIDToString(mapId));
+}
+
+RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
+{
+	return mapPartsId;
+}
+
+const std::string &Randomizer::GetMapPartsName()
+{
+	return GetMapPartsNameById(RE2RREnums::EnumMapPartsIDToString(mapPartsId));
 }
 
 void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
@@ -126,10 +141,6 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 	}
 }
 
-/// @brief
-/// @param difficulty The difficulty of the playthrough we're randomizing. This parameter is unused at this time.
-/// @param scenario The scenario of the playthrough we're randomizing.
-/// @param initialSeed The initial seed to feed to the randomizer.
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
@@ -154,6 +165,10 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		                                                    StringToGUIDA("8AE2134C-5EFD-0227-3A61-0462F2C5CC5D"),
 		                                                    StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C")});
 		AddKeyItem(StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"), candidates, gen);
+
+		// Spade Key
+		// candidates.append_range(std::initializer_list<GUID>{});
+		// AddKeyItem(NULL, candidates, gen);
 	}
 	else // B scenarios
 	{
