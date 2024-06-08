@@ -18,7 +18,7 @@ std::unordered_map<RE2RREnums::FloorID, std::string> Randomizer::floorIdToName =
         {RE2RREnums::FloorID::WasteWater_B, "Sewer Middle"},
         {RE2RREnums::FloorID::WasteWater_C, "Sewer Lower"},
         {RE2RREnums::FloorID::CityArea_A, "Raccoon City A"},
-        {RE2RREnums::FloorID::CityArea_B, "Raccoon City B"},
+        {RE2RREnums::FloorID::CityArea_B, "Raccoon City B"}, // Sewer Entrance area
         {RE2RREnums::FloorID::Laboratory_A, "NEST B1"},
         {RE2RREnums::FloorID::Laboratory_B, "NEST B2"}};
 
@@ -38,10 +38,11 @@ std::unordered_map<RE2RREnums::MapID, std::string> Randomizer::mapIdToName =
         {RE2RREnums::MapID::st1_612_0, "Sewer (1-612)"},
         {RE2RREnums::MapID::st1_613_0, "Sewer (1-613)"},
         {RE2RREnums::MapID::st1_614_0, "Sewer (1-614)"},
-        {RE2RREnums::MapID::st1_620_0, "Sewer (1-620)"}, // ???
-        {RE2RREnums::MapID::st1_621_0, "Sewer (1-621)"}, // ???
-        {RE2RREnums::MapID::st1_623_0, ""},              // ???
-        {RE2RREnums::MapID::st1_630_0, "Outdoor Walkway"},
+        {RE2RREnums::MapID::st1_620_0, "Sewer (1-620)"},
+        {RE2RREnums::MapID::st1_621_0, "Sewer (1-621)"},
+        {RE2RREnums::MapID::st1_622_0, "Alligator Fight"},
+        {RE2RREnums::MapID::st1_623_0, "Alligator Aftermath"},
+        {RE2RREnums::MapID::st1_630_0, "Kendo's Shop/Walkway"},
         {RE2RREnums::MapID::st1_631_0, "Sewer Entrance"},
         {RE2RREnums::MapID::st1_632_0, "Orphanage Approach"},
         {RE2RREnums::MapID::st3_600_0, "Hallway"},
@@ -56,7 +57,7 @@ std::unordered_map<RE2RREnums::MapID, std::string> Randomizer::mapIdToName =
         {RE2RREnums::MapID::st3_617_0, "Sewer (3-617)"},
         {RE2RREnums::MapID::st3_620_0, "Sewer (3-620)"},
         {RE2RREnums::MapID::st3_621_0, "Sewer (3-621)"},
-        {RE2RREnums::MapID::st3_622_0, "Allegator Encounter"},
+        {RE2RREnums::MapID::st3_622_0, ""}, // ???
         {RE2RREnums::MapID::st3_623_0, "Organ Trail"},
         {RE2RREnums::MapID::st3_624_0, "Supplies Storage Entrance"},
         {RE2RREnums::MapID::st3_625_0, "Supplies Storage Room"},
