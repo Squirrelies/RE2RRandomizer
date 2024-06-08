@@ -20,10 +20,15 @@ std::unordered_map<RE2RREnums::FloorID, std::string> Randomizer::floorIdToName =
         {RE2RREnums::FloorID::CityArea_A, "Raccoon City A"},
         {RE2RREnums::FloorID::CityArea_B, "Raccoon City B"}, // Sewer Entrance area
         {RE2RREnums::FloorID::Laboratory_A, "NEST B1"},
-        {RE2RREnums::FloorID::Laboratory_B, "NEST B2"}};
+        {RE2RREnums::FloorID::Laboratory_B, "NEST B2"},
+        {RE2RREnums::FloorID::Laboratory_C, "NEST Escape"},
+        {RE2RREnums::FloorID::Laboratory_D, "Train Platform"},
+        {RE2RREnums::FloorID::Laboratory_D2, "Tyrant Fight"},
+        {RE2RREnums::FloorID::Laboratory_D4, "Train"}};
 
 std::unordered_map<RE2RREnums::MapID, std::string> Randomizer::mapIdToName =
     {
+        {RE2RREnums::MapID::Invalid, ""},
         {RE2RREnums::MapID::st1_411_0, "Gas Station"},
         {RE2RREnums::MapID::st1_601_0, "Front Hall"},
         {RE2RREnums::MapID::st1_602_0, "Hallway"},
@@ -46,18 +51,18 @@ std::unordered_map<RE2RREnums::MapID, std::string> Randomizer::mapIdToName =
         {RE2RREnums::MapID::st1_631_0, "Sewer Entrance"},
         {RE2RREnums::MapID::st1_632_0, "Orphanage Approach"},
         {RE2RREnums::MapID::st3_600_0, "Hallway"},
+        {RE2RREnums::MapID::st3_602_0, "Exhaust Duct"},
         {RE2RREnums::MapID::st3_603_0, "Sewer (3-603)"},
         {RE2RREnums::MapID::st3_604_0, "Sewer (3-604)"},
-        {RE2RREnums::MapID::st3_611_0, "Sewer (3-611)"},
+        {RE2RREnums::MapID::st3_611_0, "Sewer (Upper Waterway)"},
         {RE2RREnums::MapID::st3_612_0, "Workroom"},
-        {RE2RREnums::MapID::st3_613_0, "Sewer (3-613)"},
+        {RE2RREnums::MapID::st3_613_0, "Sewer (Lower Waterway 1)"},
         {RE2RREnums::MapID::st3_614_0, "Sewer (3-614)"},
         {RE2RREnums::MapID::st3_615_0, "Treatment Room"},
         {RE2RREnums::MapID::st3_616_0, "Office (Save)"},
         {RE2RREnums::MapID::st3_617_0, "Sewer (3-617)"},
         {RE2RREnums::MapID::st3_620_0, "Sewer (3-620)"},
-        {RE2RREnums::MapID::st3_621_0, "Sewer (3-621)"},
-        {RE2RREnums::MapID::st3_622_0, ""}, // ???
+        {RE2RREnums::MapID::st3_621_0, "Sewer (Lower Waterway 2)"},
         {RE2RREnums::MapID::st3_623_0, "Organ Trail"},
         {RE2RREnums::MapID::st3_624_0, "Supplies Storage Entrance"},
         {RE2RREnums::MapID::st3_625_0, "Supplies Storage Room"},
@@ -158,15 +163,17 @@ std::unordered_map<RE2RREnums::MapID, std::string> Randomizer::mapIdToName =
         {RE2RREnums::MapID::st5_202_0, "Pump Room"},
         {RE2RREnums::MapID::st5_203_0, "Duct"},
         {RE2RREnums::MapID::st5_204_0, "Boiler Room"},
-        {RE2RREnums::MapID::st5_211_0, "Escape Platform (Save)"},
+        {RE2RREnums::MapID::st5_211_0, "Escape Platform (Save)/Tyrant Fight"},
         {RE2RREnums::MapID::st5_212_0, "Train Turntable"},
-        {RE2RREnums::MapID::st5_223_0, ""}, // ???
+        {RE2RREnums::MapID::st5_222_0, "Train Platform"},
+        {RE2RREnums::MapID::st5_223_0, "Trail Railcar (Save)"},
         {RE2RREnums::MapID::st8_408_0, "Raccoon City Streets (Kendo's Shop)"},
         {RE2RREnums::MapID::st8_410_0, "Raccoon City Streets (A Start)"}};
 
 std::unordered_map<RE2RREnums::MapPartsID, std::string> Randomizer::mapPartsIdToName =
     {
-        {RE2RREnums::MapPartsID::Invalid, ""}};
+        {RE2RREnums::MapPartsID::Invalid, ""},
+        {RE2RREnums::MapPartsID::st5_211_0e, "Mr. X Fight"}};
 
 const std::string &Randomizer::GetFloorNameById(const RE2RREnums::FloorID &key)
 {
