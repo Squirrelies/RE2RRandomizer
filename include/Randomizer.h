@@ -4,9 +4,12 @@
 #include "Common.h"
 #include "File.h"
 #include "Logging.h"
+#include "Strings.h"
 #include "Types.h"
 #include <algorithm>
+#include <fstream>
 #include <future>
+#include <iostream>
 #include <list>
 #include <random>
 #include <ranges>
@@ -84,8 +87,7 @@ public:
 	GUID &GetLastInteractedItemPositionGuid(void);
 	void Randomize(const RE2RREnums::Difficulty &, const RE2RREnums::Scenario &, int_fast32_t);
 	const Seed &GetSeed(void);
+	void ExportCheatSheet(int_fast32_t);
 };
-
-std::string GUIDToString(GUID &);
 
 #endif

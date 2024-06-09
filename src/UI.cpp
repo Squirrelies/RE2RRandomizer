@@ -36,19 +36,19 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 			if (ImGui::MenuItem("Export Cheat Sheet", NULL, false, true))
 			{
 				logger->LogMessage("Export Cheat Sheet clicked!\n");
-				// randomizer->ExportCheatSheet();
+				randomizer->ExportCheatSheet(randomSeed);
 			}
 			ImGui::EndMenu();
 		}
 
-		if (IsDebug)
+		// if (IsDebug)
+		//{
+		if (ImGui::BeginMenu("Debug"))
 		{
-			if (ImGui::BeginMenu("Debug"))
-			{
-				ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
-				ImGui::EndMenu();
-			}
+			ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
+			ImGui::EndMenu();
 		}
+		//}
 
 		if (ImGui::BeginMenu("Help"))
 		{

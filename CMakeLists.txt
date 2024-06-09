@@ -137,6 +137,7 @@ src/Types.cpp
 src/File.cpp
 src/Hashes.cpp
 src/Process.cpp
+src/Strings.cpp
 src/UI.cpp
 src/Randomizer.cpp
 src/Randomizer_OriginalItemMapping.cpp

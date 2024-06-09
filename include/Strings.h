@@ -4,11 +4,6 @@
 #include "Common.h"
 #include <string>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #ifndef TSTRING
 #ifdef UNICODE
 #define TSTRING std::wstring
@@ -41,12 +36,10 @@ extern "C"
 #endif
 #endif
 
-	LIBRARY_EXPORT_API size_t GetStringSizeA(std::string string);
+LIBRARY_EXPORT_API size_t GetStringSizeA(std::string string);
 
-	LIBRARY_EXPORT_API size_t GetStringSizeW(std::wstring string);
+LIBRARY_EXPORT_API size_t GetStringSizeW(std::wstring string);
 
-#ifdef __cplusplus
-}
-#endif
+LIBRARY_EXPORT_API const std::string &GUIDToString(const GUID &guid);
 
 #endif

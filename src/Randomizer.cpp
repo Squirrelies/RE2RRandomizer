@@ -97,21 +97,6 @@ void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &original
 	*itemToReplace = newItem;
 }
 
-std::string GUIDToString(GUID &guid)
-{
-	char guid_string[(sizeof(GUID) * 2) + 4 + 1]; // (16 bytes (4+2+2+8) * 2 for character representation) + 4 hyphens + 1 null terminator = 37 bytes/chars.
-
-	snprintf(
-	    guid_string, sizeof(guid_string),
-	    "%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
-	    guid.Data1,
-	    guid.Data2,
-	    guid.Data3,
-	    guid.Data4[0], guid.Data4[1],
-	    guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
-	return std::string(guid_string);
-}
-
 void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RREnums::Scenario &scenario, int_fast32_t initialSeed)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::Randomize(%s: %s, %s: %s, %s: %d) called.\n",
@@ -209,4 +194,27 @@ const Seed &Randomizer::GetSeed(void)
 {
 	logger->LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n");
 	return this->seed;
+}
+
+void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
+{
+	std::string filename = std::format("RE2RR_CheatSheet_{:d}.txt", initialSeed);
+	std::ofstream file(filename, std::ios::out);
+
+	if (!file.is_open())
+	{
+		logger->LogMessage("Unable to open file for writing: %s\n", filename.c_str());
+		return;
+	}
+
+	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+	{
+		file << "[" << GUIDToString(key) << "]" << std::endl
+		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.WeaponId).c_str() << std::endl
+		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].WeaponId).c_str() << std::endl
+		     << std::endl;
+	}
+
+	file.flush();
+	file.close();
 }
