@@ -41,14 +41,14 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 			ImGui::EndMenu();
 		}
 
-		// if (IsDebug)
-		//{
-		if (ImGui::BeginMenu("Debug"))
+		if (IsDebug)
 		{
-			ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
-			ImGui::EndMenu();
+			if (ImGui::BeginMenu("Debug"))
+			{
+				ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
+				ImGui::EndMenu();
+			}
 		}
-		//}
 
 		if (ImGui::BeginMenu("Help"))
 		{
