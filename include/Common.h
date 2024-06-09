@@ -1,3 +1,12 @@
+#ifndef RE2RR_COMMON_H
+#define RE2RR_COMMON_H
+
+#ifdef DEBUG
+static const bool IsDebug = true;
+#else
+static const bool IsDebug = false;
+#endif
+
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -71,4 +80,6 @@
 // Build number. This is defined at compile time so this is just a placeholder.
 #ifndef RE2RR_VERSION_BUILD
 #define RE2RR_VERSION_BUILD 0
+#endif
+
 #endif

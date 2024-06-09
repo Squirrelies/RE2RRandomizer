@@ -14,9 +14,6 @@
 // Whether to show a debug console window on attach or not. Info is still logged to file either way.
 #define RE2RRDEBUGWINDOW 1
 
-// ImGUI configuration options.
-#define IMGUI_USER_CONFIG "ImGUIConfig.h"
-
 #define DIRECTINPUT_VERSION 0x0800
 
 #include "Common.h"

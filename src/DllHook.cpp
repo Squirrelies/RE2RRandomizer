@@ -244,7 +244,7 @@ HRESULT __stdcall HookPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT
 	ImGui::NewFrame();
 
 	if (ui != nullptr)
-		ui->DrawMainUI(&isUIOpen);
+		ui->DrawMainUI(isUIOpen);
 	// ImGui::ShowDemoWindow();
 
 	ImGui::Render();

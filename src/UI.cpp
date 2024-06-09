@@ -1,31 +1,28 @@
 #include "UI.h"
 
-void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 {
 	// Always shown items (shown even if the Main UI is hidden)
-	static bool show_DebugOverlay = false;
-	if (show_DebugOverlay)
-		DrawDebugOverlay(&show_DebugOverlay, open);
+	if (show_Debug_DebugOverlay)
+		DrawDebugOverlay(show_Debug_DebugOverlay, open);
 
 	// If the Main UI is hidden, exit here.
-	if (!*open)
+	if (!open)
 		return;
 
 	// Conditionally shown items (shown only if the Main UI is showing)
-	static int_fast32_t randomSeed = randomDevice();
-	static bool show_Log = false;
-	static bool show_Help_AboutRE2RR = false;
 	if (show_Log)
-		DrawLogUI(&show_Log);
-	else if (show_Help_AboutRE2RR)
-		DrawHelpAboutRE2RRUI(&show_Help_AboutRE2RR);
+		DrawLogUI(show_Log);
+
+	if (show_Help_AboutRE2RR)
+		DrawHelpAboutRE2RRUI(show_Help_AboutRE2RR);
 
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
 	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(400, 260), ImGuiCond_FirstUseEver);
 
-	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
+	if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", (bool *)&open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::End();
 		return;
@@ -36,8 +33,21 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			ImGui::MenuItem("Debug Overlay", NULL, &show_DebugOverlay);
+			if (ImGui::MenuItem("Export Cheat Sheet", NULL, false, true))
+			{
+				logger->LogMessage("Export Cheat Sheet clicked!\n");
+				// randomizer->ExportCheatSheet();
+			}
 			ImGui::EndMenu();
+		}
+
+		if (IsDebug)
+		{
+			if (ImGui::BeginMenu("Debug"))
+			{
+				ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
+				ImGui::EndMenu();
+			}
 		}
 
 		if (ImGui::BeginMenu("Help"))
@@ -93,24 +103,24 @@ void __stdcall RE2RRUI::UI::DrawMainUI(bool *open)
 	ImGui::End();
 }
 
-void __stdcall RE2RRUI::UI::DrawLogUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawLogUI(const bool &open)
 {
 	if (this->logger == nullptr)
 		return;
 
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
-	this->logger->GetUILog()->Draw("RE2RR Log", open);
+	this->logger->GetUILog()->Draw("RE2RR Log", (bool *)&open);
 }
 
-void __stdcall RE2RRUI::UI::DrawDebugOverlay(bool *open, bool *mainUIOpen)
+void __stdcall RE2RRUI::UI::DrawDebugOverlay(const bool &open, const bool &mainUIOpen)
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-	if (mainUIOpen != nullptr && !*mainUIOpen)
+	if (!mainUIOpen)
 		window_flags |= ImGuiWindowFlags_NoMove;
 	ImGui::SetNextWindowPos(ImVec2(5, 5), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowBgAlpha(0.20f);
-	if (ImGui::Begin("RE2RR Debug Overlay", open, window_flags))
+	if (ImGui::Begin("RE2RR Debug Overlay", (bool *)&open, window_flags))
 	{
 		// if (font != nullptr)
 		// 	ImGui::PushFont(font);
@@ -133,13 +143,13 @@ void __stdcall RE2RRUI::UI::DrawDebugOverlay(bool *open, bool *mainUIOpen)
 	ImGui::End();
 }
 
-void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
+void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(const bool &open)
 {
 	// Specify a default position/size in case there's no data in the .ini file.
 	ImGuiIO &io = ImGui::GetIO();
 	ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 
-	if (!ImGui::Begin("RE2RR: About", open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+	if (!ImGui::Begin("RE2RR: About", (bool *)&open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::End();
 		return;
@@ -165,6 +175,7 @@ void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(bool *open)
 		ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
 		ImGui::Separator();
 		ImGui::Text("Build datetime: %s %s", __DATE__, __TIME__);
+		ImGui::Text("Debug build: %s", IsDebug ? "true" : "false");
 		ImGui::Text("sizeof(void *): %d", (int)sizeof(void *));
 #ifdef _WIN32
 		ImGui::Text("define: _WIN32");

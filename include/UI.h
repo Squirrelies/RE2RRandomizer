@@ -19,6 +19,11 @@ namespace RE2RRUI
 		Randomizer *randomizer;
 		ImFont *font;
 		std::random_device randomDevice;
+		int_fast32_t randomSeed = randomDevice();
+
+		bool show_Debug_DebugOverlay = false;
+		bool show_Help_AboutRE2RR = false;
+		bool show_Log = false;
 
 	protected:
 	public:
@@ -46,10 +51,10 @@ namespace RE2RRUI
 			this->font = nullptr;
 		}
 
-		void __stdcall DrawMainUI(bool *);
-		void __stdcall DrawLogUI(bool *);
-		void __stdcall DrawHelpAboutRE2RRUI(bool *);
-		void __stdcall DrawDebugOverlay(bool *, bool *);
+		void __stdcall DrawMainUI(const bool &);
+		void __stdcall DrawLogUI(const bool &);
+		void __stdcall DrawHelpAboutRE2RRUI(const bool &);
+		void __stdcall DrawDebugOverlay(const bool &, const bool &);
 		void __stdcall SetFont(ImFont *);
 		Randomizer *GetRandomizer(void);
 	};
