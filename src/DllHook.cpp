@@ -105,8 +105,8 @@ bool Startup()
 {
 	return !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
 	       (uiLog = new UILog()) != nullptr &&
-	       (logger = new ImmediateLogger(stdoutLogFile, uiLog)) != nullptr &&
-	       (ui = new RE2RRUI::UI(logger)) != nullptr &&
+	       (logger = new ImmediateLogger(stdoutLogFile, *uiLog)) != nullptr &&
+	       (ui = new RE2RRUI::UI(*logger)) != nullptr &&
 	       MH_Initialize() == MH_OK;
 }
 

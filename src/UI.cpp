@@ -35,7 +35,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 		{
 			if (ImGui::MenuItem("Export Cheat Sheet", NULL, false, true))
 			{
-				logger->LogMessage("Export Cheat Sheet clicked!\n");
+				logger.LogMessage("Export Cheat Sheet clicked!\n");
 				randomizer->ExportCheatSheet(randomSeed);
 			}
 			ImGui::EndMenu();
@@ -83,23 +83,23 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 	ImGui::InputInt("Seed", &randomSeed, 1, 1000);
 	if (ImGui::Button("Generate New Seed"))
 	{
-		logger->LogMessage("Generate New Seed clicked!\n");
+		logger.LogMessage("Generate New Seed clicked!\n");
 		randomSeed = randomDevice();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Attach"))
 	{
-		logger->LogMessage("Attach clicked!\n");
+		logger.LogMessage("Attach clicked!\n");
 
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger);
+		randomizer = new Randomizer(&logger);
 		randomizer->Randomize(*difficulty, *scenario, randomSeed);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Detach"))
 	{
-		logger->LogMessage("Detach clicked!\n");
+		logger.LogMessage("Detach clicked!\n");
 		delete randomizer;
 		randomizer = nullptr;
 	}
@@ -112,12 +112,12 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 
 void __stdcall RE2RRUI::UI::DrawLogUI(const bool &open)
 {
-	if (this->logger == nullptr)
-		return;
+	// if (this->logger == nullptr)
+	// 	return;
 
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
-	this->logger->GetUILog()->Draw("RE2RR Log", (bool *)&open);
+	this->logger.GetUILog().Draw("RE2RR Log", (bool *)&open);
 }
 
 void __stdcall RE2RRUI::UI::DrawDebugOverlay(const bool &open, const bool &mainUIOpen)

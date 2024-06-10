@@ -14,7 +14,7 @@ namespace RE2RRUI
 	class UI
 	{
 	private:
-		ImmediateLogger *logger;
+		ImmediateLogger &logger;
 		RE2RREnums::Scenario *scenario;
 		RE2RREnums::Difficulty *difficulty;
 		Randomizer *randomizer;
@@ -28,9 +28,9 @@ namespace RE2RRUI
 
 	protected:
 	public:
-		UI(ImmediateLogger *logger)
+		UI(ImmediateLogger &logger) : logger(logger)
 		{
-			this->logger = logger;
+			// this->logger = logger;
 			this->scenario = new RE2RREnums::Scenario(RE2RREnums::Scenario::LEON_A);
 			this->difficulty = new RE2RREnums::Difficulty(RE2RREnums::Difficulty::NORMAL);
 			this->randomizer = nullptr;
@@ -38,7 +38,7 @@ namespace RE2RRUI
 		}
 		~UI()
 		{
-			this->logger = nullptr;
+			// this->logger = nullptr;
 
 			delete this->scenario;
 			this->scenario = nullptr;

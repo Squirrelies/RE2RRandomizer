@@ -128,14 +128,12 @@ extern "C"
 	{
 	private:
 		FILE *out;
-		UILog *uiLog;
+		UILog &uiLog;
 
 	protected:
 	public:
-		ImmediateLogger(FILE *out, UILog *uiLog)
+		ImmediateLogger(FILE *out, UILog &uiLog) : out(out), uiLog(uiLog)
 		{
-			this->out = out;
-			this->uiLog = uiLog;
 		}
 
 		~ImmediateLogger()
@@ -157,11 +155,11 @@ extern "C"
 			va_end(args);
 
 			va_start(args, format);
-			this->uiLog->AddLogV(format, args);
+			this->uiLog.AddLogV(format, args);
 			va_end(args);
 		}
 
-		UILog *GetUILog()
+		UILog &GetUILog()
 		{
 			return this->uiLog;
 		}
