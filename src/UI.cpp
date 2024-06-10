@@ -93,7 +93,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(&logger);
+		randomizer = new Randomizer(logger);
 		randomizer->Randomize(*difficulty, *scenario, randomSeed);
 	}
 	ImGui::SameLine();

@@ -2,17 +2,17 @@
 
 void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem, GUID &itemPositionGuid)
 {
-	if (logger == nullptr || itemToReplace == nullptr)
+	if (itemToReplace == nullptr)
 		return;
 
-	logger->LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
-	                   NAMEOF(itemToReplace), itemToReplace,
-	                   NAMEOF(currentItem), currentItem.ToString().c_str(),
-	                   NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
-	logger->LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
-	                   this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().c_str());
-	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
-	                   this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().c_str());
+	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
+	                  NAMEOF(itemToReplace), itemToReplace,
+	                  NAMEOF(currentItem), currentItem.ToString().c_str(),
+	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
+	logger.LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
+	                  this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().c_str());
+	logger.LogMessage("[RE2R-R] seedData returned: %s.\n",
+	                  this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().c_str());
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
 	RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
@@ -93,16 +93,16 @@ const std::string &Randomizer::GetMapPartsName()
 
 void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
 	*itemToReplace = newItem;
 }
 
 void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RREnums::Scenario &scenario, int_fast32_t initialSeed)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::Randomize(%s: %s, %s: %s, %s: %d) called.\n",
-	                   NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(difficulty).c_str(),
-	                   NAMEOF(scenario), RE2RREnums::EnumScenarioToString(scenario).c_str(),
-	                   NAMEOF(initialSeed), initialSeed);
+	logger.LogMessage("[RE2R-R] Randomizer::Randomize(%s: %s, %s: %s, %s: %d) called.\n",
+	                  NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(difficulty).c_str(),
+	                  NAMEOF(scenario), RE2RREnums::EnumScenarioToString(scenario).c_str(),
+	                  NAMEOF(initialSeed), initialSeed);
 
 	seed = Seed{.gameMode = GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
 	std::mt19937 gen(initialSeed);
@@ -128,13 +128,13 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
-	                   NAMEOF(gen), gen);
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
+	                  NAMEOF(gen), gen);
 
 	std::vector<GUID> candidates;
 	if (seed.gameMode.Scenario == RE2RREnums::Scenario::CLAIRE_A || seed.gameMode.Scenario == RE2RREnums::Scenario::LEON_A) // A scenarios
 	{
-		logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
+		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 
 		// Knife
 		candidates.append_range(std::initializer_list<GUID>{StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"),
@@ -157,10 +157,10 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	}
 	else // B scenarios
 	{
-		logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
+		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
 	}
 
-	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
 		if (value.ItemId == RE2RREnums::ItemType::KeyStorageRoom ||
@@ -173,19 +173,19 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value}));
 	}
 
-	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
 }
 
 void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std::mt19937 &gen)
 {
 	size_t index = std::uniform_int_distribution<size_t>(0, destinations.size() - 1)(gen);
 
-	logger->LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
-	                   index,
-	                   originalItemMapping[seed.gameMode][destinations[index]].ToString().c_str(),
-	                   GUIDToString(destinations[index]).c_str(),
-	                   originalItemMapping[seed.gameMode][original].ToString().c_str(),
-	                   GUIDToString(original).c_str());
+	logger.LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
+	                  index,
+	                  originalItemMapping[seed.gameMode][destinations[index]].ToString().c_str(),
+	                  GUIDToString(destinations[index]).c_str(),
+	                  originalItemMapping[seed.gameMode][original].ToString().c_str(),
+	                  GUIDToString(original).c_str());
 
 	// Seed (LEON_A NORMAL): 384451726
 	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][destinations[index]]}));
@@ -194,7 +194,7 @@ void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std
 
 const Seed &Randomizer::GetSeed(void)
 {
-	logger->LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n");
 	return this->seed;
 }
 
@@ -205,7 +205,7 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 
 	if (!file.is_open())
 	{
-		logger->LogMessage("Unable to open file for writing: %s\n", filename.c_str());
+		logger.LogMessage("Unable to open file for writing: %s\n", filename.c_str());
 		return;
 	}
 
