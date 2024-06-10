@@ -7,14 +7,13 @@ namespace RE2RRHashes
 	const static std::vector<uint8_t> CEROZ_DX11_20230421_1 = {0x53, 0xF9, 0x2B, 0x0F, 0x4F, 0x45, 0xB0, 0xF6, 0x6A, 0x18, 0xD1, 0xF0, 0xCB, 0xE4, 0xC9, 0x0C, 0x3D, 0x65, 0x53, 0x2E, 0x50, 0x0A, 0xD8, 0x75, 0xC4, 0x64, 0xCD, 0xBB, 0x33, 0xBF, 0x71, 0xF1};
 	const static std::vector<uint8_t> CEROZ_DX12_20230814_1 = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger *logger)
+	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger &logger)
 	{
 		uint8_t *gameExeSHA256Hash = RE2RRFile::GetFileHashSHA256(filePath);
 		std::vector<uint8_t> hashVector = RE2RRFile::HashSHA256ToVector(gameExeSHA256Hash);
 		free(gameExeSHA256Hash);
 
-		if (logger)
-			logger->LogMessage("[RE2R-R] Game hash: { %s }\n", RE2RRFile::VectorToHexString(hashVector).c_str());
+		logger.LogMessage("[RE2R-R] Game hash: { %s }\n", RE2RRFile::VectorToHexString(hashVector).c_str());
 
 		RE2RREnums::RE2RGameVersion returnValue = RE2RREnums::RE2RGameVersion::Unknown;
 		if (hashVector == WW_DX11_20230421_1)
@@ -26,8 +25,7 @@ namespace RE2RRHashes
 		else if (hashVector == CEROZ_DX12_20230814_1)
 			returnValue = RE2RREnums::RE2RGameVersion::CEROZ_DX12_20230814_1;
 
-		if (logger)
-			logger->LogMessage("[RE2R-R] Game version: %s\n", RE2RREnums::EnumRE2RGameVersionToString(returnValue).c_str());
+		logger.LogMessage("[RE2R-R] Game version: %s\n", RE2RREnums::EnumRE2RGameVersionToString(returnValue).c_str());
 
 		return returnValue;
 	}
