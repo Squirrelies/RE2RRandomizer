@@ -6,8 +6,6 @@ FILE *stdoutLogFile;
 UILog *uiLog;
 ImmediateLogger *logger;
 RE2RRUI::UI *ui;
-bool allocedConsole = true;
-bool attachedConsole = true;
 void **vtableDXGISwapChain = nullptr;
 void **vtableD3D11Device = nullptr;
 void **vtableD3D11DeviceContext = nullptr;
@@ -105,25 +103,11 @@ DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 
 bool Startup()
 {
-#if RE2RRDEBUGWINDOW == 1
-	FILE *dummy;
-	allocedConsole = AllocConsole();
-	if (!allocedConsole)
-		attachedConsole = AttachConsole(ATTACH_PARENT_PROCESS);
-	SetConsoleTitleA("RE2R Randomizer");
-#endif
-	return
-#if RE2RRDEBUGWINDOW == 1
-	    (allocedConsole || attachedConsole) && // CONIN$ & CONOUT$
-	    !freopen_s(&dummy, "CONIN$", "r", stdin) &&
-	    !freopen_s(&dummy, "CONOUT$", "w", stdout) &&
-	    !freopen_s(&dummy, "CONOUT$", "w", stderr) &&
-#endif
-	    !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
-	    (uiLog = new UILog()) != nullptr &&
-	    (logger = new ImmediateLogger(stdoutLogFile, uiLog)) != nullptr &&
-	    (ui = new RE2RRUI::UI(logger)) != nullptr &&
-	    MH_Initialize() == MH_OK;
+	return !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
+	       (uiLog = new UILog()) != nullptr &&
+	       (logger = new ImmediateLogger(stdoutLogFile, uiLog)) != nullptr &&
+	       (ui = new RE2RRUI::UI(logger)) != nullptr &&
+	       MH_Initialize() == MH_OK;
 }
 
 void Shutdown()
@@ -165,13 +149,6 @@ void Shutdown()
 	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)wndProcFunc);
 	Sleep(100);
 	fclose(stdoutLogFile);
-	fclose(stdin);
-	fclose(stdout);
-	fclose(stderr);
-#if RE2RRDEBUGWINDOW == 1
-	if (allocedConsole)
-		FreeConsole();
-#endif
 	CreateThread(NULL, 0, ShutdownThread, NULL, 0, NULL);
 	TerminateThread(mainThreadHandle, 0);
 }

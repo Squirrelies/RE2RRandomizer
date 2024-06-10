@@ -11,9 +11,6 @@
 // The DirectX version we're targeting. (TODO: Add detection and support for both so this isn't needed.)
 #define DXVERSION DXVERSION_11
 
-// Whether to show a debug console window on attach or not. Info is still logged to file either way.
-#define RE2RRDEBUGWINDOW 1
-
 #define DIRECTINPUT_VERSION 0x0800
 
 #include "Common.h"
