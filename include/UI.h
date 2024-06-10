@@ -22,6 +22,7 @@ namespace RE2RRUI
 		std::random_device randomDevice;
 		int_fast32_t randomSeed = randomDevice();
 
+		bool show_Debug_DisableRandomize = false;
 		bool show_Debug_DebugOverlay = false;
 		bool show_Help_AboutRE2RR = false;
 		bool show_Log = false;

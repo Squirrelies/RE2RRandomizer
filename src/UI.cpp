@@ -46,6 +46,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 			if (ImGui::BeginMenu("Debug"))
 			{
 				ImGui::MenuItem("Debug Overlay", NULL, &show_Debug_DebugOverlay);
+				ImGui::MenuItem("Disable Randomization", NULL, &show_Debug_DisableRandomize);
 				ImGui::EndMenu();
 			}
 		}
@@ -93,7 +94,7 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 
 		if (randomizer != nullptr)
 			delete randomizer;
-		randomizer = new Randomizer(logger);
+		randomizer = new Randomizer(logger, show_Debug_DisableRandomize);
 		randomizer->Randomize(*difficulty, *scenario, randomSeed);
 	}
 	ImGui::SameLine();

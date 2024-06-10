@@ -23,6 +23,7 @@ class Randomizer
 {
 private:
 	ImmediateLogger &logger;
+	bool &debugSkipRandomization;
 	static RE2RItem defaultItemEntry;
 	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
 	static std::unordered_map<RE2RREnums::FloorID, std::string> floorIdToName;
@@ -55,9 +56,8 @@ private:
 
 protected:
 public:
-	Randomizer(ImmediateLogger &logger) : logger(logger)
+	Randomizer(ImmediateLogger &logger, bool &debugSkipRandomization) : logger(logger), debugSkipRandomization(debugSkipRandomization)
 	{
-		// this->logger = logger;
 		this->seed = {};
 		this->mapPartsId = RE2RREnums::MapPartsID::Invalid;
 		this->mapId = RE2RREnums::MapID::Invalid;
@@ -68,7 +68,6 @@ public:
 	}
 	~Randomizer(void)
 	{
-		// this->logger = nullptr;
 	}
 
 	void ItemPickup(RE2RItem *, const RE2RItem &, GUID &);

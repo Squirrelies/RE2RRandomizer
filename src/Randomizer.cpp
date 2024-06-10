@@ -14,7 +14,8 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 	logger.LogMessage("[RE2R-R] seedData returned: %s.\n",
 	                  this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().c_str());
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
-	RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
+	if (!debugSkipRandomization)
+		RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
 
 void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, GUID &itemPositionGuid)
