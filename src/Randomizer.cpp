@@ -12,9 +12,9 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 	logger->LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
 	                   this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().c_str());
 	logger->LogMessage("[RE2R-R] seedData returned: %s.\n",
-	                   this->seed.seedData[itemPositionGuid].ToString().c_str());
-	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid], itemPositionGuid);
-	// RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid]);
+	                   this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().c_str());
+	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
+	RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
 
 void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, GUID &itemPositionGuid)
@@ -109,11 +109,11 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 
 	HandleSoftLocks(gen);
 
-	std::vector<RE2RItem> values;
+	std::vector<RandomizedItem> values;
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
 		if (!seed.seedData.contains(key))
-			values.push_back(value);
+			values.push_back(RandomizedItem{.OriginalGUID = key, .ReplacementItem = value});
 	}
 
 	std::shuffle(values.begin(), values.end(), gen);
@@ -170,7 +170,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		    value.ItemId == RE2RREnums::ItemType::PlugPawn ||
 		    value.ItemId == RE2RREnums::ItemType::PlugQueen ||
 		    value.ItemId == RE2RREnums::ItemType::PlugRook)
-			seed.seedData.insert(std::make_pair(key, value));
+			seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value}));
 	}
 
 	logger->LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
@@ -187,6 +187,8 @@ void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std
 	                   originalItemMapping[seed.gameMode][original].ToString().c_str(),
 	                   GUIDToString(original).c_str());
 
+	// Seed (LEON_A NORMAL): 384451726
+	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][destinations[index]]}));
 	destinations.erase(destinations.begin() + index); // Remove this entry as a candidate since we're using it now.
 }
 
@@ -209,9 +211,9 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
-		file << "[" << GUIDToString(key) << "]" << std::endl
+		file << "[" << GUIDToString(key) << "] -> [" << GUIDToString(seed.seedData[key].OriginalGUID) << "]" << std::endl
 		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.WeaponId).c_str() << std::endl
-		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].WeaponId).c_str() << std::endl
+		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ReplacementItem.ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].ReplacementItem.WeaponId).c_str() << std::endl
 		     << std::endl;
 	}
 

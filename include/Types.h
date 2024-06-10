@@ -1538,7 +1538,7 @@ typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveI
 } RE2RItem;
 bool operator==(const RE2RItem &, const RE2RItem &);
 
-struct PACKED_DATA GameModeKey
+struct GameModeKey
 {
 	RE2RREnums::Scenario Scenario;
 	RE2RREnums::Difficulty Difficulty;
@@ -1609,10 +1609,17 @@ namespace std
 	};
 }
 
+struct RandomizedItem
+{
+	GUID OriginalGUID;
+	RE2RItem ReplacementItem;
+};
+bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs);
+
 struct Seed
 {
 	GameModeKey gameMode;
-	std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
+	std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
 };
 bool operator==(const Seed &lhs, const Seed &rhs);
 

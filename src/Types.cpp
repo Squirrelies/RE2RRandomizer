@@ -41,6 +41,12 @@ bool operator==(const GameModeKey &lhs, const GameModeKey &rhs)
 	       lhs.Difficulty == rhs.Difficulty;
 }
 
+bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs)
+{
+	return lhs.OriginalGUID == rhs.OriginalGUID &&
+	       lhs.ReplacementItem == rhs.ReplacementItem;
+}
+
 bool operator==(const Seed &lhs, const Seed &rhs)
 {
 	return lhs.gameMode == rhs.gameMode &&
