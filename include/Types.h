@@ -4,6 +4,7 @@
 #include "Common.h"
 #include <array>
 #include <functional>
+#include <memory>
 #include <rpc.h>
 #include <stdint.h>
 #include <string>
@@ -1460,23 +1461,22 @@ struct PACKED_DATA via_vec3
 	float y; // 0x10-0x13
 	float z; // 0x14-0x17
 
-	std::string ToString()
+	std::unique_ptr<std::string> ToString() const
 	{
 		const char *toStringFormat = ".%s = %f, .%s = %f, .%s = %f";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
 		                          NAMEOF(x), x,
 		                          NAMEOF(y), y,
-		                          NAMEOF(z), z);
-		char *toString = (char *)malloc(bufferSize + 1);
-		snprintf(toString, bufferSize + 1, toStringFormat,
+		                          NAMEOF(z), z) +
+		                 1;
+		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+		snprintf(toString.get(), bufferSize, toStringFormat,
 		         NAMEOF(x), x,
 		         NAMEOF(y), y,
 		         NAMEOF(z), z);
-		std::string returnValue = std::string(toString);
-		free(toString);
 
-		return returnValue;
+		return std::make_unique<std::string>(toString.get());
 	}
 };
 
@@ -1486,21 +1486,20 @@ struct PACKED_DATA app_ropeway_MansionManager_MapIdentifier
 	RE2RREnums::MapID ID;     // 0x10-0x13
 	RE2RREnums::MapArea Area; // 0x14-0x17
 
-	std::string ToString()
+	std::unique_ptr<std::string> ToString() const
 	{
 		const char *toStringFormat = ".%s = %s, .%s = %s";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
-		                          NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
-		char *toString = (char *)malloc(bufferSize + 1);
-		snprintf(toString, bufferSize + 1, toStringFormat,
-		         NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).c_str(),
-		         NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).c_str());
-		std::string returnValue = std::string(toString);
-		free(toString);
+		                          NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).get()->c_str(),
+		                          NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).get()->c_str()) +
+		                 1;
+		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+		snprintf(toString.get(), bufferSize, toStringFormat,
+		         NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).get()->c_str(),
+		         NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).get()->c_str());
 
-		return returnValue;
+		return std::make_unique<std::string>(toString.get());
 	}
 };
 
@@ -1513,27 +1512,26 @@ typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveI
 	int32_t BulletId;                // 0x1C-0x1F
 	int32_t Count;                   // 0x20-0x23
 
-	std::string &ToString() const
+	std::unique_ptr<std::string> ToString() const
 	{
 		const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
 
 		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
-		                          NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
+		                          NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).get()->c_str(),
+		                          NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
 		                          NAMEOF(WeaponParts), WeaponParts,
 		                          NAMEOF(BulletId), BulletId,
-		                          NAMEOF(Count), Count);
-		char *toString = (char *)malloc(bufferSize + 1);
-		snprintf(toString, bufferSize + 1, toStringFormat,
-		         NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).c_str(),
-		         NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).c_str(),
+		                          NAMEOF(Count), Count) +
+		                 1;
+		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+		snprintf(toString.get(), bufferSize, toStringFormat,
+		         NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).get()->c_str(),
+		         NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
 		         NAMEOF(WeaponParts), WeaponParts,
 		         NAMEOF(BulletId), BulletId,
 		         NAMEOF(Count), Count);
-		std::string *returnValue = new std::string(toString);
-		free(toString);
 
-		return *returnValue;
+		return std::make_unique<std::string>(toString.get());
 	}
 } RE2RItem;
 bool operator==(const RE2RItem &, const RE2RItem &);

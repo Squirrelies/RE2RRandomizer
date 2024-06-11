@@ -27,7 +27,7 @@ namespace RE2RRFile
 
 	LIBRARY_EXPORT_API std::vector<uint8_t> HashSHA256ToVector(const uint8_t *hash);
 
-	LIBRARY_EXPORT_API std::string VectorToHexString(std::vector<uint8_t> &vector);
+	LIBRARY_EXPORT_API std::unique_ptr<std::string> VectorToHexString(std::vector<uint8_t> &vector);
 };
 
 #endif

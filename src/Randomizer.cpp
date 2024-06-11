@@ -7,12 +7,12 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 
 	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
 	                  NAMEOF(itemToReplace), itemToReplace,
-	                  NAMEOF(currentItem), currentItem.ToString().c_str(),
-	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).c_str());
+	                  NAMEOF(currentItem), currentItem.ToString().get()->c_str(),
+	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).get()->c_str());
 	logger.LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
-	                  this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().c_str());
+	                  this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().get()->c_str());
 	logger.LogMessage("[RE2R-R] seedData returned: %s.\n",
-	                  this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().c_str());
+	                  this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().get()->c_str());
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
 	if (!debugSkipRandomization)
 		RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
@@ -94,15 +94,21 @@ const std::string &Randomizer::GetMapPartsName()
 
 void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().c_str(), newItem.ToString().c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).c_str());
-	*itemToReplace = newItem;
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().get()->c_str(), newItem.ToString().get()->c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).get()->c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).get()->c_str());
+	//*itemToReplace = newItem;
+
+	itemToReplace->ItemId = newItem.ItemId;
+	itemToReplace->WeaponId = newItem.WeaponId;
+	itemToReplace->WeaponParts = newItem.WeaponParts;
+	itemToReplace->BulletId = newItem.BulletId;
+	itemToReplace->Count = newItem.Count;
 }
 
 void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RREnums::Scenario &scenario, int_fast32_t initialSeed)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::Randomize(%s: %s, %s: %s, %s: %d) called.\n",
-	                  NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(difficulty).c_str(),
-	                  NAMEOF(scenario), RE2RREnums::EnumScenarioToString(scenario).c_str(),
+	                  NAMEOF(difficulty), RE2RREnums::EnumDifficultyToString(difficulty).get()->c_str(),
+	                  NAMEOF(scenario), RE2RREnums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
 
 	seed = Seed{.gameMode = GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
@@ -213,10 +219,10 @@ void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std
 
 	logger.LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
 	                  index,
-	                  originalItemMapping[seed.gameMode][destinations[index]].ToString().c_str(),
-	                  GUIDToString(destinations[index]).c_str(),
-	                  originalItemMapping[seed.gameMode][original].ToString().c_str(),
-	                  GUIDToString(original).c_str());
+	                  originalItemMapping[seed.gameMode][destinations[index]].ToString().get()->c_str(),
+	                  GUIDToString(destinations[index]).get()->c_str(),
+	                  originalItemMapping[seed.gameMode][original].ToString().get()->c_str(),
+	                  GUIDToString(original).get()->c_str());
 
 	// Seed (LEON_A NORMAL): 384451726
 	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][original]}));
@@ -243,8 +249,8 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
 		file << "[" << GUIDToString(key) << "] -> [" << GUIDToString(seed.seedData[key].OriginalGUID) << "]" << std::endl
-		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.WeaponId).c_str() << std::endl
-		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ReplacementItem.ItemId).c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].ReplacementItem.WeaponId).c_str() << std::endl
+		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.ItemId).get()->c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.WeaponId).get()->c_str() << std::endl
+		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ReplacementItem.ItemId).get()->c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].ReplacementItem.WeaponId).get()->c_str() << std::endl
 		     << std::endl;
 	}
 

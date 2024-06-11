@@ -183,9 +183,9 @@ __stdcall void HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2)
 
 		if (randomizer->ChangeArea(mapPartsID, mapID, floorID))
 			logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
-			                   RE2RREnums::EnumMapPartsIDToString(mapPartsID).c_str(),
-			                   RE2RREnums::EnumMapIDToString(mapID).c_str(),
-			                   RE2RREnums::EnumFloorIDToString(floorID).c_str());
+			                   RE2RREnums::EnumMapPartsIDToString(mapPartsID).get()->c_str(),
+			                   RE2RREnums::EnumMapIDToString(mapID).get()->c_str(),
+			                   RE2RREnums::EnumFloorIDToString(floorID).get()->c_str());
 	}
 }
 

@@ -66,21 +66,21 @@ std::vector<uint8_t> RE2RRFile::HashSHA256ToVector(const uint8_t *hash)
 	return std::vector<uint8_t>(hash, hash + SIZE_OF_SHA_256_HASH);
 }
 
-std::string RE2RRFile::VectorToHexString(std::vector<uint8_t> &vector)
+std::unique_ptr<std::string> RE2RRFile::VectorToHexString(std::vector<uint8_t> &vector)
 {
 	size_t vectorSize = vector.size();
 	size_t bufferSize = (vectorSize * 6) - 2 + 1;
-	char *toString = (char *)malloc(bufferSize);
-	memset(toString, 0, bufferSize);
+
+	std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+	memset(toString.get(), 0, bufferSize);
+
 	for (size_t i = 0; i < vectorSize; ++i)
 	{
 		if (i < vectorSize - 1)
-			snprintf(toString + (i * 6), 7, "0x%02X, ", vector[i]);
+			snprintf(toString.get() + (i * 6), 7, "0x%02X, ", vector[i]);
 		else
-			snprintf(toString + (i * 6), 5, "0x%02X", vector[i]);
+			snprintf(toString.get() + (i * 6), 5, "0x%02X", vector[i]);
 	}
-	std::string returnValue = std::string(toString);
-	free(toString);
 
-	return returnValue;
+	return std::make_unique<std::string>(toString.get());
 }

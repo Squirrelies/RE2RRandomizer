@@ -4,7 +4,7 @@
 
 namespace RE2RREnums
 {
-#define ENUM_METHOD_NAME(name) std::string DEFINE_CONCATENATION(DEFINE_CONCATENATION(Enum, name), ToString)(DEFINE_CONCATENATION(, name) enumValue)
+#define ENUM_METHOD_NAME(name) std::unique_ptr<std::string> DEFINE_CONCATENATION(DEFINE_CONCATENATION(Enum, name), ToString)(DEFINE_CONCATENATION(, name) enumValue)
 	ENUM_METHOD_NAME(ENUM_NAME)
 #undef ENUM_METHOD_NAME
 	{
@@ -12,11 +12,11 @@ namespace RE2RREnums
 		{
 #define ENUM_VALUE(name, value) \
 	case ENUM_NAME::name:       \
-		return #name;
+		return std::make_unique<std::string>(#name);
 			ENUM_LIST
 #undef ENUM_VALUE
 			default:
-				return {};
+				return std::make_unique<std::string>();
 		}
 	}
 

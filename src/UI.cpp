@@ -136,14 +136,14 @@ void __stdcall RE2RRUI::UI::DrawDebugOverlay(const bool &open, const bool &mainU
 			ImGui::Text("Randomizer not initialized!");
 		else
 		{
-			ImGui::Text("Scenario: %s", RE2RREnums::EnumScenarioToString(randomizer->GetScenario()).c_str());
-			ImGui::Text("Difficulty: %s", RE2RREnums::EnumDifficultyToString(randomizer->GetDifficulty()).c_str());
-			ImGui::Text("Floor: %s (%s)", randomizer->GetFloorName().c_str(), RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).c_str());
-			ImGui::Text("Map: %s (%s)", randomizer->GetMapName().c_str(), RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).c_str());
-			ImGui::Text("Map Part: %s (%s)", randomizer->GetMapPartsName().c_str(), RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).c_str());
-			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
-			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().c_str());
-			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().c_str());
+			ImGui::Text("Scenario: %s", RE2RREnums::EnumScenarioToString(randomizer->GetScenario()).get()->c_str());
+			ImGui::Text("Difficulty: %s", RE2RREnums::EnumDifficultyToString(randomizer->GetDifficulty()).get()->c_str());
+			ImGui::Text("Floor: %s (%s)", randomizer->GetFloorName().c_str(), RE2RREnums::EnumFloorIDToString(randomizer->GetFloorID()).get()->c_str());
+			ImGui::Text("Map: %s (%s)", randomizer->GetMapName().c_str(), RE2RREnums::EnumMapIDToString(randomizer->GetMapID()).get()->c_str());
+			ImGui::Text("Map Part: %s (%s)", randomizer->GetMapPartsName().c_str(), RE2RREnums::EnumMapPartsIDToString(randomizer->GetMapPartsID()).get()->c_str());
+			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).get()->c_str());
+			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().get()->c_str());
+			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().get()->c_str());
 		}
 		// if (font != nullptr)
 		// 	ImGui::PopFont();
