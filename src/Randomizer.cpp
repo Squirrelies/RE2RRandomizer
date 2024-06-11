@@ -113,7 +113,8 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 	std::vector<RandomizedItem> values;
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
-		if (!seed.seedData.contains(key))
+		if (!std::ranges::any_of(seed.seedData, [&key](const std::pair<GUID, RandomizedItem> &kv)
+		                         { return key == kv.second.OriginalGUID; }))
 			values.push_back(RandomizedItem{.OriginalGUID = key, .ReplacementItem = value});
 	}
 
@@ -138,23 +139,52 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 
 		// Knife
-		candidates.append_range(std::initializer_list<GUID>{StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"),
-		                                                    StringToGUIDA("17761516-0B95-0710-16D2-EDDF56F1866D"),
-		                                                    StringToGUIDA("F1E708F9-318D-4D29-8351-EB1AA8218188"),
-		                                                    StringToGUIDA("0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91"),
-		                                                    StringToGUIDA("59F3E4BF-ACB0-40B5-B7B6-01480EEC855F"),
-		                                                    StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"),
-		                                                    StringToGUIDA("6A098F7F-81A3-4B2C-9144-8C28C9506C90"),
-		                                                    StringToGUIDA("C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"),
-		                                                    StringToGUIDA("1FABF80A-A8B2-44CA-A8B6-D9DC1BC8BC4D"),
-		                                                    StringToGUIDA("03659087-CCD3-4032-A375-5DCCA3C339EE"),
-		                                                    StringToGUIDA("8AE2134C-5EFD-0227-3A61-0462F2C5CC5D"),
-		                                                    StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C")});
+		candidates.append_range(std::initializer_list<GUID>{
+		    StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"),
+		    StringToGUIDA("17761516-0B95-0710-16D2-EDDF56F1866D"),
+		    StringToGUIDA("F1E708F9-318D-4D29-8351-EB1AA8218188"),
+		    StringToGUIDA("0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91"),
+		    StringToGUIDA("59F3E4BF-ACB0-40B5-B7B6-01480EEC855F"),
+		    StringToGUIDA("6A098F7F-81A3-4B2C-9144-8C28C9506C90"),
+		    StringToGUIDA("C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"),
+		    StringToGUIDA("1FABF80A-A8B2-44CA-A8B6-D9DC1BC8BC4D"),
+		    StringToGUIDA("03659087-CCD3-4032-A375-5DCCA3C339EE"),
+		    StringToGUIDA("8AE2134C-5EFD-0227-3A61-0462F2C5CC5D"),
+		    StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C")});
 		AddKeyItem(StringToGUIDA("09749BFC-D1B4-09EA-3723-AC256D7E5630"), candidates, gen);
 
 		// Spade Key
-		// candidates.append_range(std::initializer_list<GUID>{});
-		// AddKeyItem(NULL, candidates, gen);
+		candidates.append_range(std::initializer_list<GUID>{
+		    StringToGUIDA("1E671313-7622-0DB1-318D-4D3B5C9B1CA0"),
+		    StringToGUIDA("792CD162-B4FD-44F0-B10E-2576B241C815"),
+		    StringToGUIDA("B98024D4-BD20-02DC-228E-2718F9F4E693"),
+		    StringToGUIDA("725BFD68-10C7-04EC-120D-2D8EEA24A933"),
+		    StringToGUIDA("CA039CC1-DFC3-4B2A-9918-92B9E8D93BBB"),
+		    StringToGUIDA("923B3354-E5C4-4A5F-BFF1-DD76FC643317"),
+		    StringToGUIDA("E823B55D-3226-0FA9-2742-E0CEB2A3E4AD"),
+		    StringToGUIDA("BF8A39DB-8BB1-0E78-0DEA-8DA0C264476E"),
+		    StringToGUIDA("2A907E12-7FE3-4559-9AF4-3051473F8FAA"),
+		    StringToGUIDA("9F00CC80-24E4-448D-B72D-78B39E4A5808"),
+		    StringToGUIDA("FAF9B2E8-5373-48B7-AA5A-7554AB1A613C"),
+		    StringToGUIDA("A66B843C-DB59-49A8-B7DA-774944EB7298"),
+		    StringToGUIDA("A8C3FD34-3F01-47E1-831D-784EF6822707"),
+		    StringToGUIDA("89E3BCFB-964D-4068-9248-219A4F52FBAF"),
+		    StringToGUIDA("3B1822E5-3C5F-40E9-A7CC-2EA0E0869454"),
+		    StringToGUIDA("A9FB31F3-03CE-4369-B897-3C25461F6634"),
+		    StringToGUIDA("C132B6AB-AF0B-49A5-8D34-0531BBFFEA1A"),
+		    StringToGUIDA("5B941AC8-03C9-4C51-9F56-8C44D8B08218"),
+		    StringToGUIDA("4176F7D5-727D-43AD-AE01-B01D1E3D99A6"),
+		    StringToGUIDA("759E8645-B0B3-4AB2-92CF-31035AF835CC"),
+		    StringToGUIDA("02A2983C-F3F2-46A3-B681-07FAE38B72AC"),
+		    StringToGUIDA("F842B0CF-4D7C-0112-2CFE-6574850326A7"),
+		    StringToGUIDA("87758B8D-E424-43DD-AFEA-2B5321A769E8"),
+		    StringToGUIDA("BAB694FD-96A8-41E8-A261-9436D992B853"),
+		    StringToGUIDA("B2FA1538-4D10-4056-84B4-0B5E78D6D82F"),
+		    StringToGUIDA("6A43B6B6-9C0A-456C-A0A2-B36BD0BBEE83"),
+		    StringToGUIDA("6A098F7F-81A3-4B2C-9144-8C28C9506C90"),
+		    StringToGUIDA("C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"),
+		});
+		AddKeyItem(StringToGUIDA("1E671313-7622-0DB1-318D-4D3B5C9B1CA0"), candidates, gen);
 	}
 	else // B scenarios
 	{
@@ -189,7 +219,7 @@ void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std
 	                  GUIDToString(original).c_str());
 
 	// Seed (LEON_A NORMAL): 384451726
-	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][destinations[index]]}));
+	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][original]}));
 	destinations.erase(destinations.begin() + index); // Remove this entry as a candidate since we're using it now.
 }
 

@@ -114,7 +114,8 @@
         "print": "cpp",
         "queue": "cpp",
         "shared_mutex": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "__config": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++23",
     "cmake.environment": {
