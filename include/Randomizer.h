@@ -41,10 +41,10 @@ private:
 	static const std::string &GetFloorNameById(const RE2RREnums::FloorID &);
 	static const std::string &GetMapNameById(const RE2RREnums::MapID &);
 	static const std::string &GetMapPartsNameById(const RE2RREnums::MapPartsID &);
-	void RandomizeItem(RE2RItem *, const RE2RItem &, const RE2RItem &);
+	void RandomizeItem(RE2RItem &, const RE2RItem &, const RE2RItem &);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);
-	void SetLast(const RE2RItem &, const RE2RItem &, GUID &);
+	void SetLast(const RE2RItem &, const RE2RItem &, const GUID &);
 	/// @brief
 	/// @param gen
 	void HandleSoftLocks(std::mt19937 &gen);
@@ -70,7 +70,7 @@ public:
 	{
 	}
 
-	void ItemPickup(RE2RItem *, const RE2RItem &, GUID &);
+	void ItemPickup(RE2RItem &, const RE2RItem &, const GUID &);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 	RE2RREnums::Difficulty GetDifficulty(void);
 	RE2RREnums::Scenario GetScenario(void);

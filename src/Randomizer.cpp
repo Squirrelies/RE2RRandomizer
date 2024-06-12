@@ -1,12 +1,9 @@
 #include "Randomizer.h"
 
-void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem, GUID &itemPositionGuid)
+void Randomizer::ItemPickup(RE2RItem &itemToReplace, const RE2RItem &currentItem, const GUID &itemPositionGuid)
 {
-	if (itemToReplace == nullptr)
-		return;
-
 	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
-	                  NAMEOF(itemToReplace), itemToReplace,
+	                  NAMEOF(itemToReplace), &itemToReplace,
 	                  NAMEOF(currentItem), currentItem.ToString().get()->c_str(),
 	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).get()->c_str());
 	logger.LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
@@ -18,7 +15,7 @@ void Randomizer::ItemPickup(RE2RItem *itemToReplace, const RE2RItem &currentItem
 		RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
 
-void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, GUID &itemPositionGuid)
+void Randomizer::SetLast(const RE2RItem &item, const RE2RItem &randomizedItem, const GUID &itemPositionGuid)
 {
 	this->lastInteractedItem = item;
 	this->lastRandomizedItem = randomizedItem;
@@ -92,16 +89,10 @@ const std::string &Randomizer::GetMapPartsName()
 	return GetMapPartsNameById(mapPartsId);
 }
 
-void Randomizer::RandomizeItem(RE2RItem *itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
+void Randomizer::RandomizeItem(RE2RItem &itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", itemToReplace, originalItem.ToString().get()->c_str(), newItem.ToString().get()->c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).get()->c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).get()->c_str());
-	//*itemToReplace = newItem;
-
-	itemToReplace->ItemId = newItem.ItemId;
-	itemToReplace->WeaponId = newItem.WeaponId;
-	itemToReplace->WeaponParts = newItem.WeaponParts;
-	itemToReplace->BulletId = newItem.BulletId;
-	itemToReplace->Count = newItem.Count;
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", &itemToReplace, originalItem.ToString().get()->c_str(), newItem.ToString().get()->c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).get()->c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).get()->c_str());
+	itemToReplace = newItem;
 }
 
 void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RREnums::Scenario &scenario, int_fast32_t initialSeed)
@@ -134,6 +125,7 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 	}
 }
 
+// Seed (LEON_A NORMAL): 384451726
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
@@ -224,7 +216,6 @@ void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std
 	                  originalItemMapping[seed.gameMode][original].ToString().get()->c_str(),
 	                  GUIDToString(original).get()->c_str());
 
-	// Seed (LEON_A NORMAL): 384451726
 	seed.seedData.insert(std::make_pair(destinations[index], RandomizedItem{.OriginalGUID = original, .ReplacementItem = originalItemMapping[seed.gameMode][original]}));
 	destinations.erase(destinations.begin() + index); // Remove this entry as a candidate since we're using it now.
 }
