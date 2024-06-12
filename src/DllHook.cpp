@@ -3,9 +3,9 @@
 HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
 FILE *stdoutLogFile;
-UILog *uiLog;
-ImmediateLogger *logger;
-RE2RRUI::UI *ui;
+std::unique_ptr<UILog> uiLog;
+std::unique_ptr<ImmediateLogger> logger;
+std::unique_ptr<RE2RRUI::UI> ui;
 void **vtableDXGISwapChain = nullptr;
 void **vtableD3D11Device = nullptr;
 void **vtableD3D11DeviceContext = nullptr;
@@ -104,9 +104,9 @@ DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 bool Startup()
 {
 	return !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
-	       (uiLog = new UILog()) != nullptr &&
-	       (logger = new ImmediateLogger(stdoutLogFile, *uiLog)) != nullptr &&
-	       (ui = new RE2RRUI::UI(*logger)) != nullptr &&
+	       (uiLog = std::make_unique<UILog>()).get() != nullptr &&
+	       (logger = std::make_unique<ImmediateLogger>(stdoutLogFile, *uiLog)).get() != nullptr &&
+	       (ui = std::make_unique<RE2RRUI::UI>(*logger.get())).get() != nullptr &&
 	       MH_Initialize() == MH_OK;
 }
 
@@ -117,21 +117,6 @@ void Shutdown()
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 	Sleep(100);
-	if (ui != nullptr)
-	{
-		delete ui;
-		ui = nullptr;
-	}
-	if (logger != nullptr)
-	{
-		delete logger;
-		logger = nullptr;
-	}
-	if (uiLog != nullptr)
-	{
-		delete uiLog;
-		uiLog = nullptr;
-	}
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
