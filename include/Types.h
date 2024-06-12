@@ -24,8 +24,8 @@ bool TryStringToGUIDW(const std::wstring &stringGUID, const GUID &guid);
 #else
 #define StringToGUID StringToGUIDA
 #endif
-GUID &StringToGUIDA(const std::string &stringGUID);
-GUID &StringToGUIDW(const std::wstring &stringGUID);
+std::unique_ptr<GUID> StringToGUIDA(const std::string &stringGUID);
+std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 
 // Enum RE2RGameVersion
 #ifndef RE2RR_TYPES_H_RE2RGameVersion

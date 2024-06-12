@@ -9,9 +9,8 @@ namespace RE2RRHashes
 
 	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger &logger)
 	{
-		uint8_t *gameExeSHA256Hash = RE2RRFile::GetFileHashSHA256(filePath);
-		std::vector<uint8_t> hashVector = RE2RRFile::HashSHA256ToVector(gameExeSHA256Hash);
-		free(gameExeSHA256Hash);
+		std::unique_ptr<uint8_t[]> gameExeSHA256Hash = RE2RRFile::GetFileHashSHA256(filePath);
+		std::vector<uint8_t> hashVector = RE2RRFile::HashSHA256ToVector(gameExeSHA256Hash.get());
 
 		logger.LogMessage("[RE2R-R] Game hash: { %s }\n", RE2RRFile::VectorToHexString(hashVector).get()->c_str());
 

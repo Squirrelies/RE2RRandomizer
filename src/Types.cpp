@@ -12,18 +12,18 @@ bool TryStringToGUIDW(const std::wstring &stringGUID, const GUID &guid)
 	return UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)&guid) == RPC_S_OK;
 }
 
-GUID &StringToGUIDA(const std::string &stringGUID)
+std::unique_ptr<GUID> StringToGUIDA(const std::string &stringGUID)
 {
-	GUID *returnValue = new GUID();
-	UuidFromStringA((unsigned char *)stringGUID.c_str(), (UUID *)returnValue);
-	return *returnValue;
+	std::unique_ptr<GUID> returnValue = std::make_unique<GUID>();
+	UuidFromStringA((unsigned char *)stringGUID.c_str(), (UUID *)returnValue.get());
+	return returnValue;
 }
 
-GUID &StringToGUIDW(const std::wstring &stringGUID)
+std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID)
 {
-	GUID *returnValue = new GUID();
-	UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)returnValue);
-	return *returnValue;
+	std::unique_ptr<GUID> returnValue = std::make_unique<GUID>();
+	UuidFromStringW((unsigned short *)stringGUID.c_str(), (UUID *)returnValue.get());
+	return returnValue;
 }
 
 bool operator==(const RE2RItem &lhs, const RE2RItem &rhs)

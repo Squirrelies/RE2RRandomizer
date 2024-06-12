@@ -23,7 +23,7 @@ namespace RE2RRFile
 	/// @brief Calculates the SHA256 hash for a given file.
 	/// @param filePath The file to calculate the SHA256 hash for.
 	/// @return The SHA256 hash as an uint8_t array. This array will always be 32-bytes or 256-bits.
-	LIBRARY_EXPORT_API uint8_t *GetFileHashSHA256(const char *filePath);
+	LIBRARY_EXPORT_API std::unique_ptr<uint8_t[]> GetFileHashSHA256(const char *filePath);
 
 	LIBRARY_EXPORT_API std::vector<uint8_t> HashSHA256ToVector(const uint8_t *hash);
 

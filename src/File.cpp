@@ -24,7 +24,7 @@ size_t RE2RRFile::GetFileSizeT(const char *filePath)
 	return size;
 }
 
-uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
+std::unique_ptr<uint8_t[]> RE2RRFile::GetFileHashSHA256(const char *filePath)
 {
 	const int bufferSize = SIZE_OF_SHA_256_CHUNK * SIZE_OF_SHA_256_CHUNK;
 
@@ -32,26 +32,25 @@ uint8_t *RE2RRFile::GetFileHashSHA256(const char *filePath)
 	if (file == nullptr)
 		return nullptr;
 
-	uint8_t *hash = (uint8_t *)malloc(SIZE_OF_SHA_256_HASH);
+	std::unique_ptr<uint8_t[]> hash = std::make_unique<uint8_t[]>(SIZE_OF_SHA_256_HASH);
 	struct Sha_256 sha_256;
-	sha_256_init(&sha_256, hash);
+	sha_256_init(&sha_256, hash.get());
 
 	size_t fileSize = GetFileSizeT(filePath);
-	uint8_t *fileData = (uint8_t *)malloc(bufferSize);
+	std::unique_ptr<uint8_t[]> fileData = std::make_unique<uint8_t[]>(bufferSize);
 	size_t totalBytesRead = 0;
 	size_t bytesRead = 0;
 	int error = 0;
 	int eof = 0;
 	do
 	{
-		bytesRead = fread(fileData, sizeof(uint8_t), bufferSize, file);
-		sha_256_write(&sha_256, fileData, bytesRead);
+		bytesRead = fread(fileData.get(), sizeof(uint8_t), bufferSize, file);
+		sha_256_write(&sha_256, fileData.get(), bytesRead);
 		totalBytesRead += bytesRead;
 		error = ferror(file);
 		eof = feof(file);
 		clearerr(file);
 	} while ((totalBytesRead < fileSize) && !error && !eof);
-	free(fileData);
 	fclose(file);
 	sha_256_close(&sha_256);
 

@@ -67,8 +67,8 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	logger->LogMessage("[RE2R-R] MainThread called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
-	const char *gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	RE2RREnums::RE2RGameVersion UNUSED(gameVersion) = RE2RRHashes::DetectVersion(gameExePath, *logger);
+	const std::unique_ptr<char[]> gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
+	RE2RREnums::RE2RGameVersion UNUSED(gameVersion) = RE2RRHashes::DetectVersion(gameExePath.get(), *logger);
 
 	MH_STATUS status;
 	do

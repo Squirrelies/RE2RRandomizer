@@ -47,7 +47,7 @@ HMODULE GetProcessModuleByName(HANDLE hProcess, TCHAR moduleName[])
 	return NULL;
 }
 
-char *GetProcessModulePathByNameA(HANDLE hProcess, const char moduleName[])
+std::unique_ptr<char[]> GetProcessModulePathByNameA(HANDLE hProcess, const char moduleName[])
 {
 	HMODULE hMods[1024];
 	DWORD cbNeeded;
@@ -57,23 +57,22 @@ char *GetProcessModulePathByNameA(HANDLE hProcess, const char moduleName[])
 	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
 	{
 		size_t szModNameSize = (MAX_PATH * sizeof(char)) + sizeof(char);
-		char *szModName = (char *)malloc(szModNameSize);
+		std::unique_ptr<char[]> szModName = std::make_unique<char[]>(szModNameSize);
 		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
 		{
 			// Get the full path to the module's file.
-			if (GetModuleFileNameExA(hProcess, hMods[i], szModName, szModNameSize))
+			if (GetModuleFileNameExA(hProcess, hMods[i], szModName.get(), szModNameSize))
 			{
-				if (stricmp(szModName, moduleName))
+				if (stricmp(szModName.get(), moduleName))
 					return szModName;
 			}
 		}
-		free(szModName);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, wchar_t moduleName[])
+std::unique_ptr<wchar_t[]> GetProcessModulePathByNameW(HANDLE hProcess, wchar_t moduleName[])
 {
 	HMODULE hMods[1024];
 	DWORD cbNeeded;
@@ -83,20 +82,19 @@ wchar_t *GetProcessModulePathByNameW(HANDLE hProcess, wchar_t moduleName[])
 	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
 	{
 		size_t szModNameSize = (MAX_PATH * sizeof(wchar_t)) + sizeof(wchar_t);
-		wchar_t *szModName = (wchar_t *)malloc(szModNameSize);
+		std::unique_ptr<wchar_t[]> szModName = std::make_unique<wchar_t[]>(szModNameSize);
 		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
 		{
 			// Get the full path to the module's file.
-			if (GetModuleFileNameExW(hProcess, hMods[i], szModName, szModNameSize))
+			if (GetModuleFileNameExW(hProcess, hMods[i], szModName.get(), szModNameSize))
 			{
-				if (wcsicmp(szModName, moduleName))
+				if (wcsicmp(szModName.get(), moduleName))
 					return szModName;
 			}
 		}
-		free(szModName);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool TryGetModuleInfo(HANDLE hProcess, HMODULE hModule, MODULEINFO *moduleInfo)
