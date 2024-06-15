@@ -41,6 +41,12 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("View"))
+		{
+			ImGui::MenuItem("Show Log", NULL, &show_Log);
+			ImGui::EndMenu();
+		}
+
 		if (IsDebug)
 		{
 			if (ImGui::BeginMenu("Debug"))
@@ -104,9 +110,6 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 		delete randomizer;
 		randomizer = nullptr;
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Show/Hide Log"))
-		show_Log = !show_Log;
 
 	ImGui::End();
 }
