@@ -1,16 +1,13 @@
 #include "Randomizer.h"
 
-void Randomizer::ItemPickup(RE2RItem &itemToReplace, const RE2RItem &currentItem, const GUID &itemPositionGuid)
+void Randomizer::ItemPickup(RE2RItem &itemToReplace, const GUID &itemPositionGuid)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s, *%s: %s) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s) called.\n",
 	                  NAMEOF(itemToReplace), &itemToReplace,
-	                  NAMEOF(currentItem), currentItem.ToString().get()->c_str(),
 	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).get()->c_str());
-	logger.LogMessage("[RE2R-R] originalItemMapping returned: %s.\n",
-	                  this->originalItemMapping[this->seed.gameMode][itemPositionGuid].ToString().get()->c_str());
-	logger.LogMessage("[RE2R-R] seedData returned: %s.\n",
-	                  this->seed.seedData[itemPositionGuid].ReplacementItem.ToString().get()->c_str());
+
 	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
+
 	if (!debugSkipRandomization)
 		RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
@@ -91,7 +88,10 @@ const std::string &Randomizer::GetMapPartsName()
 
 void Randomizer::RandomizeItem(RE2RItem &itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem().\n\tOld (%p): %s.\n\tNew: %s.\n\t%s -> %s\n", &itemToReplace, originalItem.ToString().get()->c_str(), newItem.ToString().get()->c_str(), RE2RREnums::EnumItemTypeToString(originalItem.ItemId).get()->c_str(), RE2RREnums::EnumItemTypeToString(newItem.ItemId).get()->c_str());
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, ...).\n\t%s\n\t%s\n",
+	                  NAMEOF(itemToReplace), &itemToReplace,
+	                  originalItem.ToString().get()->c_str(),
+	                  newItem.ToString().get()->c_str());
 	itemToReplace = newItem;
 }
 

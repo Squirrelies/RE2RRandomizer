@@ -70,7 +70,7 @@ public:
 	{
 	}
 
-	void ItemPickup(RE2RItem &, const RE2RItem &, const GUID &);
+	void ItemPickup(RE2RItem &, const GUID &);
 	bool ChangeArea(RE2RREnums::MapPartsID, RE2RREnums::MapID, RE2RREnums::FloorID);
 	RE2RREnums::Difficulty GetDifficulty(void);
 	RE2RREnums::Scenario GetScenario(void);

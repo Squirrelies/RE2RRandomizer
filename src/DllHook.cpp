@@ -147,11 +147,11 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 		return itemPickupFunc(param1, param2, param3, param4);
 
 	RE2RItem *itemToReplace = (RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
-	const RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);           // This is where we want to read to get what the item is.
+	// const RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);        // This is where we want to read to get what the item is.
 	const GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
 
-	if (itemToReplace != nullptr && currentItem != nullptr && itemPositionGuid != nullptr)
-		randomizer->ItemPickup(*itemToReplace, *currentItem, *itemPositionGuid);
+	if (itemToReplace != nullptr && itemPositionGuid != nullptr)
+		randomizer->ItemPickup(*itemToReplace, *itemPositionGuid);
 
 	return itemPickupFunc(param1, param2, param3, param4);
 }

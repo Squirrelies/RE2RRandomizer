@@ -4,7 +4,7 @@
 #define GAMEEDITION_WW 0
 #define GAMEEDITION_CEROZ 1
 // The game edition we're targeting. (TODO: Add detection and support for both so this isn't needed.)
-#define GAMEEDITION GAMEEDITION_CEROZ
+#define GAMEEDITION GAMEEDITION_WW
 
 #define DXVERSION_11 0
 #define DXVERSION_12 1
@@ -36,6 +36,8 @@
 
 #if (DXVERSION == DXVERSION_11 && GAMEEDITION == GAMEEDITION_WW)
 // DX11-WW as of 20240102
+// constexpr uintptr_t ItemPlacement1FuncOffset = 0x12CDA20; // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gamemastering.InventoryManager.ItemData, app.ropeway.gamemastering.Location.ID, app.ropeway.gamemastering.Map.ID, System.Guid)
+// constexpr uintptr_t ItemPlacement2FuncOffset = 0x12CC740; // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gimmick.action.SetItem.SetItemSaveData)
 constexpr uintptr_t ItemPickupFuncOffset = 0xB912D0;         // app.ropeway.gui.GUIMaster.openInventoryGetItemMode(app.ropeway.gamemastering.InventoryManager.StockItem, app.ropeway.gimmick.action.SetItem.SetItemSaveData)
 constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430; // app.ropeway.gamemastering.UIMapManager.update()
 #elif (DXVERSION == DXVERSION_12 && GAMEEDITION == GAMEEDITION_WW)
@@ -54,6 +56,8 @@ constexpr uintptr_t UIMapManagerUpdateFuncOffset = 0x95E430;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
+typedef void(__stdcall *ItemPlacement1)(uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+typedef uintptr_t(__stdcall *ItemPlacement2)(uintptr_t, uintptr_t, uintptr_t);
 typedef uintptr_t(__stdcall *ItemPickup)(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 typedef void(__stdcall *UIMapManagerUpdate)(uintptr_t, uintptr_t);
 
@@ -67,6 +71,8 @@ DWORD WINAPI ShutdownThread(LPVOID);
 bool Startup(void);
 void Shutdown(void);
 
+__stdcall void HookItemPlacement1(uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+__stdcall uintptr_t HookItemPlacement2(uintptr_t, uintptr_t, uintptr_t);
 __stdcall uintptr_t HookItemPickup(uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 __stdcall void HookUIMapManagerUpdate(uintptr_t, uintptr_t);
 HRESULT __stdcall HookPresent(IDXGISwapChain *, UINT, UINT);
