@@ -10,11 +10,7 @@
 
 namespace RE2RRHashes
 {
-	/// @brief Detects the game version using a SHA256 checksum hash.
-	/// @param filePath The path to the game executable.
-	/// @param logger The ImmediateLogger instance to log messages to.
-	/// @return A enumeration value representing the detected version of the game.
-	RE2RREnums::RE2RGameVersion DetectVersion(const char *filePath, ImmediateLogger &logger);
+	bool DetectVersion(const char *filePath, RE2RREnums::RE2RGameVersion &gameVersion, RE2RREnums::RE2RGameEdition &gameEdition, RE2RREnums::RE2RGameDXVersion &gameDXVersion, ImmediateLogger &logger);
 }
 
 #endif

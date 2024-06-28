@@ -32,12 +32,50 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 #define RE2RR_TYPES_H_RE2RGameVersion
 #define ENUM_NAME RE2RGameVersion
 #define ENUM_TYPE uint32_t
-#define ENUM_LIST                        \
-	ENUM_VALUE(Unknown, 0)               \
-	ENUM_VALUE(WW_DX11_20230421_1, 1)    \
-	ENUM_VALUE(WW_DX12_20230814_1, 2)    \
-	ENUM_VALUE(CEROZ_DX11_20230421_1, 3) \
-	ENUM_VALUE(CEROZ_DX12_20230814_1, 4)
+#define ENUM_LIST                  \
+	ENUM_VALUE(Unknown, 0)         \
+	ENUM_VALUE(RE2R_20230421_1, 1) \
+	ENUM_VALUE(RE2R_20230814_1, 2)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
+#include "Types_Enum.h"
+#endif
+#undef ENUM_LIST
+#undef ENUM_TYPE
+#undef ENUM_NAME
+#endif
+//
+
+// Enum RE2RGameEdition
+#ifndef RE2RR_TYPES_H_RE2RGameEdition
+#define RE2RR_TYPES_H_RE2RGameEdition
+#define ENUM_NAME RE2RGameEdition
+#define ENUM_TYPE uint32_t
+#define ENUM_LIST            \
+	ENUM_VALUE(Unknown, 0)   \
+	ENUM_VALUE(WorldWide, 1) \
+	ENUM_VALUE(CeroZ, 2)
+#ifdef RE2RR_TYPES_CPP
+#include "../src/Types_Enum.cpp"
+#else
+#include "Types_Enum.h"
+#endif
+#undef ENUM_LIST
+#undef ENUM_TYPE
+#undef ENUM_NAME
+#endif
+//
+
+// Enum RE2RGameDXVersion
+#ifndef RE2RR_TYPES_H_RE2RGameDXVersion
+#define RE2RR_TYPES_H_RE2RGameDXVersion
+#define ENUM_NAME RE2RGameDXVersion
+#define ENUM_TYPE uint32_t
+#define ENUM_LIST            \
+	ENUM_VALUE(Unknown, 0)   \
+	ENUM_VALUE(DirectX11, 1) \
+	ENUM_VALUE(DirectX12, 2)
 #ifdef RE2RR_TYPES_CPP
 #include "../src/Types_Enum.cpp"
 #else
@@ -1454,6 +1492,10 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 #undef ENUM_NAME
 #endif
 //
+
+extern RE2RREnums::RE2RGameVersion gameVersion;
+extern RE2RREnums::RE2RGameEdition gameEdition;
+extern RE2RREnums::RE2RGameDXVersion gameDXVersion;
 
 struct PACKED_DATA via_vec3
 {

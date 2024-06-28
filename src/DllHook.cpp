@@ -27,10 +27,13 @@ HWND window;
 Present presentFunc;
 GetDeviceState getDeviceStateFunc;
 WNDPROC wndProcFunc;
-ItemPickup itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
+ItemPickup itemPickupFuncTarget = nullptr;
 ItemPickup itemPickupFunc = nullptr;
-UIMapManagerUpdate uiMapManagerUpdateFuncTarget = reinterpret_cast<UIMapManagerUpdate>((uintptr_t)GetModuleHandleW(L"re2.exe") + UIMapManagerUpdateFuncOffset);
+UIMapManagerUpdate uiMapManagerUpdateFuncTarget = nullptr;
 UIMapManagerUpdate uiMapManagerUpdateFunc = nullptr;
+RE2RREnums::RE2RGameVersion gameVersion;
+RE2RREnums::RE2RGameEdition gameEdition;
+RE2RREnums::RE2RGameDXVersion gameDXVersion;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -68,7 +71,63 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
 	const std::unique_ptr<char[]> gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	RE2RREnums::RE2RGameVersion UNUSED(gameVersion) = RE2RRHashes::DetectVersion(gameExePath.get(), *logger);
+	if (!RE2RRHashes::DetectVersion(gameExePath.get(), gameVersion, gameEdition, gameDXVersion, *logger))
+	{
+		logger->LogMessage("[RE2R-R] Unable to detect game version, shutting down...\n");
+		Shutdown();
+		return FALSE; // Bail out if we can't detect version.
+	}
+
+	// Set function pointer addresses.
+	if (gameEdition == RE2RREnums::RE2RGameEdition::WorldWide)
+	{
+		if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX11)
+		{
+			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230421_1)
+			{
+				ItemPlacement1FuncOffset = 0x12CDA20;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gamemastering.InventoryManager.ItemData, app.ropeway.gamemastering.Location.ID, app.ropeway.gamemastering.Map.ID, System.Guid)
+				ItemPlacement2FuncOffset = 0x12CC740;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gimmick.action.SetItem.SetItemSaveData)
+				ItemPickupFuncOffset = 0xB912D0;         // app.ropeway.gui.GUIMaster.openInventoryGetItemMode(app.ropeway.gamemastering.InventoryManager.StockItem, app.ropeway.gimmick.action.SetItem.SetItemSaveData)
+				UIMapManagerUpdateFuncOffset = 0x95E430; // app.ropeway.gamemastering.UIMapManager.update()
+			}
+		}
+		else if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX12)
+		{
+			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230814_1)
+			{
+				ItemPlacement1FuncOffset = 0x0;
+				ItemPlacement2FuncOffset = 0x0;
+				ItemPickupFuncOffset = 0x0;
+				UIMapManagerUpdateFuncOffset = 0x0;
+			}
+		}
+	}
+	else if (gameEdition == RE2RREnums::RE2RGameEdition::CeroZ)
+	{
+		if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX11)
+		{
+			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230421_1)
+			{
+				ItemPlacement1FuncOffset = 0x0;
+				ItemPlacement2FuncOffset = 0x0;
+				ItemPickupFuncOffset = 0x0;
+				UIMapManagerUpdateFuncOffset = 0x0;
+			}
+		}
+		else if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX12)
+		{
+			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230814_1)
+			{
+				ItemPlacement1FuncOffset = 0x0;
+				ItemPlacement2FuncOffset = 0x0;
+				ItemPickupFuncOffset = 0x0;
+				UIMapManagerUpdateFuncOffset = 0x0;
+			}
+		}
+	}
+
+	itemPickupFuncTarget = reinterpret_cast<ItemPickup>((uintptr_t)GetModuleHandleW(L"re2.exe") + ItemPickupFuncOffset);
+	uiMapManagerUpdateFuncTarget = reinterpret_cast<UIMapManagerUpdate>((uintptr_t)GetModuleHandleW(L"re2.exe") + UIMapManagerUpdateFuncOffset);
 
 	MH_STATUS status;
 	do
@@ -208,7 +267,6 @@ HRESULT __stdcall HookPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT
 
 	if (ui != nullptr)
 		ui->DrawMainUI(isUIOpen);
-	// ImGui::ShowDemoWindow();
 
 	ImGui::Render();
 

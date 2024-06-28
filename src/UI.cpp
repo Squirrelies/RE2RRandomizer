@@ -184,6 +184,10 @@ void __stdcall RE2RRUI::UI::DrawHelpAboutRE2RRUI(const bool &open)
 
 		ImGui::Text("Resident Evil 2 (2019) Randomizer");
 		ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
+		ImGui::Text("%s %s (%s)",
+		            RE2RREnums::EnumRE2RGameEditionToString(gameEdition).get()->c_str(),
+		            RE2RREnums::EnumRE2RGameDXVersionToString(gameDXVersion).get()->c_str(),
+		            RE2RREnums::EnumRE2RGameVersionToString(gameVersion).get()->c_str());
 		ImGui::Separator();
 		ImGui::Text("Build datetime: %s %s", __DATE__, __TIME__);
 		ImGui::Text("Debug build: %s", IsDebug ? "true" : "false");

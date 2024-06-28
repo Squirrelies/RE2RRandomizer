@@ -54,6 +54,7 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 }
 
 // Seed (LEON_A NORMAL): 384451726
+// Seed (CLAIRE_B NORMAL): 566284478
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
@@ -65,6 +66,8 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
 	{
 		if (value.ItemId == RE2RREnums::ItemType::KeyCardParkingGarage ||
+		    value.ItemId == RE2RREnums::ItemType::KeyOrphanage ||
+		    value.ItemId == RE2RREnums::ItemType::StuffedDoll ||
 		    value.ItemId == RE2RREnums::ItemType::PlugBishop ||
 		    value.ItemId == RE2RREnums::ItemType::PlugKing ||
 		    value.ItemId == RE2RREnums::ItemType::PlugKnight ||
@@ -94,35 +97,89 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
 
 		// BoltCutter or KeyCourtyard
-		originals.append_range(std::initializer_list<GUID>{*StringToGUIDA("B70C9C24-93B9-4A2A-824A-A75700C67277").get(),
-		                                                   *StringToGUIDA("E49A8008-0A1F-4944-BF1E-F8DA443B82AD").get()});
+		originals.append_range(std::initializer_list<GUID>{
+		    *StringToGUIDA("B70C9C24-93B9-4A2A-824A-A75700C67277").get(),
+		    *StringToGUIDA("E49A8008-0A1F-4944-BF1E-F8DA443B82AD").get(),
+		});
 
 		candidates.append_range(std::initializer_list<GUID>{
+		    // East Courtyard
 		    *StringToGUIDA("65F7FE6D-5046-4E7D-B5AA-24747AAB03BB").get(),
 		    *StringToGUIDA("B70C9C24-93B9-4A2A-824A-A75700C67277").get(),
-		    *StringToGUIDA("D79F6C57-3330-4396-82EC-EDD8A4CBE27F").get()});
+		    *StringToGUIDA("D79F6C57-3330-4396-82EC-EDD8A4CBE27F").get(),
+		});
 		AddKeyItem(originals, candidates, gen);
 
-		// If BoltCutter is left, randomize it to these locations.
+		// If BoltCutter is left, randomize it to these locations. (TODO: This can actually be expanded to east hall and safe room)
 		if (originals[0] == *StringToGUIDA("B70C9C24-93B9-4A2A-824A-A75700C67277").get())
 		{
 			candidates.append_range(std::initializer_list<GUID>{
-			    *StringToGUIDA("CB32491D-679A-0168-07B4-D26FE88EBC72").get(),
-			    *StringToGUIDA("4A8A159A-EFDA-0123-3D96-01C9FBF9019A").get(),
+			    // Art room
+			    *StringToGUIDA("CB32491D-679A-0168-07B4-D26FE88EBC72").get(), // This is the statue arm that is on the table.
+			    //*StringToGUIDA("D8C1E40B-DB48-42B0-AA16-B4F366245998").get(), // This is the statue arm that is inserted into the statue already
 			    *StringToGUIDA("FA8A099B-2BE6-4196-936F-B53C9382F455").get(),
-			    *StringToGUIDA("D8C1E40B-DB48-42B0-AA16-B4F366245998").get(),
+			    // 2nd floor east hallway
 			    *StringToGUIDA("85F0708C-E754-4A1A-ABF6-1DEE1CB1097E").get(),
-			    *StringToGUIDA("FC707A9A-F8BF-461A-8B83-EF90C00BAAF1").get()});
+			    *StringToGUIDA("FC707A9A-F8BF-461A-8B83-EF90C00BAAF1").get(),
+			    // East staiurwell
+			    *StringToGUIDA("F66D5A99-E6D5-4B32-B86F-ED8BC4D0B37F").get(),
+			    *StringToGUIDA("64B130EE-53DD-4F5B-822F-5A5A77730EAC").get(),
+			    // East Office
+			    *StringToGUIDA("49AF34BC-067C-4BB4-97A9-94FB6F83FBC1").get(),
+			    *StringToGUIDA("76C43A01-0C25-4F3F-9F22-1762C9CF5577").get(),
+			    *StringToGUIDA("AD84247C-A192-4EBA-B99D-412BD6F245B1").get(),
+			    *StringToGUIDA("B15B8A2C-19D6-465F-A4BA-2B1CC9E1306A").get(),
+			    *StringToGUIDA("DA2805DC-F487-0942-3C3D-5C4C65B04107").get(),
+			    *StringToGUIDA("E47F659D-99A0-42BE-B1C8-E59FC1383708").get(),
+			    // East Closet
+			    *StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C").get(),
+			    *StringToGUIDA("B39EC79F-23A5-4B84-8E26-4C82B1A5D4CE").get(),
+			    // Press Room
+			    *StringToGUIDA("F71DDBE7-8CE3-4B98-B103-3F7AC4EC633F").get(),
+			    // East Break Room (Save)
+			    *StringToGUIDA("1E33C3D4-8971-4BA8-8F97-1FDA9E2F3F32").get(),
+			    *StringToGUIDA("2456358F-71BD-4F97-94CF-B225EF4018AF").get(),
+			    *StringToGUIDA("15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD").get(),
+			    *StringToGUIDA("4E68F4C7-8AEB-418F-B089-7F7CB2751783").get(),
+			    *StringToGUIDA("92A9F2F6-4CC4-449A-9B68-B94874D72816").get(),
+			    *StringToGUIDA("03659087-CCD3-4032-A375-5DCCA3C339EE").get(),
+			});
 			AddKeyItem(originals, candidates, gen);
 		}
 		// If KeyCourtyard is left, randomize it to these locations.
 		else if (originals[0] == *StringToGUIDA("E49A8008-0A1F-4944-BF1E-F8DA443B82AD").get())
 		{
 			candidates.append_range(std::initializer_list<GUID>{
+			    // East Guard Room
 			    *StringToGUIDA("E27DF9E6-5944-47EA-AE8B-5B1097FA4AF2").get(),
 			    *StringToGUIDA("389292E7-42DB-49CE-8CF7-E42B324E46A2").get(),
 			    *StringToGUIDA("E49A8008-0A1F-4944-BF1E-F8DA443B82AD").get(),
-			    *StringToGUIDA("D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B").get()});
+			    *StringToGUIDA("D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B").get(),
+			});
+			AddKeyItem(originals, candidates, gen);
+		}
+
+		// Main Hall Fuse or Spade Key
+		originals.append_range(std::initializer_list<GUID>{
+		    *StringToGUIDA("15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD").get(),
+		    *StringToGUIDA("1E671313-7622-0DB1-318D-4D3B5C9B1CA0").get(),
+		});
+		AddKeyItem(originals, candidates, gen);
+
+		// If Main Hall Fuse is left, randomize it to these locations.
+		if (originals[0] == *StringToGUIDA("15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD").get())
+		{
+			candidates.append_range(std::initializer_list<GUID>{
+			    //*StringToGUIDA("").get(),
+			});
+			AddKeyItem(originals, candidates, gen);
+		}
+		// If Spade Key is left, randomize it to these locations.
+		else if (originals[0] == *StringToGUIDA("1E671313-7622-0DB1-318D-4D3B5C9B1CA0").get())
+		{
+			candidates.append_range(std::initializer_list<GUID>{
+			    //*StringToGUIDA("").get(),
+			});
 			AddKeyItem(originals, candidates, gen);
 		}
 	}
@@ -130,7 +187,6 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
 }
 
-// void Randomizer::AddKeyItem(GUID &original, std::vector<GUID> &destinations, std::mt19937 &gen)
 void Randomizer::AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &destinations, std::mt19937 &gen)
 {
 	size_t origIndex = std::uniform_int_distribution<size_t>(0, originals.size() - 1)(gen);
