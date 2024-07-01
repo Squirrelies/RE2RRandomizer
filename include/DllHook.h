@@ -46,6 +46,8 @@ DWORD WINAPI ShutdownThread(LPVOID);
 bool Startup(void);
 void Shutdown(void);
 
+bool TrySetPointer(const void *, const std::vector<uint32_t> &&, void **, const char *);
+
 __stdcall void HookItemPlacement1(uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 __stdcall uintptr_t HookItemPlacement2(uintptr_t, uintptr_t, uintptr_t);
 __stdcall uintptr_t HookItemPickup(uintptr_t, uintptr_t, uintptr_t, uintptr_t);

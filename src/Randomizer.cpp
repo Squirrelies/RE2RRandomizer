@@ -20,7 +20,7 @@ void Randomizer::RandomizeItem(RE2RItem &itemToReplace, const RE2RItem &original
 	                  newItem.ToString().get()->c_str());
 
 	// itemToReplace = newItem;
-	memcpy(&itemToReplace, &newItem, sizeof(RE2RItem));
+	memmove(&itemToReplace, &newItem, sizeof(RE2RItem));
 }
 
 void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RREnums::Scenario &scenario, int_fast32_t initialSeed)

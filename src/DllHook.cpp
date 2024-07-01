@@ -197,6 +197,24 @@ void Shutdown()
 	TerminateThread(mainThreadHandle, 0);
 }
 
+bool TrySetPointer(const void *start, const std::vector<uint32_t> &&offsets, void **end, const char *pointerName)
+{
+	logger->LogMessage("[TrySetPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(start), start);
+	*end = (void *)start;
+	for (size_t i = 0; i < offsets.size(); ++i)
+	{
+		// logger->LogMessage("[TrySetPointer: %s] Iteration %s[%d] = %X: %p\n", pointerName, NAMEOF(offsets), i, offsets[i], (void *)((uintptr_t)*end + offsets[i]));
+		if ((void *)((uintptr_t)*end + offsets[i]) == nullptr)
+		{
+			logger->LogMessage("[TrySetPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(end), *end);
+			return false;
+		}
+		*end = (void *)((uintptr_t)*end + offsets[i]);
+	}
+	logger->LogMessage("[TrySetPointer: %s] Success %s: %p\n", pointerName, NAMEOF(end), *end);
+	return true;
+}
+
 __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
 {
 	Randomizer *randomizer;
@@ -205,9 +223,17 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	    (randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr) == nullptr) // If we're not randomizing, this will be null.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	RE2RItem *itemToReplace = (RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
-	// const RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);        // This is where we want to read to get what the item is.
-	const GUID *itemPositionGuid = (GUID *)(param4 + 0x30);
+	RE2RItem *itemToReplace = (RE2RItem *)param3;
+	const GUID *itemPositionGuid = (GUID *)param4;
+	// logger->LogMessage("[HookItemPickup] %s: %p\n", NAMEOF(itemToReplace), itemToReplace);
+	if (!TrySetPointer((const void *)param3, {0x50, 0x10, 0x10}, (void **)&itemToReplace, NAMEOF(itemToReplace)) ||
+	    !TrySetPointer((const void *)param4, {0x30}, (void **)&itemPositionGuid, NAMEOF(itemPositionGuid)))
+		return itemPickupFunc(param1, param2, param3, param4);
+	// logger->LogMessage("[HookItemPickup] %s: %p\n", NAMEOF(itemToReplace), itemToReplace);
+
+	// RE2RItem *itemToReplace = (RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
+	// const RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);           // This is where we want to read to get what the item is.
+	// const GUID *itemPositionGuid = (GUID *)(param4 + 0x30); // The item's position GUID.
 
 	if (itemToReplace != nullptr && itemPositionGuid != nullptr)
 		randomizer->ItemPickup(*itemToReplace, *itemPositionGuid);

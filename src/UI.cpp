@@ -94,17 +94,13 @@ void __stdcall RE2RRUI::UI::DrawMainUI(const bool &open)
 		randomSeed = randomDevice();
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Attach"))
+	if (randomizer == nullptr && ImGui::Button("Attach"))
 	{
-		logger.LogMessage("Attach clicked!\n");
-
-		if (randomizer != nullptr)
-			delete randomizer;
+		logger.LogMessage("Attach clicked for seed %d!\n", randomSeed);
 		randomizer = new Randomizer(logger, show_Debug_DisableRandomize);
 		randomizer->Randomize(*difficulty, *scenario, randomSeed);
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Detach"))
+	else if (randomizer != nullptr && ImGui::Button("Detach"))
 	{
 		logger.LogMessage("Detach clicked!\n");
 		delete randomizer;
