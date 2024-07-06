@@ -124,13 +124,13 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			    // East staiurwell
 			    *StringToGUIDA("F66D5A99-E6D5-4B32-B86F-ED8BC4D0B37F").get(),
 			    *StringToGUIDA("64B130EE-53DD-4F5B-822F-5A5A77730EAC").get(),
-			    // East Office
-			    *StringToGUIDA("49AF34BC-067C-4BB4-97A9-94FB6F83FBC1").get(),
-			    *StringToGUIDA("76C43A01-0C25-4F3F-9F22-1762C9CF5577").get(),
-			    *StringToGUIDA("AD84247C-A192-4EBA-B99D-412BD6F245B1").get(),
-			    *StringToGUIDA("B15B8A2C-19D6-465F-A4BA-2B1CC9E1306A").get(),
-			    *StringToGUIDA("DA2805DC-F487-0942-3C3D-5C4C65B04107").get(),
-			    *StringToGUIDA("E47F659D-99A0-42BE-B1C8-E59FC1383708").get(),
+			    // // East Office
+			    // *StringToGUIDA("49AF34BC-067C-4BB4-97A9-94FB6F83FBC1").get(),
+			    // *StringToGUIDA("76C43A01-0C25-4F3F-9F22-1762C9CF5577").get(),
+			    // *StringToGUIDA("AD84247C-A192-4EBA-B99D-412BD6F245B1").get(),
+			    // *StringToGUIDA("B15B8A2C-19D6-465F-A4BA-2B1CC9E1306A").get(),
+			    // *StringToGUIDA("DA2805DC-F487-0942-3C3D-5C4C65B04107").get(),
+			    // *StringToGUIDA("E47F659D-99A0-42BE-B1C8-E59FC1383708").get(),
 			    // East Closet
 			    *StringToGUIDA("21FA606C-B4D6-45C4-B097-2F439920F36C").get(),
 			    *StringToGUIDA("B39EC79F-23A5-4B84-8E26-4C82B1A5D4CE").get(),
@@ -171,6 +171,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
 			    //*StringToGUIDA("").get(),
+			    // pretty much anywhere up to maiden medallion or stars office area.
 			});
 			AddKeyItem(originals, candidates, gen);
 		}
@@ -179,6 +180,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
 			    //*StringToGUIDA("").get(),
+			    // Main hall, 2nd floor east waiting room, lobby, conf. room., west halls, west office, west save room, etc.
 			});
 			AddKeyItem(originals, candidates, gen);
 		}
