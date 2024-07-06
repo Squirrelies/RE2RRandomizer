@@ -13,6 +13,7 @@
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/toolchains/clang-toolchain.cmake",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static-custom",
                 "VCPKG_HOST_TRIPLET": "x64-mingw-static-custom"
             }

@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 3.25)
-set(CMAKE_C_COMPILER "C:/msys64/clang64/bin/clang.exe" CACHE FILEPATH "" FORCE)
-set(CMAKE_CXX_COMPILER "C:/msys64/clang64/bin/clang++.exe" CACHE FILEPATH "" FORCE)
 project (RE2RRandomizer)
 
 function(set_from_env var_name default_value var_type var_desc)
@@ -31,10 +29,6 @@ enable_testing()
 include(GoogleTest)
 find_package(GTest CONFIG REQUIRED)
 
-#set(CMAKE_C_STANDARD 17) # 90, 99, 11, 17, 23
-#set(CMAKE_C_STANDARD_REQUIRED TRUE)
-set(CMAKE_CXX_STANDARD 23)  # 98, 11, 14, 17, 20, 23, 26
-set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 string(ASCII 169 COPYRIGHT)
 
 # VERSIONINFO properties (Ref: https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
