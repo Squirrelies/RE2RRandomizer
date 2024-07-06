@@ -179,8 +179,35 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		else if (originals[0] == *StringToGUIDA("1E671313-7622-0DB1-318D-4D3B5C9B1CA0").get())
 		{
 			candidates.append_range(std::initializer_list<GUID>{
-			    //*StringToGUIDA("").get(),
-			    // Main hall, 2nd floor east waiting room, lobby, conf. room., west halls, west office, west save room, etc.
+			    // Main Hall
+			    *StringToGUIDA("6002D460-036A-4CEA-BB6B-BC589EAFC3D5").get(),
+			    *StringToGUIDA("65CE3F5E-37B7-4F64-995B-3301EA6DFB9D").get(),
+			    *StringToGUIDA("F1E708F9-318D-4D29-8351-EB1AA8218188").get(),
+			    *StringToGUIDA("0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91").get(),
+			    *StringToGUIDA("4E718EA1-5BB3-4E98-A6F8-FD012C058DE5").get(),
+			    // 2nd floor waiting room
+			    *StringToGUIDA("6A098F7F-81A3-4B2C-9144-8C28C9506C90").get(),
+			    *StringToGUIDA("C0888EF1-C0AA-47B1-B241-CDE8A11AA29C").get(),
+			    // Operations Room
+			    *StringToGUIDA("65DB71B3-1BC3-4074-80FA-282C363DA0A0").get(),
+			    *StringToGUIDA("8A880186-D623-4B03-8820-DC06781D527F").get(),
+			    *StringToGUIDA("2D717007-20AC-4BD6-8563-138F3EECBD29").get(),
+			    *StringToGUIDA("4AD55D3D-CF04-0CC2-2563-6045F552BF7B").get(),
+			    *StringToGUIDA("A1B4B37D-7916-4F7B-B290-9E1500527828").get(),
+			    // West Hallway 1st floor
+			    *StringToGUIDA("3B1822E5-3C5F-40E9-A7CC-2EA0E0869454").get(),
+			    *StringToGUIDA("A9FB31F3-03CE-4369-B897-3C25461F6634").get(),
+			    *StringToGUIDA("297ACBFC-1ECE-4079-824E-A8B0469E074F").get(),
+			    // West Office
+			    *StringToGUIDA("2A907E12-7FE3-4559-9AF4-3051473F8FAA").get(),
+			    *StringToGUIDA("89524D9A-972D-4608-A4D2-9DF8FD77F057").get(),
+			    *StringToGUIDA("9F00CC80-24E4-448D-B72D-78B39E4A5808").get(),
+			    *StringToGUIDA("E823B55D-3226-0FA9-2742-E0CEB2A3E4AD").get(),
+			    // Darkroom (West Save Room)
+			    *StringToGUIDA("A66B843C-DB59-49A8-B7DA-774944EB7298").get(),
+			    *StringToGUIDA("A8C3FD34-3F01-47E1-831D-784EF6822707").get(),
+			    *StringToGUIDA("FAF9B2E8-5373-48B7-AA5A-7554AB1A613C").get(),
+			    // lobby, etc.
 			});
 			AddKeyItem(originals, candidates, gen);
 		}

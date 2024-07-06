@@ -1578,6 +1578,17 @@ typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveI
 } RE2RItem;
 bool operator==(const RE2RItem &, const RE2RItem &);
 
+struct PACKED_DATA ItemInformation
+{
+	GUID ItemPositionGUID;
+	RE2RItem Item;
+	RE2RREnums::FloorID Floor;
+	RE2RREnums::MapID Map;
+	RE2RREnums::MapPartsID MapPart;
+	RE2RREnums::Scenario Scenario;
+	RE2RREnums::Difficulty Difficulty;
+};
+
 struct GameModeKey
 {
 	RE2RREnums::Scenario Scenario;
