@@ -1,6 +1,6 @@
 #include <Database.h>
 
-const std::unordered_map<RE2RREnums::FloorID, std::string> floorNames =
+std::unordered_map<RE2RREnums::FloorID, std::string> floorNames =
     {
         {RE2RREnums::FloorID::CityArea_A, "Raccoon City A"},
         {RE2RREnums::FloorID::CityArea_B, "Raccoon City B"},
@@ -26,7 +26,7 @@ const std::unordered_map<RE2RREnums::FloorID, std::string> floorNames =
         {RE2RREnums::FloorID::WaterPlant_C, "Water Treatment Lower"},
 };
 
-const std::unordered_map<RE2RREnums::MapID, std::string> mapNames =
+std::unordered_map<RE2RREnums::MapID, std::string> mapNames =
     {
         {RE2RREnums::MapID::st1_411_0, "Gas Station"},
         {RE2RREnums::MapID::st1_601_0, "Front Hall"},
@@ -170,12 +170,12 @@ const std::unordered_map<RE2RREnums::MapID, std::string> mapNames =
         {RE2RREnums::MapID::st8_410_0, "Raccoon City Streets (A Start)"},
 };
 
-const std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartNames =
+std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartNames =
     {
         {RE2RREnums::MapPartsID::st5_211_0e, "Mr. X Fight"},
 };
 
-const std::vector<ItemInformation> itemDB =
+std::vector<ItemInformation> itemDB =
     {
         ItemInformation{.ItemPositionGUID = *StringToGUIDA("FF9122A6-7CCE-04E4-3317-103F06B2D2E5").get(), .Item = RE2RItem{.ItemId = RE2RREnums::ItemType::KeyStorageRoom, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RREnums::FloorID::None, .Map = RE2RREnums::MapID::st1_411_0, .MapPart = RE2RREnums::MapPartsID::st1_411_0, .Scenario = RE2RREnums::Scenario::CLAIRE_A, .Difficulty = RE2RREnums::Difficulty::NORMAL},
         ItemInformation{.ItemPositionGUID = *StringToGUIDA("584D9C75-F520-440A-B35C-38436336BAFF").get(), .Item = RE2RItem{.ItemId = RE2RREnums::ItemType::Scissors, .WeaponId = RE2RREnums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RREnums::FloorID::OrphanAsylum_B, .Map = RE2RREnums::MapID::st1_605_0, .MapPart = RE2RREnums::MapPartsID::st1_605_0, .Scenario = RE2RREnums::Scenario::CLAIRE_A, .Difficulty = RE2RREnums::Difficulty::NORMAL},

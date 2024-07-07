@@ -7,9 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
-extern const std::unordered_map<RE2RREnums::FloorID, std::string> floorNames;
-extern const std::unordered_map<RE2RREnums::MapID, std::string> mapNames;
-extern const std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartNames;
-extern const std::vector<ItemInformation> itemDB;
+extern std::unordered_map<RE2RREnums::FloorID, std::string> floorNames;
+extern std::unordered_map<RE2RREnums::MapID, std::string> mapNames;
+extern std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartNames;
+extern std::vector<ItemInformation> itemDB;
 
 #endif

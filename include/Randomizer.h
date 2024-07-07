@@ -2,6 +2,7 @@
 #define RE2RR_RANDOMIZER_H
 
 #include "Common.h"
+#include "Database.h"
 #include "File.h"
 #include "Logging.h"
 #include "Strings.h"
@@ -26,9 +27,6 @@ private:
 	bool &debugSkipRandomization;
 	static RE2RItem defaultItemEntry;
 	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
-	static std::unordered_map<RE2RREnums::FloorID, std::string> floorIdToName;
-	static std::unordered_map<RE2RREnums::MapID, std::string> mapIdToName;
-	static std::unordered_map<RE2RREnums::MapPartsID, std::string> mapPartsIdToName;
 	Seed seed;
 	RE2RREnums::FloorID floorId;
 	RE2RREnums::MapID mapId;

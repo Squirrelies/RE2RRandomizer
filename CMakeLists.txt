@@ -135,7 +135,6 @@ src/Strings.cpp
 src/UI.cpp
 src/Randomizer.cpp
 src/Randomizer_OriginalItemMapping.cpp
-src/Randomizer_Locations.cpp
 src/Database.cpp
 src/DllHook.cpp
 )
