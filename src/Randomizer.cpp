@@ -314,7 +314,10 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 
 const std::string &Randomizer::GetFloorName()
 {
-	return GetFloorNameById(floorId);
+	if (floorIdToName.contains(floorId))
+		return std::format("{} ({})", floorIdToName[floorId], RE2RREnums::EnumFloorIDToString(floorId).get()->c_str());
+	else
+		return RE2RREnums::EnumFloorIDToString(floorId).get()->c_str();
 }
 
 RE2RREnums::MapID Randomizer::GetMapID()
@@ -324,7 +327,10 @@ RE2RREnums::MapID Randomizer::GetMapID()
 
 const std::string &Randomizer::GetMapName()
 {
-	return GetMapNameById(mapId);
+	if (mapIdToName.contains(mapId))
+		return std::format("{} ({})", mapIdToName[mapId], RE2RREnums::EnumMapIDToString(mapId).get()->c_str());
+	else
+		return RE2RREnums::EnumMapIDToString(mapId).get()->c_str();
 }
 
 RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
@@ -334,5 +340,8 @@ RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
 
 const std::string &Randomizer::GetMapPartsName()
 {
-	return GetMapPartsNameById(mapPartsId);
+	if (mapPartsIdToName.contains(mapPartsId))
+		return std::format("{} ({})", mapPartsIdToName[mapPartsId], RE2RREnums::EnumMapPartsIDToString(mapPartsId).get()->c_str());
+	else
+		return RE2RREnums::EnumMapPartsIDToString(mapPartsId).get()->c_str();
 }

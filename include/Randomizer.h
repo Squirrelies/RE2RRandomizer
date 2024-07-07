@@ -37,10 +37,6 @@ private:
 	RE2RItem lastRandomizedItem = {};
 	GUID lastInteractedItemPositionGuid = {};
 
-	// static RE2RItem &GetItemByGameModeKeyAndGUID(const GameModeKey &, GUID &);
-	static const std::string &GetFloorNameById(const RE2RREnums::FloorID &);
-	static const std::string &GetMapNameById(const RE2RREnums::MapID &);
-	static const std::string &GetMapPartsNameById(const RE2RREnums::MapPartsID &);
 	void RandomizeItem(RE2RItem &, const RE2RItem &, const RE2RItem &);
 	RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RItem *, GUID *);

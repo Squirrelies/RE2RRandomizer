@@ -174,30 +174,3 @@ std::unordered_map<RE2RREnums::MapPartsID, std::string> Randomizer::mapPartsIdTo
     {
         {RE2RREnums::MapPartsID::Invalid, ""},
         {RE2RREnums::MapPartsID::st5_211_0e, "Mr. X Fight"}};
-
-const std::string &Randomizer::GetFloorNameById(const RE2RREnums::FloorID &key)
-{
-	static const std::string defaultValue = "";
-	if (floorIdToName.contains(key))
-		return floorIdToName[key];
-	else
-		return defaultValue;
-}
-
-const std::string &Randomizer::GetMapNameById(const RE2RREnums::MapID &key)
-{
-	static const std::string defaultValue = "";
-	if (mapIdToName.contains(key))
-		return mapIdToName[key];
-	else
-		return defaultValue;
-}
-
-const std::string &Randomizer::GetMapPartsNameById(const RE2RREnums::MapPartsID &key)
-{
-	static const std::string defaultValue = "";
-	if (mapPartsIdToName.contains(key))
-		return mapPartsIdToName[key];
-	else
-		return defaultValue;
-}
