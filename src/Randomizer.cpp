@@ -312,12 +312,12 @@ RE2RREnums::FloorID Randomizer::GetFloorID()
 	return floorId;
 }
 
-const std::string &Randomizer::GetFloorName()
+const std::unique_ptr<std::string> Randomizer::GetFloorName()
 {
 	if (floorIdToName.contains(floorId))
-		return std::format("{} ({})", floorIdToName[floorId], RE2RREnums::EnumFloorIDToString(floorId).get()->c_str());
+		return std::make_unique<std::string>(std::format("{} ({})", floorIdToName[floorId], RE2RREnums::EnumFloorIDToString(floorId).get()->c_str()));
 	else
-		return RE2RREnums::EnumFloorIDToString(floorId).get()->c_str();
+		return RE2RREnums::EnumFloorIDToString(floorId);
 }
 
 RE2RREnums::MapID Randomizer::GetMapID()
@@ -325,12 +325,12 @@ RE2RREnums::MapID Randomizer::GetMapID()
 	return mapId;
 }
 
-const std::string &Randomizer::GetMapName()
+const std::unique_ptr<std::string> Randomizer::GetMapName()
 {
 	if (mapIdToName.contains(mapId))
-		return std::format("{} ({})", mapIdToName[mapId], RE2RREnums::EnumMapIDToString(mapId).get()->c_str());
+		return std::make_unique<std::string>(std::format("{} ({})", mapIdToName[mapId], RE2RREnums::EnumMapIDToString(mapId).get()->c_str()));
 	else
-		return RE2RREnums::EnumMapIDToString(mapId).get()->c_str();
+		return RE2RREnums::EnumMapIDToString(mapId);
 }
 
 RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
@@ -338,10 +338,10 @@ RE2RREnums::MapPartsID Randomizer::GetMapPartsID()
 	return mapPartsId;
 }
 
-const std::string &Randomizer::GetMapPartsName()
+const std::unique_ptr<std::string> Randomizer::GetMapPartsName()
 {
 	if (mapPartsIdToName.contains(mapPartsId))
-		return std::format("{} ({})", mapPartsIdToName[mapPartsId], RE2RREnums::EnumMapPartsIDToString(mapPartsId).get()->c_str());
+		return std::make_unique<std::string>(std::format("{} ({})", mapPartsIdToName[mapPartsId], RE2RREnums::EnumMapPartsIDToString(mapPartsId).get()->c_str()));
 	else
-		return RE2RREnums::EnumMapPartsIDToString(mapPartsId).get()->c_str();
+		return RE2RREnums::EnumMapPartsIDToString(mapPartsId);
 }

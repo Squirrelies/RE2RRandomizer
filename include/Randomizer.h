@@ -72,11 +72,11 @@ public:
 	RE2RREnums::Scenario GetScenario(void);
 
 	RE2RREnums::FloorID GetFloorID(void);
-	const std::string &GetFloorName(void);
+	const std::unique_ptr<std::string> GetFloorName(void);
 	RE2RREnums::MapID GetMapID(void);
-	const std::string &GetMapName(void);
+	const std::unique_ptr<std::string> GetMapName(void);
 	RE2RREnums::MapPartsID GetMapPartsID(void);
-	const std::string &GetMapPartsName(void);
+	const std::unique_ptr<std::string> GetMapPartsName(void);
 	const RE2RItem &GetLastInteractedItem(void);
 	const RE2RItem &GetLastRandomizedItem(void);
 	GUID &GetLastInteractedItemPositionGuid(void);

@@ -137,9 +137,9 @@ void __stdcall RE2RRUI::UI::DrawDebugOverlay(const bool &open, const bool &mainU
 		{
 			ImGui::Text("Scenario: %s", RE2RREnums::EnumScenarioToString(randomizer->GetScenario()).get()->c_str());
 			ImGui::Text("Difficulty: %s", RE2RREnums::EnumDifficultyToString(randomizer->GetDifficulty()).get()->c_str());
-			ImGui::Text("Floor: %s", randomizer->GetFloorName().c_str());
-			ImGui::Text("Map: %s", randomizer->GetMapName().c_str());
-			ImGui::Text("Map Part: %s", randomizer->GetMapPartsName().c_str());
+			ImGui::Text("Floor: %s", randomizer->GetFloorName().get()->c_str());
+			ImGui::Text("Map: %s", randomizer->GetMapName().get()->c_str());
+			ImGui::Text("Map Part: %s", randomizer->GetMapPartsName().get()->c_str());
 			ImGui::Text("Last Guid: %s", GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).get()->c_str());
 			ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().get()->c_str());
 			ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().get()->c_str());
