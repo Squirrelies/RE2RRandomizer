@@ -25,8 +25,7 @@ class Randomizer
 private:
 	ImmediateLogger &logger;
 	bool &debugSkipRandomization;
-	static RE2RItem defaultItemEntry;
-	static std::unordered_map<GameModeKey, std::unordered_map<GUID, RE2RItem, std::hash<GUID>, std::equal_to<GUID>>, std::hash<GameModeKey>, std::equal_to<GameModeKey>> originalItemMapping;
+	std::unordered_map<GUID, ItemInformation, std::hash<GUID>, std::equal_to<GUID>> originalItemInformation;
 	Seed seed;
 	RE2RREnums::FloorID floorId;
 	RE2RREnums::MapID mapId;

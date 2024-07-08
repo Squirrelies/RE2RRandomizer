@@ -6,10 +6,10 @@ void Randomizer::ItemPickup(RE2RItem &itemToReplace, const GUID &itemPositionGui
 	                  NAMEOF(itemToReplace), &itemToReplace,
 	                  NAMEOF(itemPositionGuid), GUIDToString(itemPositionGuid).get()->c_str());
 
-	SetLast(this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
+	SetLast(this->originalItemInformation[itemPositionGuid].Item, this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
 
 	if (!debugSkipRandomization)
-		RandomizeItem(itemToReplace, this->originalItemMapping[this->seed.gameMode][itemPositionGuid], this->seed.seedData[itemPositionGuid].ReplacementItem);
+		RandomizeItem(itemToReplace, this->originalItemInformation[itemPositionGuid].Item, this->seed.seedData[itemPositionGuid].ReplacementItem);
 }
 
 void Randomizer::RandomizeItem(RE2RItem &itemToReplace, const RE2RItem &originalItem, const RE2RItem &newItem)
@@ -35,18 +35,25 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 
 	HandleSoftLocks(gen);
 
+	auto filteredItemDB = itemDB |
+	                      std::views::filter([this](ItemInformation i)
+	                                         { return i.Scenario == this->GetScenario() && i.Difficulty == this->GetDifficulty(); }) |
+	                      std::views::transform([](ItemInformation i)
+	                                            { return std::make_pair(i.ItemPositionGUID, i); });
+	originalItemInformation = std::unordered_map<GUID, ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
+
 	std::vector<RandomizedItem> values;
-	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+	for (const auto &[key, value] : originalItemInformation)
 	{
 		if (!std::ranges::any_of(seed.seedData, [&key](const std::pair<GUID, RandomizedItem> &kv)
 		                         { return key == kv.second.OriginalGUID; }))
-			values.push_back(RandomizedItem{.OriginalGUID = key, .ReplacementItem = value});
+			values.push_back(RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item});
 	}
 
 	std::shuffle(values.begin(), values.end(), gen);
 
 	auto value = values.begin();
-	for (const auto &[key, _] : originalItemMapping[seed.gameMode])
+	for (const auto &[key, _] : originalItemInformation)
 	{
 		if (!seed.seedData.contains(key))
 			seed.seedData.insert(std::make_pair(key, *value++));
@@ -63,28 +70,28 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	std::vector<GUID> candidates;
 
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
-	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+	for (const auto &[key, value] : originalItemInformation)
 	{
-		if (value.ItemId == RE2RREnums::ItemType::KeyCardParkingGarage ||
-		    value.ItemId == RE2RREnums::ItemType::KeyOrphanage ||
-		    value.ItemId == RE2RREnums::ItemType::StuffedDoll ||
-		    value.ItemId == RE2RREnums::ItemType::PlugBishop ||
-		    value.ItemId == RE2RREnums::ItemType::PlugKing ||
-		    value.ItemId == RE2RREnums::ItemType::PlugKnight ||
-		    value.ItemId == RE2RREnums::ItemType::PlugPawn ||
-		    value.ItemId == RE2RREnums::ItemType::PlugQueen ||
-		    value.ItemId == RE2RREnums::ItemType::PlugRook)
-			seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value}));
+		if (value.Item.ItemId == RE2RREnums::ItemType::KeyCardParkingGarage ||
+		    value.Item.ItemId == RE2RREnums::ItemType::KeyOrphanage ||
+		    value.Item.ItemId == RE2RREnums::ItemType::StuffedDoll ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugBishop ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugKing ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugKnight ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugPawn ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugQueen ||
+		    value.Item.ItemId == RE2RREnums::ItemType::PlugRook)
+			seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item}));
 	}
 
 	if (seed.gameMode.Scenario == RE2RREnums::Scenario::CLAIRE_A || seed.gameMode.Scenario == RE2RREnums::Scenario::LEON_A) // A scenarios
 	{
-		for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+		for (const auto &[key, value] : originalItemInformation)
 		{
-			if (value.ItemId == RE2RREnums::ItemType::KeyStorageRoom ||
-			    value.ItemId == RE2RREnums::ItemType::KeySpade ||
-			    value.ItemId == RE2RREnums::ItemType::BoltCutter)
-				seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value}));
+			if (value.Item.ItemId == RE2RREnums::ItemType::KeyStorageRoom ||
+			    value.Item.ItemId == RE2RREnums::ItemType::KeySpade ||
+			    value.Item.ItemId == RE2RREnums::ItemType::BoltCutter)
+				seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item}));
 		}
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 
@@ -223,12 +230,12 @@ void Randomizer::AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &des
 
 	logger.LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
 	                  destIndex,
-	                  originalItemMapping[seed.gameMode][destinations[destIndex]].ToString().get()->c_str(),
+	                  originalItemInformation[destinations[destIndex]].Item.ToString().get()->c_str(),
 	                  GUIDToString(destinations[destIndex]).get()->c_str(),
-	                  originalItemMapping[seed.gameMode][originals[origIndex]].ToString().get()->c_str(),
+	                  originalItemInformation[originals[origIndex]].Item.ToString().get()->c_str(),
 	                  GUIDToString(originals[origIndex]).get()->c_str());
 
-	seed.seedData.insert(std::make_pair(destinations[destIndex], RandomizedItem{.OriginalGUID = originals[origIndex], .ReplacementItem = originalItemMapping[seed.gameMode][originals[origIndex]]}));
+	seed.seedData.insert(std::make_pair(destinations[destIndex], RandomizedItem{.OriginalGUID = originals[origIndex], .ReplacementItem = originalItemInformation[originals[origIndex]].Item}));
 
 	originals.erase(originals.begin() + origIndex);       // Remove this entry as an original since we've handled it now.
 	destinations.erase(destinations.begin() + destIndex); // Remove this entry as a candidate since we're using it now.
@@ -251,10 +258,10 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 		return;
 	}
 
-	for (const auto &[key, value] : originalItemMapping[seed.gameMode])
+	for (const auto &[key, value] : originalItemInformation)
 	{
 		file << "[" << GUIDToString(key) << "] -> [" << GUIDToString(seed.seedData[key].OriginalGUID) << "]" << std::endl
-		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.ItemId).get()->c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.WeaponId).get()->c_str() << std::endl
+		     << "\tFrom: " << RE2RREnums::EnumItemTypeToString(value.Item.ItemId).get()->c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(value.Item.WeaponId).get()->c_str() << std::endl
 		     << "\tTo  : " << RE2RREnums::EnumItemTypeToString(seed.seedData[key].ReplacementItem.ItemId).get()->c_str() << " / " << RE2RREnums::EnumWeaponTypeToString(seed.seedData[key].ReplacementItem.WeaponId).get()->c_str() << std::endl
 		     << std::endl;
 	}
