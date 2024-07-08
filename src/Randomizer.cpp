@@ -30,17 +30,17 @@ void Randomizer::Randomize(const RE2RREnums::Difficulty &difficulty, const RE2RR
 	                  NAMEOF(scenario), RE2RREnums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
 
+	auto filteredItemDB = itemDB |
+	                      std::views::filter([difficulty, scenario](ItemInformation i)
+	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
+	                      std::views::transform([](ItemInformation i)
+	                                            { return std::make_pair(i.ItemPositionGUID, i); });
+	originalItemInformation = std::unordered_map<GUID, ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
+
 	seed = Seed{.gameMode = GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
 	std::mt19937 gen(initialSeed);
 
 	HandleSoftLocks(gen);
-
-	auto filteredItemDB = itemDB |
-	                      std::views::filter([this](ItemInformation i)
-	                                         { return i.Scenario == this->GetScenario() && i.Difficulty == this->GetDifficulty(); }) |
-	                      std::views::transform([](ItemInformation i)
-	                                            { return std::make_pair(i.ItemPositionGUID, i); });
-	originalItemInformation = std::unordered_map<GUID, ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
 
 	std::vector<RandomizedItem> values;
 	for (const auto &[key, value] : originalItemInformation)
@@ -147,7 +147,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			    *StringToGUIDA("1E33C3D4-8971-4BA8-8F97-1FDA9E2F3F32").get(),
 			    *StringToGUIDA("2456358F-71BD-4F97-94CF-B225EF4018AF").get(),
 			    *StringToGUIDA("15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD").get(),
-			    *StringToGUIDA("4E68F4C7-8AEB-418F-B089-7F7CB2751783").get(),
+			    *StringToGUIDA("4E68F4C7-8AEB-418F-B089-7F7CB2751783").get(), // This is LEON only...!
 			    *StringToGUIDA("92A9F2F6-4CC4-449A-9B68-B94874D72816").get(),
 			    *StringToGUIDA("03659087-CCD3-4032-A375-5DCCA3C339EE").get(),
 			});
