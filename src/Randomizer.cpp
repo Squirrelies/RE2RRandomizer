@@ -70,8 +70,13 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	std::vector<GUID> candidates;
 
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
-	for (const auto &[key, value] : originalItemInformation)
+	for (const auto &[_, value] : originalItemInformation)
 	{
+		// if (value.Floor == RE2RREnums::FloorID::OrphanAsylum_A ||
+		//     value.Floor == RE2RREnums::FloorID::OrphanAsylum_B ||
+		//     value.Floor == RE2RREnums::FloorID::OrphanAsylum_C)
+		// 	seed.seedData.insert(std::make_pair(value.ItemPositionGUID, RandomizedItem{.OriginalGUID = value.ItemPositionGUID, .ReplacementItem = value.Item}));
+
 		if (value.Item.ItemId == RE2RREnums::ItemType::KeyCardParkingGarage ||
 		    value.Item.ItemId == RE2RREnums::ItemType::KeyOrphanage ||
 		    value.Item.ItemId == RE2RREnums::ItemType::StuffedDoll ||
@@ -81,17 +86,17 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		    value.Item.ItemId == RE2RREnums::ItemType::PlugPawn ||
 		    value.Item.ItemId == RE2RREnums::ItemType::PlugQueen ||
 		    value.Item.ItemId == RE2RREnums::ItemType::PlugRook)
-			seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item}));
+			seed.seedData.insert(std::make_pair(value.ItemPositionGUID, RandomizedItem{.OriginalGUID = value.ItemPositionGUID, .ReplacementItem = value.Item}));
 	}
 
 	if (seed.gameMode.Scenario == RE2RREnums::Scenario::CLAIRE_A || seed.gameMode.Scenario == RE2RREnums::Scenario::LEON_A) // A scenarios
 	{
-		for (const auto &[key, value] : originalItemInformation)
+		for (const auto &[_, value] : originalItemInformation)
 		{
 			if (value.Item.ItemId == RE2RREnums::ItemType::KeyStorageRoom ||
 			    value.Item.ItemId == RE2RREnums::ItemType::KeySpade ||
 			    value.Item.ItemId == RE2RREnums::ItemType::BoltCutter)
-				seed.seedData.insert(std::make_pair(key, RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item}));
+				seed.seedData.insert(std::make_pair(value.ItemPositionGUID, RandomizedItem{.OriginalGUID = value.ItemPositionGUID, .ReplacementItem = value.Item}));
 		}
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 

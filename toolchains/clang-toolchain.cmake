@@ -1,8 +1,8 @@
-set(CMAKE_C_COMPILER "C:/msys64/clang64/bin/clang.exe")
-set(CMAKE_C_COMPILER_ID "clang")
+set(CMAKE_C_COMPILER "clang")
+#set(CMAKE_C_COMPILER_ID "clang")
 
-set(CMAKE_CXX_COMPILER "C:/msys64/clang64/bin/clang++.exe")
-set(CMAKE_CXX_COMPILER_ID "clang")
+set(CMAKE_CXX_COMPILER "clang++")
+#set(CMAKE_CXX_COMPILER_ID "clang")
 
 set(CMAKE_C_STANDARD 23) # 90, 99, 11, 17, 23
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
