@@ -38,6 +38,10 @@ jobs:
   Build:
     name: Build w/ MSYS2
     runs-on: windows-latest
+    permissions:
+      contents: write
+      actions: write
+      attestations: write
 
     defaults:
       run:
