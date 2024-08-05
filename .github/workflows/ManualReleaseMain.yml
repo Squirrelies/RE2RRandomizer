@@ -51,7 +51,7 @@ jobs:
           release: false
           update: true
           cache: true
-          install: git base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
+          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
 
       - name: Checkout code
         uses: actions/checkout@v4

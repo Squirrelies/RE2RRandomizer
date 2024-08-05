@@ -3,7 +3,7 @@
 ## To build this source code you'll need the following items
 
 * [Git](https://git-scm.com/)
-* [GCC](https://gcc.gnu.org/) (Tested with 13.2)
+* [CLang](https://clang.llvm.org/) (Tested with 18.1)
 * [CMake](https://cmake.org/) (3.11+)
 * [MinGW-w64 Headers](https://www.mingw-w64.org/) (Must be newer than v11.x as that version and older lacks PFN_D3D12_SERIALIZE_ROOT_SIGNATURE needed for DirectX 12)
 * [VCPkg](https://vcpkg.io/)
