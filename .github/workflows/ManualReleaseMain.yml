@@ -82,11 +82,6 @@ jobs:
         shell: msys2 {0}
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
-      - name: Update build number variable
-        env:
-          GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
-        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
-
       - name: Zip the publish artifacts
         working-directory: ${{github.workspace}}
         run: |
@@ -108,3 +103,8 @@ jobs:
           title: "Manual Build [main] - v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}} Release"
           files: |
             RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip
+
+      - name: Update build number variable
+        env:
+          GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
+        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
