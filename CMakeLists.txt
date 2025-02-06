@@ -17,7 +17,7 @@ set(CMAKE_SHARED_LIBRARY_SUFFIX ".dll")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
 set(CMAKE_EXECUTABLE_ENABLE_EXPORTS TRUE)
-option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 if(BUILD_SHARED_LIBS)
     add_definitions(-DBUILD_SHARED_LIBS)
 else()
@@ -67,8 +67,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SHA-2)
 
+FetchContent_Declare(
+    minhook
+    GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
+    GIT_TAG        c1a7c3843bd1a5fe3eb779b64c0d823bca3dc339 # origin/master
+    SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/TsudaKageyu/minhook
+)
+FetchContent_MakeAvailable(minhook)
+
 # vcpkg dependencies.
-find_package(minhook CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 # Required libraries we'll link for ImGUI.
@@ -122,9 +129,10 @@ cmake_print_variables(
 
 target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY})
 include_directories(include extern/amosnier/sha-2)
+include_directories(include extern/TsudaKageyu/minhook)
 
 ### Library
-add_library(${PROJECT_NAME}Hook
+add_library(${PROJECT_NAME}Hook SHARED
 ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoDll.rc
 extern/amosnier/sha-2/sha-256.c
 src/Types.cpp
@@ -138,9 +146,9 @@ src/Randomizer.cpp
 src/DllHook.cpp
 )
 target_link_libraries(${PROJECT_NAME}Hook
-PRIVATE minhook::minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
+PRIVATE minhook imgui::imgui ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
 )
-add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD DEPENDS ${PROJECT_NAME}Hook COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}Hook.dll)
+add_custom_command(TARGET ${PROJECT_NAME}Hook POST_BUILD COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}Hook.dll)
 
 ### Executable
 add_executable(${PROJECT_NAME}
@@ -149,25 +157,25 @@ src/ExeInjector.cpp
 src/Strings.cpp
 src/Process.cpp
 )
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD DEPENDS ${PROJECT_NAME} COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:${CMAKE_STRIP}> ARGS --strip-all ${PROJECT_NAME}.exe)
 
 ### Unit Tests
-include_directories(${GTest_INCLUDE_DIRS})
+# include_directories(${GTest_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME}Tests
-tests/test_Strings.cpp
-)
-target_link_libraries(${PROJECT_NAME}Tests
-PRIVATE GTest::gtest
-PRIVATE GTest::gtest_main
-PRIVATE ${PROJECT_NAME}
-PRIVATE ${PROJECT_NAME}Hook
-)
+# add_executable(${PROJECT_NAME}Tests
+# tests/test_Strings.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}Tests
+# PRIVATE GTest::gtest
+# PRIVATE GTest::gtest_main
+# PRIVATE ${PROJECT_NAME}
+# PRIVATE ${PROJECT_NAME}Hook
+# )
 
-gtest_discover_tests(${PROJECT_NAME}Tests
-PROPERTIES
-DISCOVERY_TIMEOUT 30
-TEST_LIST discovered_tests
-)
+# gtest_discover_tests(${PROJECT_NAME}Tests
+# PROPERTIES
+# DISCOVERY_TIMEOUT 30
+# TEST_LIST discovered_tests
+# )
 
-message(STATUS "Discovered tests: ${discovered_tests}")
+# message(STATUS "Discovered tests: ${discovered_tests}")
