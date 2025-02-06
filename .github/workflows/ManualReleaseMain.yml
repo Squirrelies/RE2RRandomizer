@@ -28,6 +28,11 @@ on:
         required: false
         default: 0
         type: number
+      unitTests:
+        description: "Run Unit Tests"
+        required: false
+        default: true
+        type: boolean
 
 env:
   VCPKG_ROOT: C:/vcpkg
@@ -79,6 +84,7 @@ jobs:
         run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
 
       - name: Run CTest
+        if: ${{ success() && inputs.unitTests == 'true' }}
         shell: msys2 {0}
         run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
 
