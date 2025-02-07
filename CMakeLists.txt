@@ -65,15 +65,13 @@ FetchContent_Declare(
     GIT_TAG        b29613850d6e54e7159197ef42c7d22d012b6367 # origin/master
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/amosnier/sha-2
 )
-FetchContent_MakeAvailable(SHA-2)
-
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
     GIT_TAG        c1a7c3843bd1a5fe3eb779b64c0d823bca3dc339 # origin/master
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/TsudaKageyu/minhook
 )
-FetchContent_MakeAvailable(minhook)
+FetchContent_MakeAvailable(SHA-2 minhook)
 
 # vcpkg dependencies.
 find_package(imgui CONFIG REQUIRED)
@@ -128,8 +126,7 @@ cmake_print_variables(
 )
 
 target_link_libraries(imgui::imgui INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY})
-include_directories(include extern/amosnier/sha-2)
-include_directories(include extern/TsudaKageyu/minhook)
+include_directories(include ${sha-2_SOURCE_DIR} ${minhook_SOURCE_DIR}/include)
 
 ### Library
 add_library(${PROJECT_NAME}Hook SHARED
