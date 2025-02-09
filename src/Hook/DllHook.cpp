@@ -156,11 +156,18 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 {
 	Sleep(100);
-	HMODULE hCommon = GetModuleHandle(L"RE2RR_Common.dll");
-	if (hCommon)
-		FreeLibrary(hCommon);
+	FreeDependencyLibrary(L"RE2RR.Database.dll");
+	FreeDependencyLibrary(L"RE2RR.Types.dll");
+	FreeDependencyLibrary(L"RE2RR.Common.dll");
 	FreeLibraryAndExitThread(dllInstance, 0);
 	return 0;
+}
+
+void FreeDependencyLibrary(const TCHAR *moduleName)
+{
+	HMODULE hModule = GetModuleHandle(moduleName);
+	if (hModule)
+		FreeLibrary(hModule);
 }
 
 bool Startup()

@@ -43,6 +43,7 @@ typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID);
 DWORD WINAPI MainThread(LPVOID);
 DWORD WINAPI ShutdownThread(LPVOID);
+void FreeDependencyLibrary(const TCHAR *);
 bool Startup(void);
 void Shutdown(void);
 

@@ -10,10 +10,10 @@ int wmain(void)
 	{
 		std::wstring basePath = std::filesystem::current_path().native();
 		std::wstring dllPaths[] = {
-		    basePath + L"\\RE2RR_Common.dll",
-		    basePath + L"\\RE2RR_Types.dll",
-		    basePath + L"\\RE2RR_Database.dll",
-		    basePath + L"\\RE2RR_Hook.dll"};
+		    basePath + L"\\RE2RR.Common.dll",
+		    basePath + L"\\RE2RR.Types.dll",
+		    basePath + L"\\RE2RR.Database.dll",
+		    basePath + L"\\RE2RR.Hook.dll"};
 		size_t dllPathsLength = sizeof(dllPaths) / sizeof(dllPaths[0]);
 
 		size_t dllPathSize;

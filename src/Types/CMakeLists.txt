@@ -1,13 +1,12 @@
 project(RE2RR_Types)
 
-set(LOCAL_PROJECT_ALIAS RE2RR::Types)
 set(LOCAL_EXPORT_NAME Types)
-set(RC_INTERNALNAME "${PROJECT_NAME}")
+set(RC_INTERNALNAME "RE2RR.Types")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${PROJECT_BINARY_DIR}/VersionInfoTypes.rc @ONLY)
 
 add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
-add_library(${LOCAL_PROJECT_ALIAS} ALIAS ${PROJECT_NAME})
+add_library(RE2RR::Types ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})
 set_project_compile_definitions(${PROJECT_NAME})

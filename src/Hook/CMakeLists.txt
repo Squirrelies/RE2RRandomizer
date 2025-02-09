@@ -1,8 +1,7 @@
 project(RE2RR_Hook)
 
-set(LOCAL_PROJECT_ALIAS RE2RR::Hook)
 set(LOCAL_EXPORT_NAME Hook)
-set(RC_INTERNALNAME "${PROJECT_NAME}")
+set(RC_INTERNALNAME "RE2RR.Hook")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${PROJECT_BINARY_DIR}/VersionInfoHook.rc @ONLY)
 
@@ -19,7 +18,7 @@ FetchContent_MakeAvailable(minhook)
 FetchContent_GetProperties(minhook)
 
 add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
-add_library(${LOCAL_PROJECT_ALIAS} ALIAS ${PROJECT_NAME})
+add_library(RE2RR::Hook ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})
 set_project_compile_definitions(${PROJECT_NAME})
