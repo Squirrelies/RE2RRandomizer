@@ -4,7 +4,7 @@ set(LOCAL_PROJECT_ALIAS RE2RR::Common)
 set(LOCAL_PREFIX_NAME RE2RR_COMMON_)
 set(LOCAL_EXPORT_NAME Common)
 set(RC_INTERNALNAME "${PROJECT_NAME}")
-set(RC_ORIGINALFILENAME "${PROJECT_NAME}.dll")
+set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${CMAKE_CURRENT_BINARY_DIR}/VersionInfoCommon.rc @ONLY)
 
 include(FetchContent)
@@ -45,7 +45,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_NAME ${PROJECT_NAME}
+    OUTPUT_NAME ${RC_INTERNALNAME}
     EXPORT_NAME ${LOCAL_EXPORT_NAME}
 )
 
