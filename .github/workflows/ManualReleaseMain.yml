@@ -96,6 +96,8 @@ jobs:
           [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.exe', 'RE2RRandomizer.exe')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR_Common.dll', 'RE2RR_Common.dll')
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR_Database.dll', 'RE2RR_Database.dll')
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR_Types.dll', 'RE2RR_Types.dll')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR_Hook.dll', 'RE2RR_Hook.dll')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'LICENSE', 'LICENSE')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'README.md', 'README.md')

@@ -45,6 +45,7 @@ target_sources(${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}/VersionInfoCommon.rc
         extern/amosnier/sha-2/sha-256.c
         File.cpp
+        Memory.cpp
         Process.cpp
         Strings.cpp
 )

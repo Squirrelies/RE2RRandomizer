@@ -9,7 +9,11 @@ int wmain(void)
 	HANDLE handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pid);
 	{
 		std::wstring basePath = std::filesystem::current_path().native();
-		std::wstring dllPaths[] = {basePath + L"\\RE2RR_Common.dll", basePath + L"\\RE2RR_Hook.dll"};
+		std::wstring dllPaths[] = {
+		    basePath + L"\\RE2RR_Common.dll",
+		    basePath + L"\\RE2RR_Types.dll",
+		    basePath + L"\\RE2RR_Database.dll",
+		    basePath + L"\\RE2RR_Hook.dll"};
 		size_t dllPathsLength = sizeof(dllPaths) / sizeof(dllPaths[0]);
 
 		size_t dllPathSize;

@@ -12,5 +12,7 @@ include(SetProjectLinkOptions)
 include(ProjectSettings)
 
 add_subdirectory(src/Common)
+add_subdirectory(src/Types)
+add_subdirectory(src/Database)
 add_subdirectory(src/Hook)
 add_subdirectory(src/App)

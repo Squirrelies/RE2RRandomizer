@@ -1,22 +1,10 @@
-project(RE2RR_Hook)
+project(RE2RR_Types)
 
-set(LOCAL_PROJECT_ALIAS RE2RR::Hook)
-set(LOCAL_EXPORT_NAME Hook)
+set(LOCAL_PROJECT_ALIAS RE2RR::Types)
+set(LOCAL_EXPORT_NAME Types)
 set(RC_INTERNALNAME "${PROJECT_NAME}")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
-configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${PROJECT_BINARY_DIR}/VersionInfoHook.rc @ONLY)
-
-include(FetchContent)
-set(FETCHCONTENT_QUIET off)
-
-FetchContent_Declare(
-    minhook
-    GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
-    GIT_TAG        c1a7c3843bd1a5fe3eb779b64c0d823bca3dc339 # origin/master
-    SOURCE_DIR extern/TsudaKageyu/minhook
-)
-FetchContent_MakeAvailable(minhook)
-FetchContent_GetProperties(minhook)
+configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${PROJECT_BINARY_DIR}/VersionInfoTypes.rc @ONLY)
 
 add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
 add_library(${LOCAL_PROJECT_ALIAS} ALIAS ${PROJECT_NAME})
@@ -27,11 +15,8 @@ set_project_link_options(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        ${PROJECT_BINARY_DIR}/VersionInfoHook.rc
-        Hashes.cpp
-        UI.cpp
-        Randomizer.cpp
-        DllHook.cpp
+        ${PROJECT_BINARY_DIR}/VersionInfoTypes.rc
+        Types.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -43,7 +28,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-PRIVATE RE2RR::Common RE2RR::Types RE2RR::Database minhook
+PRIVATE RE2RR::Common
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
