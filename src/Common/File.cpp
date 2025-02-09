@@ -1,4 +1,5 @@
 #include "File.h"
+#include "sha-256.h"
 
 bool RE2RRFile::FileExists(const char *filePath)
 {

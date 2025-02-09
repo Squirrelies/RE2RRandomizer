@@ -2,8 +2,6 @@
 #define RE2RR_FILE_H
 
 #include "Common.h"
-#include "Types.h"
-#include "sha-256.h"
 #include <memory>
 #include <stdio.h>
 #include <vector>

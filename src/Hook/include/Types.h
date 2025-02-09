@@ -37,7 +37,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(RE2R_20230421_1, 1) \
 	ENUM_VALUE(RE2R_20230814_1, 2)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -57,7 +57,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(WorldWide, 1) \
 	ENUM_VALUE(CeroZ, 2)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -77,7 +77,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(DirectX11, 1) \
 	ENUM_VALUE(DirectX12, 2)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -107,7 +107,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(MAX, 11)     \
 	ENUM_VALUE(INVALID, 12)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -128,7 +128,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(HARD, 2)   \
 	ENUM_VALUE(MAX, 3)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -180,7 +180,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(Ending, 33)              \
 	ENUM_VALUE(LOCATION_NUM, 34)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -204,7 +204,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(_5, 5) \
 	ENUM_VALUE(AREA_NUM, 6)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -657,7 +657,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(st8_614_0, 434) \
 	ENUM_VALUE(MAP_NUM, 435)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -1237,7 +1237,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(dummy127, 562)   \
 	ENUM_VALUE(MAP_PARTS_NUM, 563)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -1289,7 +1289,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(Laboratory_D4, 32)       \
 	ENUM_VALUE(FLOOR_NUM, 33)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -1436,7 +1436,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(WoodenBox2, 0x0127)                  \
 	ENUM_VALUE(TinStorageBox2, 0x0128)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
@@ -1483,7 +1483,7 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 	ENUM_VALUE(AntiTankRocketLauncher_Infinite, 0xF2)   \
 	ENUM_VALUE(Minigun_Infinite, 0xFC)
 #ifdef RE2RR_TYPES_CPP
-#include "../src/Types_Enum.cpp"
+#include "../Types_Enum.cpp"
 #else
 #include "Types_Enum.h"
 #endif
