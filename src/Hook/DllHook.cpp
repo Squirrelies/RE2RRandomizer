@@ -2,6 +2,7 @@
 
 HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
+bool startupSuccess;
 FILE *stdoutLogFile;
 std::unique_ptr<UILog> uiLog;
 std::unique_ptr<ImmediateLogger> logger;
@@ -43,7 +44,7 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 		{
 			DisableThreadLibraryCalls(hinstDLL);
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-			if (Startup())
+			if ((startupSuccess = Startup()))
 			{
 				logger->LogMessage("[RE2R-R] DllMain (DLL_PROCESS_ATTACH) called.\n");
 				dllInstance = hinstDLL;
@@ -58,6 +59,13 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 				}
 				mainThreadHandle = CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
 			}
+			else
+				return FALSE;
+			break;
+		}
+		case DLL_PROCESS_DETACH: // 0
+		{
+			Shutdown();
 			break;
 		}
 	}
@@ -155,7 +163,7 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 
 DWORD WINAPI ShutdownThread(LPVOID UNUSED(lpThreadParameter))
 {
-	Sleep(100);
+	TerminateThread(mainThreadHandle, 0);
 	FreeDependencyLibrary(L"RE2RR.Database.dll");
 	FreeDependencyLibrary(L"RE2RR.Types.dll");
 	FreeDependencyLibrary(L"RE2RR.Common.dll");
@@ -181,30 +189,37 @@ bool Startup()
 
 void Shutdown()
 {
-	logger->LogMessage("[RE2R-R] Shutdown called.\n");
+	// This might not have been setup properly if Startup() failed.
+	if (startupSuccess)
+		logger->LogMessage("[RE2R-R] Shutdown called.\n");
+
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_RemoveHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
-	Sleep(100);
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-	CleanupRenderTarget();
-	if (deviceContext)
+
+	// These would only have been setup if we succeeded Startup().
+	if (startupSuccess)
 	{
-		deviceContext->Release();
-		deviceContext = nullptr;
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+		CleanupRenderTarget();
+		if (deviceContext)
+		{
+			deviceContext->Release();
+			deviceContext = nullptr;
+		}
+		if (device)
+		{
+			device->Release();
+			device = nullptr;
+		}
+		SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)wndProcFunc);
 	}
-	if (device)
-	{
-		device->Release();
-		device = nullptr;
-	}
-	SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)wndProcFunc);
-	Sleep(100);
-	fclose(stdoutLogFile);
+
+	if (stdoutLogFile)
+		fclose(stdoutLogFile);
 	CreateThread(NULL, 0, ShutdownThread, NULL, 0, NULL);
-	TerminateThread(mainThreadHandle, 0);
 }
 
 __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t param3, uintptr_t param4)
