@@ -12,5 +12,5 @@ function(set_project_compile_options project_name)
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
     )
 
-    target_compile_options(${project_name} PRIVATE ${CLANG_COMPILE_OPTIONS})
+    target_compile_options(${project_name} PRIVATE ${CLANG_COMPILE_OPTIONS} ${ARGN})
 endfunction()

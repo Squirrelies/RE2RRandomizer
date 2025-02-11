@@ -1,8 +1,6 @@
 #if defined(ENUM_NAME) && defined(ENUM_TYPE) && defined(ENUM_LIST)
 
 #include "Common.h"
-#include <stdint.h>
-#include <string>
 
 namespace RE2RREnums
 {

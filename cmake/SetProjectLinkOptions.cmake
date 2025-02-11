@@ -4,5 +4,5 @@ function(set_project_link_options project_name)
         -static
     )
 
-    target_link_options(${project_name} PRIVATE ${CLANG_LINK_OPTIONS})
+    target_link_options(${project_name} PRIVATE ${CLANG_LINK_OPTIONS} ${ARGN})
 endfunction()

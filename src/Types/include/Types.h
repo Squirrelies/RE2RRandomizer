@@ -3,13 +3,10 @@
 
 #include "Common.h"
 #include <array>
-#include <functional>
 #include <memory>
 #include <rpc.h>
-#include <stdint.h>
 #include <string>
-#include <vector>
-#include <windows.h>
+#include <unordered_map>
 
 #ifdef UNICODE
 #define TryStringToGUID TryStringToGUIDW

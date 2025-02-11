@@ -7,5 +7,5 @@ function(set_project_compile_definitions project_name)
     WIN32_LEAN_AND_MEAN
     )
 
-    target_compile_definitions(${project_name} PRIVATE ${CLANG_COMPILE_DEFINITIONS})
+    target_compile_definitions(${project_name} PRIVATE ${CLANG_COMPILE_DEFINITIONS} ${ARGN})
 endfunction()
