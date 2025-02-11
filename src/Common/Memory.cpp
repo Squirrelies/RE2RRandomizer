@@ -56,3 +56,20 @@ bool TryFindPatternAddress(HANDLE hProcess, TCHAR *moduleName, std::vector<char1
 
 	return TryFindPatternAddress(hProcess, hModule, pattern, address, startOffset);
 }
+
+bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, ImmediateLogger &logger)
+{
+	logger.LogMessage("[TrySetPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
+	*object = (void *)pointer;
+	for (size_t i = 0; i < offsets.size(); ++i)
+	{
+		if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
+		{
+			logger.LogMessage("[TrySetPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(object), *object);
+			return false;
+		}
+		*object = (void *)((uintptr_t)*object + offsets[i]);
+	}
+	logger.LogMessage("[TrySetPointer: %s] Success %s: %p\n", pointerName, NAMEOF(object), *object);
+	return true;
+}

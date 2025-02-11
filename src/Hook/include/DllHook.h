@@ -8,6 +8,7 @@
 #include "Hashes.h"
 #include "Hooking.h"
 #include "Logging.h"
+#include "Memory.h"
 #include "Process.h"
 #include "Randomizer.h"
 #include "Types.h"
@@ -46,8 +47,6 @@ DWORD WINAPI ShutdownThread(LPVOID);
 void FreeDependencyLibrary(const TCHAR *);
 bool Startup(void);
 void Shutdown(void);
-
-bool TrySetPointer(const void *, const std::vector<uint32_t> &&, void **, const char *);
 
 __stdcall void HookItemPlacement1(uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
 __stdcall uintptr_t HookItemPlacement2(uintptr_t, uintptr_t, uintptr_t);

@@ -6,167 +6,44 @@
 #include <stdio.h>
 #include <windows.h>
 
-#ifdef __cplusplus
-extern "C"
+struct UILog
 {
-#endif
+	ImGuiTextBuffer Buf;
+	ImGuiTextFilter Filter;
+	ImVector<int> LineOffsets;
+	bool AutoScroll;
 
-	struct UILog
+	UILog()
 	{
-		ImGuiTextBuffer Buf;
-		ImGuiTextFilter Filter;
-		ImVector<int> LineOffsets;
-		bool AutoScroll;
+		AutoScroll = true;
+		Clear();
+	}
 
-		UILog()
-		{
-			AutoScroll = true;
-			Clear();
-		}
+	LIBRARY_EXPORT_API void Clear();
+	LIBRARY_EXPORT_API void AddLog(const char *fmt, ...) IM_FMTARGS(2);
+	LIBRARY_EXPORT_API void AddLogV(const char *fmt, __builtin_va_list args);
+	LIBRARY_EXPORT_API void Draw(const char *title, bool *p_open = NULL);
+};
 
-		void Clear()
-		{
-			Buf.clear();
-			LineOffsets.clear();
-			LineOffsets.push_back(0);
-		}
+class ImmediateLogger
+{
+private:
+	FILE *out;
+	UILog &uiLog;
 
-		void AddLog(const char *fmt, ...) IM_FMTARGS(2)
-		{
-			int old_size = Buf.size();
-			va_list args;
-			va_start(args, fmt);
-			Buf.appendfv(fmt, args);
-			va_end(args);
-			for (int new_size = Buf.size(); old_size < new_size; old_size++)
-				if (Buf[old_size] == '\n')
-					LineOffsets.push_back(old_size + 1);
-		}
-
-		void AddLogV(const char *fmt, __builtin_va_list args)
-		{
-			int old_size = Buf.size();
-			Buf.appendfv(fmt, args);
-			for (int new_size = Buf.size(); old_size < new_size; old_size++)
-				if (Buf[old_size] == '\n')
-					LineOffsets.push_back(old_size + 1);
-		}
-
-		void Draw(const char *title, bool *p_open = NULL)
-		{
-			if (!ImGui::Begin(title, p_open))
-			{
-				ImGui::End();
-				return;
-			}
-
-			// Options menu
-			if (ImGui::BeginPopup("Options"))
-			{
-				ImGui::Checkbox("Auto-scroll", &AutoScroll);
-				ImGui::EndPopup();
-			}
-
-			// Main window
-			if (ImGui::Button("Options"))
-				ImGui::OpenPopup("Options");
-			ImGui::SameLine();
-			bool clear = ImGui::Button("Clear");
-			ImGui::SameLine();
-			bool copy = ImGui::Button("Copy");
-			ImGui::SameLine();
-			Filter.Draw("Filter", -100.0f);
-
-			ImGui::Separator();
-
-			if (ImGui::BeginChild("scrolling", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
-			{
-				if (clear)
-					Clear();
-				if (copy)
-					ImGui::LogToClipboard();
-
-				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-				const char *buf = Buf.begin();
-				const char *buf_end = Buf.end();
-				if (Filter.IsActive())
-				{
-					for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
-					{
-						const char *line_start = buf + LineOffsets[line_no];
-						const char *line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-						if (Filter.PassFilter(line_start, line_end))
-							ImGui::TextUnformatted(line_start, line_end);
-					}
-				}
-				else
-				{
-					ImGuiListClipper clipper;
-					clipper.Begin(LineOffsets.Size);
-					while (clipper.Step())
-					{
-						for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
-						{
-							const char *line_start = buf + LineOffsets[line_no];
-							const char *line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-							ImGui::TextUnformatted(line_start, line_end);
-						}
-					}
-					clipper.End();
-				}
-				ImGui::PopStyleVar();
-
-				if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-					ImGui::SetScrollHereY(1.0f);
-			}
-			ImGui::EndChild();
-			ImGui::End();
-		}
-	};
-
-	class LIBRARY_EXPORT_API ImmediateLogger
+protected:
+public:
+	ImmediateLogger(FILE *out, UILog &uiLog) : out(out), uiLog(uiLog)
 	{
-	private:
-		FILE *out;
-		UILog &uiLog;
+	}
 
-	protected:
-	public:
-		ImmediateLogger(FILE *out, UILog &uiLog) : out(out), uiLog(uiLog)
-		{
-		}
+	~ImmediateLogger()
+	{
+		fflush(out);
+	}
 
-		~ImmediateLogger()
-		{
-			fflush(out);
-		}
-
-		void LogMessage(const char *format, ...)
-		{
-			va_list args;
-
-			va_start(args, format);
-			vprintf(format, args);
-			va_end(args);
-
-			va_start(args, format);
-			vfprintf(out, format, args);
-			fflush(out);
-			va_end(args);
-
-			va_start(args, format);
-			this->uiLog.AddLogV(format, args);
-			va_end(args);
-		}
-
-		UILog &GetUILog()
-		{
-			return this->uiLog;
-		}
-	};
-
-#ifdef __cplusplus
-}
-#endif
+	LIBRARY_EXPORT_API void LogMessage(const char *format, ...);
+	LIBRARY_EXPORT_API UILog &GetUILog();
+};
 
 #endif

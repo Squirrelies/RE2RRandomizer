@@ -44,6 +44,7 @@ target_sources(${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}/VersionInfoCommon.rc
         extern/amosnier/sha-2/sha-256.c
         File.cpp
+        Logging.cpp
         Memory.cpp
         Process.cpp
         Strings.cpp
@@ -58,7 +59,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-INTERFACE imgui::imgui ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY} ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
+PUBLIC imgui::imgui
+INTERFACE ${D3D11_LIBRARY} ${D3D12_LIBRARY} ${D3DCOMPILER_LIBRARY} ${GDI32_LIBRARY} ${DWMAPI_LIBRARY} ${RPCRT4_LIBRARY} ${DXGUID_LIBRARY} ${DINPUT8_LIBRARY}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
