@@ -30,6 +30,10 @@ static uintptr_t ItemPlacement2FuncOffset;     // app.ropeway.gamemastering.Inve
 static uintptr_t ItemPickupFuncOffset;         // app.ropeway.gui.GUIMaster.openInventoryGetItemMode(app.ropeway.gamemastering.InventoryManager.StockItem, app.ropeway.gimmick.action.SetItem.SetItemSaveData)
 static uintptr_t UIMapManagerUpdateFuncOffset; // app.ropeway.gamemastering.UIMapManager.update()
 
+extern RE2RR::Types::Enums::RE2RGameVersion gameVersion;
+extern RE2RR::Types::Enums::RE2RGameEdition gameEdition;
+extern RE2RR::Types::Enums::RE2RGameDXVersion gameDXVersion;
+
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 typedef void(__stdcall *ItemPlacement1)(uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);

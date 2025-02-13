@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <vector>
 
-namespace RE2RRFile
+namespace RE2RR::Common::File
 {
 	/// @brief Checks if a file exists.
 	/// @param filePath The path to the file to check.

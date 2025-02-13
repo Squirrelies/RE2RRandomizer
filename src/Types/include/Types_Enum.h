@@ -2,7 +2,7 @@
 
 #include "Common.h"
 
-namespace RE2RREnums
+namespace Enums
 {
 	enum class ENUM_NAME : ENUM_TYPE
 	{

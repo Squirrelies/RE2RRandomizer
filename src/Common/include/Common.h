@@ -1,11 +1,7 @@
 #ifndef RE2RR_COMMON_H
 #define RE2RR_COMMON_H
 
-#ifdef DEBUG
-static const bool IsDebug = true;
-#else
-static const bool IsDebug = false;
-#endif
+#include <minwindef.h>
 
 #ifndef UNICODE
 #define UNICODE
@@ -19,14 +15,12 @@ static const bool IsDebug = false;
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <minwindef.h>
-
 #ifndef LIBRARY_EXPORT_API
 // Windows Static or non-Windows
-#if defined(BUILD_STATIC_LIBS) || !defined(WIN32) || !defined(WIN64)
+#if !defined(BUILD_RE2RR_SHARED_LIBS) || !defined(WIN32) || !defined(WIN64)
 #define LIBRARY_EXPORT_API
 // Windows Shared (Build/Export)
-#elif defined(BUILD_SHARED_LIBS)
+#elif defined(BUILD_RE2RR_SHARED_LIBS)
 #define LIBRARY_EXPORT_API __declspec(dllexport)
 // Windows Shared (Usage/Import)
 #else
@@ -81,5 +75,14 @@ static const bool IsDebug = false;
 #ifndef RE2RR_VERSION_BUILD
 #define RE2RR_VERSION_BUILD 0
 #endif
+
+namespace RE2RR::Common
+{
+#ifdef DEBUG
+	static const bool IsDebug = true;
+#else
+	static const bool IsDebug = false;
+#endif
+}
 
 #endif

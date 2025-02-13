@@ -8,22 +8,34 @@
 #include <string>
 #include <unordered_map>
 
-#ifdef UNICODE
-#define TryStringToGUID TryStringToGUIDW
-#else
-#define TryStringToGUID TryStringToGUIDA
-#endif
-bool TryStringToGUIDA(const std::string &stringGUID, const GUID &guid);
-bool TryStringToGUIDW(const std::wstring &stringGUID, const GUID &guid);
+namespace std
+{
+	template <>
+	struct hash<GUID>
+	{
+		size_t operator()(const GUID &guid) const noexcept
+		{
+			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
+			std::hash<uint64_t> hash;
+			return hash(p[0]) ^ hash(p[1]);
+		}
+	};
 
-#ifdef UNICODE
-#define StringToGUID StringToGUIDW
-#else
-#define StringToGUID StringToGUIDA
-#endif
-std::unique_ptr<GUID> StringToGUIDA(const std::string &stringGUID);
-std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
+	template <>
+	struct equal_to<GUID>
+	{
+		bool operator()(const GUID &lhs, const GUID &rhs) const noexcept
+		{
+			return lhs.Data1 == rhs.Data1 &&
+			       lhs.Data2 == rhs.Data2 &&
+			       lhs.Data3 == rhs.Data3 &&
+			       std::equal(std::begin(lhs.Data4), std::end(lhs.Data4), std::begin(rhs.Data4));
+		}
+	};
+}
 
+namespace RE2RR::Types
+{
 // Enum RE2RGameVersion
 #ifndef RE2RR_TYPES_H_RE2RGameVersion
 #define RE2RR_TYPES_H_RE2RGameVersion
@@ -1488,140 +1500,128 @@ std::unique_ptr<GUID> StringToGUIDW(const std::wstring &stringGUID);
 #undef ENUM_TYPE
 #undef ENUM_NAME
 #endif
-//
+	//
 
-extern RE2RREnums::RE2RGameVersion gameVersion;
-extern RE2RREnums::RE2RGameEdition gameEdition;
-extern RE2RREnums::RE2RGameDXVersion gameDXVersion;
-
-struct PACKED_DATA via_vec3
-{
-	float x; // 0x00-0x0F
-	float y; // 0x10-0x13
-	float z; // 0x14-0x17
-
-	std::unique_ptr<std::string> ToString() const
+	struct PACKED_DATA via_vec3
 	{
-		const char *toStringFormat = ".%s = %f, .%s = %f, .%s = %f";
+		float x; // 0x00-0x0F
+		float y; // 0x10-0x13
+		float z; // 0x14-0x17
 
-		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          NAMEOF(x), x,
-		                          NAMEOF(y), y,
-		                          NAMEOF(z), z) +
-		                 1;
-		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
-		snprintf(toString.get(), bufferSize, toStringFormat,
-		         NAMEOF(x), x,
-		         NAMEOF(y), y,
-		         NAMEOF(z), z);
+		std::unique_ptr<std::string> ToString() const
+		{
+			const char *toStringFormat = ".%s = %f, .%s = %f, .%s = %f";
 
-		return std::make_unique<std::string>(toString.get());
-	}
-};
+			int bufferSize = snprintf(NULL, 0, toStringFormat,
+			                          NAMEOF(x), x,
+			                          NAMEOF(y), y,
+			                          NAMEOF(z), z) +
+			                 1;
+			std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+			snprintf(toString.get(), bufferSize, toStringFormat,
+			         NAMEOF(x), x,
+			         NAMEOF(y), y,
+			         NAMEOF(z), z);
 
-struct PACKED_DATA app_ropeway_MansionManager_MapIdentifier
-{
-	uint8_t _Reserved[0x10];  // 0x00-0x0F
-	RE2RREnums::MapID ID;     // 0x10-0x13
-	RE2RREnums::MapArea Area; // 0x14-0x17
+			return std::make_unique<std::string>(toString.get());
+		}
+	};
 
-	std::unique_ptr<std::string> ToString() const
+	struct PACKED_DATA app_ropeway_MansionManager_MapIdentifier
 	{
-		const char *toStringFormat = ".%s = %s, .%s = %s";
+		uint8_t _Reserved[0x10];           // 0x00-0x0F
+		RE2RR::Types::Enums::MapID ID;     // 0x10-0x13
+		RE2RR::Types::Enums::MapArea Area; // 0x14-0x17
 
-		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).get()->c_str(),
-		                          NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).get()->c_str()) +
-		                 1;
-		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
-		snprintf(toString.get(), bufferSize, toStringFormat,
-		         NAMEOF(ID), RE2RREnums::EnumMapIDToString(ID).get()->c_str(),
-		         NAMEOF(Area), RE2RREnums::EnumMapAreaToString(Area).get()->c_str());
+		std::unique_ptr<std::string> ToString() const
+		{
+			const char *toStringFormat = ".%s = %s, .%s = %s";
 
-		return std::make_unique<std::string>(toString.get());
-	}
-};
+			int bufferSize = snprintf(NULL, 0, toStringFormat,
+			                          NAMEOF(ID), RE2RR::Types::Enums::EnumMapIDToString(ID).get()->c_str(),
+			                          NAMEOF(Area), RE2RR::Types::Enums::EnumMapAreaToString(Area).get()->c_str()) +
+			                 1;
+			std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+			snprintf(toString.get(), bufferSize, toStringFormat,
+			         NAMEOF(ID), RE2RR::Types::Enums::EnumMapIDToString(ID).get()->c_str(),
+			         NAMEOF(Area), RE2RR::Types::Enums::EnumMapAreaToString(Area).get()->c_str());
 
-typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveItem
-{
-	// uint8_t _Reserved[0x10]; // 0x00-0x0F
-	RE2RREnums::ItemType ItemId;     // 0x10-0x13
-	RE2RREnums::WeaponType WeaponId; // 0x14-0x17
-	int32_t WeaponParts;             // 0x18-0x1B
-	int32_t BulletId;                // 0x1C-0x1F
-	int32_t Count;                   // 0x20-0x23
+			return std::make_unique<std::string>(toString.get());
+		}
+	};
 
-	std::unique_ptr<std::string> ToString() const
+	typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveItem
 	{
-		const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
+		// uint8_t _Reserved[0x10]; // 0x00-0x0F
+		RE2RR::Types::Enums::ItemType ItemId;     // 0x10-0x13
+		RE2RR::Types::Enums::WeaponType WeaponId; // 0x14-0x17
+		int32_t WeaponParts;                      // 0x18-0x1B
+		int32_t BulletId;                         // 0x1C-0x1F
+		int32_t Count;                            // 0x20-0x23
 
-		int bufferSize = snprintf(NULL, 0, toStringFormat,
-		                          NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).get()->c_str(),
-		                          NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
-		                          NAMEOF(WeaponParts), WeaponParts,
-		                          NAMEOF(BulletId), BulletId,
-		                          NAMEOF(Count), Count) +
-		                 1;
-		std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
-		snprintf(toString.get(), bufferSize, toStringFormat,
-		         NAMEOF(ItemId), RE2RREnums::EnumItemTypeToString(ItemId).get()->c_str(),
-		         NAMEOF(WeaponId), RE2RREnums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
-		         NAMEOF(WeaponParts), WeaponParts,
-		         NAMEOF(BulletId), BulletId,
-		         NAMEOF(Count), Count);
+		std::unique_ptr<std::string> ToString() const
+		{
+			const char *toStringFormat = ".%s = %s, .%s = %s, .%s = %d, .%s = %d, .%s = %d";
 
-		return std::make_unique<std::string>(toString.get());
-	}
-} RE2RItem;
-bool operator==(const RE2RItem &, const RE2RItem &);
+			int bufferSize = snprintf(NULL, 0, toStringFormat,
+			                          NAMEOF(ItemId), RE2RR::Types::Enums::EnumItemTypeToString(ItemId).get()->c_str(),
+			                          NAMEOF(WeaponId), RE2RR::Types::Enums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
+			                          NAMEOF(WeaponParts), WeaponParts,
+			                          NAMEOF(BulletId), BulletId,
+			                          NAMEOF(Count), Count) +
+			                 1;
+			std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+			snprintf(toString.get(), bufferSize, toStringFormat,
+			         NAMEOF(ItemId), RE2RR::Types::Enums::EnumItemTypeToString(ItemId).get()->c_str(),
+			         NAMEOF(WeaponId), RE2RR::Types::Enums::EnumWeaponTypeToString(WeaponId).get()->c_str(),
+			         NAMEOF(WeaponParts), WeaponParts,
+			         NAMEOF(BulletId), BulletId,
+			         NAMEOF(Count), Count);
 
-struct PACKED_DATA ItemInformation
-{
-	GUID ItemPositionGUID;
-	RE2RItem Item;
-	RE2RREnums::FloorID Floor;
-	RE2RREnums::MapID Map;
-	RE2RREnums::MapPartsID MapPart;
-	RE2RREnums::Scenario Scenario;
-	RE2RREnums::Difficulty Difficulty;
-};
+			return std::make_unique<std::string>(toString.get());
+		}
+	} RE2RItem;
+	bool operator==(const RE2RItem &, const RE2RItem &);
 
-struct GameModeKey
-{
-	RE2RREnums::Scenario Scenario;
-	RE2RREnums::Difficulty Difficulty;
-};
-bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
+	struct PACKED_DATA ItemInformation
+	{
+		GUID ItemPositionGUID;
+		RE2RItem Item;
+		RE2RR::Types::Enums::FloorID Floor;
+		RE2RR::Types::Enums::MapID Map;
+		RE2RR::Types::Enums::MapPartsID MapPart;
+		RE2RR::Types::Enums::Scenario Scenario;
+		RE2RR::Types::Enums::Difficulty Difficulty;
+	};
+
+	struct GameModeKey
+	{
+		RE2RR::Types::Enums::Scenario Scenario;
+		RE2RR::Types::Enums::Difficulty Difficulty;
+	};
+	bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
+
+	struct RandomizedItem
+	{
+		GUID OriginalGUID;
+		RE2RItem ReplacementItem;
+	};
+	bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs);
+
+	struct Seed
+	{
+		GameModeKey gameMode;
+		std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
+	};
+	bool operator==(const Seed &lhs, const Seed &rhs);
+}
 
 namespace std
 {
 	template <>
-	struct hash<GUID>
+	struct hash<RE2RR::Types::RE2RItem>
 	{
-		size_t operator()(const GUID &guid) const noexcept
-		{
-			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
-			std::hash<uint64_t> hash;
-			return hash(p[0]) ^ hash(p[1]);
-		}
-	};
-
-	template <>
-	struct equal_to<GUID>
-	{
-		bool operator()(const GUID &lhs, const GUID &rhs) const noexcept
-		{
-			return lhs.Data1 == rhs.Data1 &&
-			       lhs.Data2 == rhs.Data2 &&
-			       lhs.Data3 == rhs.Data3 &&
-			       std::equal(std::begin(lhs.Data4), std::end(lhs.Data4), std::begin(rhs.Data4));
-		}
-	};
-
-	template <>
-	struct hash<RE2RItem>
-	{
-		size_t operator()(const RE2RItem &item) const noexcept
+		size_t operator()(const RE2RR::Types::RE2RItem &item) const noexcept
 		{
 			const int32_t *p = reinterpret_cast<const int32_t *>(&item);
 			std::hash<int32_t> hash;
@@ -1630,9 +1630,9 @@ namespace std
 	};
 
 	template <>
-	struct equal_to<RE2RItem>
+	struct equal_to<RE2RR::Types::RE2RItem>
 	{
-		bool operator()(const RE2RItem &lhs, const RE2RItem &rhs) const noexcept
+		bool operator()(const RE2RR::Types::RE2RItem &lhs, const RE2RR::Types::RE2RItem &rhs) const noexcept
 		{
 			return lhs.ItemId == rhs.ItemId &&
 			       lhs.WeaponId == rhs.WeaponId &&
@@ -1643,9 +1643,9 @@ namespace std
 	};
 
 	template <>
-	struct hash<GameModeKey>
+	struct hash<RE2RR::Types::GameModeKey>
 	{
-		size_t operator()(const GameModeKey &key) const
+		size_t operator()(const RE2RR::Types::GameModeKey &key) const
 		{
 			size_t res = 17;
 
@@ -1656,19 +1656,5 @@ namespace std
 		}
 	};
 }
-
-struct RandomizedItem
-{
-	GUID OriginalGUID;
-	RE2RItem ReplacementItem;
-};
-bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs);
-
-struct Seed
-{
-	GameModeKey gameMode;
-	std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
-};
-bool operator==(const Seed &lhs, const Seed &rhs);
 
 #endif

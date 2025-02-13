@@ -2,7 +2,7 @@
 
 int wmain(void)
 {
-	DWORD pid = GetProcessIdByName(L"re2.exe");
+	DWORD pid = RE2RR::Common::Process::GetProcessIdByName(L"re2.exe");
 	if (pid == 0)
 		return 1;
 
@@ -22,7 +22,7 @@ int wmain(void)
 
 		for (size_t i = 0; i < dllPathsLength; ++i)
 		{
-			dllPathSize = GetStringSize(dllPaths[i]);
+			dllPathSize = RE2RR::Common::Strings::GetStringSize(dllPaths[i]);
 			pDllPath = VirtualAllocEx(handle, 0, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
 			WriteProcessMemory(handle, pDllPath, (LPVOID)dllPaths[i].c_str(), dllPathSize, nullptr);
 			hDllThread = CreateRemoteThread(handle, 0, 0, (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "LoadLibraryW"), pDllPath, 0, 0);

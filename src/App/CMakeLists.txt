@@ -25,7 +25,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-PRIVATE RE2RR::Common RE2RR::Hook
+PRIVATE RE2RR::Common
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

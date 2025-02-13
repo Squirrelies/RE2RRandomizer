@@ -6,44 +6,47 @@
 #include <stdio.h>
 #include <windows.h>
 
-struct UILog
+namespace RE2RR::Common::Logging
 {
-	ImGuiTextBuffer Buf;
-	ImGuiTextFilter Filter;
-	ImVector<int> LineOffsets;
-	bool AutoScroll;
-
-	UILog()
+	struct UILog
 	{
-		AutoScroll = true;
-		Clear();
-	}
+		ImGuiTextBuffer Buf;
+		ImGuiTextFilter Filter;
+		ImVector<int> LineOffsets;
+		bool AutoScroll;
 
-	LIBRARY_EXPORT_API void Clear();
-	LIBRARY_EXPORT_API void AddLog(const char *fmt, ...) IM_FMTARGS(2);
-	LIBRARY_EXPORT_API void AddLogV(const char *fmt, __builtin_va_list args);
-	LIBRARY_EXPORT_API void Draw(const char *title, bool *p_open = NULL);
-};
+		UILog()
+		{
+			AutoScroll = true;
+			Clear();
+		}
 
-class ImmediateLogger
-{
-private:
-	FILE *out;
-	UILog &uiLog;
+		LIBRARY_EXPORT_API void Clear();
+		LIBRARY_EXPORT_API void AddLog(const char *fmt, ...) IM_FMTARGS(2);
+		LIBRARY_EXPORT_API void AddLogV(const char *fmt, __builtin_va_list args);
+		LIBRARY_EXPORT_API void Draw(const char *title, bool *p_open = NULL);
+	};
 
-protected:
-public:
-	ImmediateLogger(FILE *out, UILog &uiLog) : out(out), uiLog(uiLog)
+	class ImmediateLogger
 	{
-	}
+	private:
+		FILE *out;
+		UILog &uiLog;
 
-	~ImmediateLogger()
-	{
-		fflush(out);
-	}
+	protected:
+	public:
+		ImmediateLogger(FILE *out, UILog &uiLog) : out(out), uiLog(uiLog)
+		{
+		}
 
-	LIBRARY_EXPORT_API void LogMessage(const char *format, ...);
-	LIBRARY_EXPORT_API UILog &GetUILog();
-};
+		~ImmediateLogger()
+		{
+			fflush(out);
+		}
+
+		LIBRARY_EXPORT_API void LogMessage(const char *format, ...);
+		LIBRARY_EXPORT_API UILog &GetUILog();
+	};
+}
 
 #endif

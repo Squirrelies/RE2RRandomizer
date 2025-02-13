@@ -2,7 +2,7 @@
 
 #include "Types_Enum.h"
 
-namespace RE2RREnums
+namespace Enums
 {
 #define ENUM_METHOD_NAME(name) std::unique_ptr<std::string> DEFINE_CONCATENATION(DEFINE_CONCATENATION(Enum, name), ToString)(DEFINE_CONCATENATION(, name) enumValue)
 	ENUM_METHOD_NAME(ENUM_NAME)

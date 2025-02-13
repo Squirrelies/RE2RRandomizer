@@ -9,14 +9,14 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
-namespace RE2RRUI
+namespace RE2RR::Hook::UI
 {
 	class UI
 	{
 	private:
-		ImmediateLogger &logger;
-		RE2RREnums::Scenario *scenario;
-		RE2RREnums::Difficulty *difficulty;
+		RE2RR::Common::Logging::ImmediateLogger &logger;
+		RE2RR::Types::Enums::Scenario *scenario;
+		RE2RR::Types::Enums::Difficulty *difficulty;
 		Randomizer *randomizer;
 		ImFont *font;
 		std::random_device randomDevice;
@@ -29,11 +29,11 @@ namespace RE2RRUI
 
 	protected:
 	public:
-		UI(ImmediateLogger &logger) : logger(logger)
+		UI(RE2RR::Common::Logging::ImmediateLogger &logger) : logger(logger)
 		{
 			// this->logger = logger;
-			this->scenario = new RE2RREnums::Scenario(RE2RREnums::Scenario::LEON_A);
-			this->difficulty = new RE2RREnums::Difficulty(RE2RREnums::Difficulty::NORMAL);
+			this->scenario = new RE2RR::Types::Enums::Scenario(RE2RR::Types::Enums::Scenario::LEON_A);
+			this->difficulty = new RE2RR::Types::Enums::Difficulty(RE2RR::Types::Enums::Difficulty::NORMAL);
 			this->randomizer = nullptr;
 			this->font = nullptr;
 		}

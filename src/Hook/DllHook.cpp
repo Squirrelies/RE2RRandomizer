@@ -4,9 +4,9 @@ HINSTANCE dllInstance;
 HANDLE mainThreadHandle;
 bool startupSuccess;
 FILE *stdoutLogFile;
-std::unique_ptr<UILog> uiLog;
-std::unique_ptr<ImmediateLogger> logger;
-std::unique_ptr<RE2RRUI::UI> ui;
+std::unique_ptr<RE2RR::Common::Logging::UILog> uiLog;
+std::unique_ptr<RE2RR::Common::Logging::ImmediateLogger> logger;
+std::unique_ptr<RE2RR::Hook::UI::UI> ui;
 void **vtableDXGISwapChain = nullptr;
 void **vtableD3D11Device = nullptr;
 void **vtableD3D11DeviceContext = nullptr;
@@ -32,9 +32,9 @@ ItemPickup itemPickupFuncTarget = nullptr;
 ItemPickup itemPickupFunc = nullptr;
 UIMapManagerUpdate uiMapManagerUpdateFuncTarget = nullptr;
 UIMapManagerUpdate uiMapManagerUpdateFunc = nullptr;
-RE2RREnums::RE2RGameVersion gameVersion;
-RE2RREnums::RE2RGameEdition gameEdition;
-RE2RREnums::RE2RGameDXVersion gameDXVersion;
+RE2RR::Types::Enums::RE2RGameVersion gameVersion = RE2RR::Types::Enums::RE2RGameVersion::Unknown;
+RE2RR::Types::Enums::RE2RGameEdition gameEdition = RE2RR::Types::Enums::RE2RGameEdition::Unknown;
+RE2RR::Types::Enums::RE2RGameDXVersion gameDXVersion = RE2RR::Types::Enums::RE2RGameDXVersion::Unknown;
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID UNUSED(lpvReserved))
 {
@@ -78,8 +78,8 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	logger->LogMessage("[RE2R-R] MainThread called.\n");
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
-	const std::unique_ptr<char[]> gameExePath = GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
-	if (!RE2RRHashes::DetectVersion(gameExePath.get(), gameVersion, gameEdition, gameDXVersion, *logger))
+	const std::unique_ptr<char[]> gameExePath = RE2RR::Common::Process::GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
+	if (!RE2RR::Hook::Hashes::DetectVersion(gameExePath.get(), gameVersion, gameEdition, gameDXVersion, *logger))
 	{
 		logger->LogMessage("[RE2R-R] Unable to detect game version, shutting down...\n");
 		Shutdown();
@@ -87,11 +87,11 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 	}
 
 	// Set function pointer addresses.
-	if (gameEdition == RE2RREnums::RE2RGameEdition::WorldWide)
+	if (gameEdition == RE2RR::Types::Enums::RE2RGameEdition::WorldWide)
 	{
-		if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX11)
+		if (gameDXVersion == RE2RR::Types::Enums::RE2RGameDXVersion::DirectX11)
 		{
-			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230421_1)
+			if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230421_1)
 			{
 				ItemPlacement1FuncOffset = 0x12CDA20;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gamemastering.InventoryManager.ItemData, app.ropeway.gamemastering.Location.ID, app.ropeway.gamemastering.Map.ID, System.Guid)
 				ItemPlacement2FuncOffset = 0x12CC740;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gimmick.action.SetItem.SetItemSaveData)
@@ -99,9 +99,9 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 				UIMapManagerUpdateFuncOffset = 0x95E430; // app.ropeway.gamemastering.UIMapManager.update()
 			}
 		}
-		else if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX12)
+		else if (gameDXVersion == RE2RR::Types::Enums::RE2RGameDXVersion::DirectX12)
 		{
-			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230814_1)
+			if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230814_1)
 			{
 				ItemPlacement1FuncOffset = 0x0;
 				ItemPlacement2FuncOffset = 0x0;
@@ -110,11 +110,11 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 			}
 		}
 	}
-	else if (gameEdition == RE2RREnums::RE2RGameEdition::CeroZ)
+	else if (gameEdition == RE2RR::Types::Enums::RE2RGameEdition::CeroZ)
 	{
-		if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX11)
+		if (gameDXVersion == RE2RR::Types::Enums::RE2RGameDXVersion::DirectX11)
 		{
-			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230421_1)
+			if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230421_1)
 			{
 				ItemPlacement1FuncOffset = 0x0;
 				ItemPlacement2FuncOffset = 0x0;
@@ -122,9 +122,9 @@ DWORD WINAPI MainThread(LPVOID UNUSED(lpThreadParameter))
 				UIMapManagerUpdateFuncOffset = 0x0;
 			}
 		}
-		else if (gameDXVersion == RE2RREnums::RE2RGameDXVersion::DirectX12)
+		else if (gameDXVersion == RE2RR::Types::Enums::RE2RGameDXVersion::DirectX12)
 		{
-			if (gameVersion == RE2RREnums::RE2RGameVersion::RE2R_20230814_1)
+			if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230814_1)
 			{
 				ItemPlacement1FuncOffset = 0x0;
 				ItemPlacement2FuncOffset = 0x0;
@@ -181,9 +181,9 @@ void FreeDependencyLibrary(const TCHAR *moduleName)
 bool Startup()
 {
 	return !fopen_s(&stdoutLogFile, "RE2RR_Core.log", "w") &&
-	       (uiLog = std::make_unique<UILog>()).get() != nullptr &&
-	       (logger = std::make_unique<ImmediateLogger>(stdoutLogFile, *uiLog)).get() != nullptr &&
-	       (ui = std::make_unique<RE2RRUI::UI>(*logger.get())).get() != nullptr &&
+	       (uiLog = std::make_unique<RE2RR::Common::Logging::UILog>()).get() != nullptr &&
+	       (logger = std::make_unique<RE2RR::Common::Logging::ImmediateLogger>(stdoutLogFile, *uiLog)).get() != nullptr &&
+	       (ui = std::make_unique<RE2RR::Hook::UI::UI>(*logger.get())).get() != nullptr &&
 	       MH_Initialize() == MH_OK;
 }
 
@@ -230,14 +230,14 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	    (randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr) == nullptr) // If we're not randomizing, this will be null.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	RE2RItem *itemToReplace = (RE2RItem *)param3;
+	RE2RR::Types::RE2RItem *itemToReplace = (RE2RR::Types::RE2RItem *)param3;
 	const GUID *itemPositionGuid = (GUID *)param4;
-	if (!TryReadPointer((const void *)param3, {0x50, 0x10, 0x10}, (void **)&itemToReplace, NAMEOF(itemToReplace), *logger.get()) ||
-	    !TryReadPointer((const void *)param4, {0x30}, (void **)&itemPositionGuid, NAMEOF(itemPositionGuid), *logger.get()))
+	if (!RE2RR::Common::Memory::TryReadPointer((const void *)param3, {0x50, 0x10, 0x10}, (void **)&itemToReplace, NAMEOF(itemToReplace), *logger.get()) ||
+	    !RE2RR::Common::Memory::TryReadPointer((const void *)param4, {0x30}, (void **)&itemPositionGuid, NAMEOF(itemPositionGuid), *logger.get()))
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	// RE2RItem *itemToReplace = (RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
-	// const RE2RItem *currentItem = (RE2RItem *)(param4 + 0x14);           // This is where we want to read to get what the item is.
+	// RE2RR::Types::RE2RItem *itemToReplace = (RE2RR::Types::RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
+	// const RE2RR::Types::RE2RItem *currentItem = (RE2RR::Types::RE2RItem *)(param4 + 0x14);           // This is where we want to read to get what the item is.
 	// const GUID *itemPositionGuid = (GUID *)(param4 + 0x30); // The item's position GUID.
 
 	if (itemToReplace != nullptr && itemPositionGuid != nullptr)
@@ -253,15 +253,15 @@ __stdcall void HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2)
 	Randomizer *randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr;
 	if (randomizer != nullptr)
 	{
-		RE2RREnums::MapPartsID mapPartsID = *(RE2RREnums::MapPartsID *)(param2 + 0xC8);
-		RE2RREnums::MapID mapID = *(RE2RREnums::MapID *)(param2 + 0xCC);
-		RE2RREnums::FloorID floorID = *(RE2RREnums::FloorID *)(param2 + 0xD4);
+		RE2RR::Types::Enums::MapPartsID mapPartsID = *(RE2RR::Types::Enums::MapPartsID *)(param2 + 0xC8);
+		RE2RR::Types::Enums::MapID mapID = *(RE2RR::Types::Enums::MapID *)(param2 + 0xCC);
+		RE2RR::Types::Enums::FloorID floorID = *(RE2RR::Types::Enums::FloorID *)(param2 + 0xD4);
 
 		if (randomizer->ChangeArea(mapPartsID, mapID, floorID))
 			logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
-			                   RE2RREnums::EnumMapPartsIDToString(mapPartsID).get()->c_str(),
-			                   RE2RREnums::EnumMapIDToString(mapID).get()->c_str(),
-			                   RE2RREnums::EnumFloorIDToString(floorID).get()->c_str());
+			                   RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsID).get()->c_str(),
+			                   RE2RR::Types::Enums::EnumMapIDToString(mapID).get()->c_str(),
+			                   RE2RR::Types::Enums::EnumFloorIDToString(floorID).get()->c_str());
 	}
 }
 
