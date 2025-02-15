@@ -2,37 +2,7 @@
 #define RE2RR_TYPES_H
 
 #include "Common.h"
-#include <array>
-#include <memory>
-#include <rpc.h>
-#include <string>
-#include <unordered_map>
-
-namespace std
-{
-	template <>
-	struct hash<GUID>
-	{
-		size_t operator()(const GUID &guid) const noexcept
-		{
-			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
-			std::hash<uint64_t> hash;
-			return hash(p[0]) ^ hash(p[1]);
-		}
-	};
-
-	template <>
-	struct equal_to<GUID>
-	{
-		bool operator()(const GUID &lhs, const GUID &rhs) const noexcept
-		{
-			return lhs.Data1 == rhs.Data1 &&
-			       lhs.Data2 == rhs.Data2 &&
-			       lhs.Data3 == rhs.Data3 &&
-			       std::equal(std::begin(lhs.Data4), std::end(lhs.Data4), std::begin(rhs.Data4));
-		}
-	};
-}
+#include "Guid.h"
 
 namespace RE2RR::Types
 {

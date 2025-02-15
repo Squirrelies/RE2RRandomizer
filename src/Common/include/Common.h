@@ -44,13 +44,13 @@
 #define NAMEOF(name) #name
 #endif
 
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__clang__)
 #define UNUSED(x) UNUSED_##x __attribute__((__unused__))
 #else
 #define UNUSED(x) UNUSED_##x
 #endif
 
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__clang__)
 #define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_##x
 #else
 #define UNUSED_FUNCTION(x) UNUSED_##x

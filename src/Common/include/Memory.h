@@ -58,6 +58,21 @@ namespace RE2RR::Common::Memory
 	/// @param logger An instance of ImmediateLogger to log messages to.
 	/// @return A boolean indicating whether we succeeded in traversing the pointer chain.
 	LIBRARY_EXPORT_API bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger);
+
+	/// @brief Swaps the endianness of a 16-bit unsigned integer.
+	/// @param value The value to swap endianness on.
+	/// @return The endian swapped value.
+	LIBRARY_EXPORT_API consteval uint16_t EndianSwap(const uint16_t value) noexcept;
+
+	/// @brief Swaps the endianness of a 32-bit unsigned integer.
+	/// @param value The value to swap endianness on.
+	/// @return The endian swapped value.
+	LIBRARY_EXPORT_API consteval uint32_t EndianSwap(const uint32_t value) noexcept;
+
+	/// @brief Swaps the endianness of a 64-bit unsigned integer.
+	/// @param value The value to swap endianness on.
+	/// @return The endian swapped value.
+	LIBRARY_EXPORT_API consteval uint64_t EndianSwap(const uint64_t value) noexcept;
 }
 
 #endif

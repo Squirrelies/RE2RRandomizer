@@ -102,8 +102,8 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		}
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 
-		originals.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
-		candidates.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
+		originals.append_range(std::initializer_list<GUID>{u8"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
+		candidates.append_range(std::initializer_list<GUID>{u8"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
 		AddKeyItem(originals, candidates, gen);
 	}
 	else // B scenarios
@@ -112,115 +112,115 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 
 		// BoltCutter or KeyCourtyard
 		originals.append_range(std::initializer_list<GUID>{
-		    "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
-		    "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
+		    u8"B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
+		    u8"E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
 		});
 
 		candidates.append_range(std::initializer_list<GUID>{
 		    // East Courtyard
-		    "65F7FE6D-5046-4E7D-B5AA-24747AAB03BB"_guid,
-		    "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
-		    "D79F6C57-3330-4396-82EC-EDD8A4CBE27F"_guid,
+		    u8"65F7FE6D-5046-4E7D-B5AA-24747AAB03BB"_guid,
+		    u8"B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
+		    u8"D79F6C57-3330-4396-82EC-EDD8A4CBE27F"_guid,
 		});
 		AddKeyItem(originals, candidates, gen);
 
 		// If BoltCutter is left, randomize it to these locations. (TODO: This can actually be expanded to east hall and safe room)
-		if (originals[0] == "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid)
+		if (originals[0] == u8"B70C9C24-93B9-4A2A-824A-A75700C67277"_guid)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
 			    // Art room
-			    "CB32491D-679A-0168-07B4-D26FE88EBC72"_guid, // This is the statue arm that is on the table.
-			    //"D8C1E40B-DB48-42B0-AA16-B4F366245998"_guid, // This is the statue arm that is inserted into the statue already
-			    "FA8A099B-2BE6-4196-936F-B53C9382F455"_guid,
+			    u8"CB32491D-679A-0168-07B4-D26FE88EBC72"_guid, // This is the statue arm that is on the table.
+			    // u8"D8C1E40B-DB48-42B0-AA16-B4F366245998"_guid, // This is the statue arm that is inserted into the statue already
+			    u8"FA8A099B-2BE6-4196-936F-B53C9382F455"_guid,
 			    // 2nd floor east hallway
-			    "85F0708C-E754-4A1A-ABF6-1DEE1CB1097E"_guid,
-			    "FC707A9A-F8BF-461A-8B83-EF90C00BAAF1"_guid,
+			    u8"85F0708C-E754-4A1A-ABF6-1DEE1CB1097E"_guid,
+			    u8"FC707A9A-F8BF-461A-8B83-EF90C00BAAF1"_guid,
 			    // East staiurwell
-			    "F66D5A99-E6D5-4B32-B86F-ED8BC4D0B37F"_guid,
-			    "64B130EE-53DD-4F5B-822F-5A5A77730EAC"_guid,
+			    u8"F66D5A99-E6D5-4B32-B86F-ED8BC4D0B37F"_guid,
+			    u8"64B130EE-53DD-4F5B-822F-5A5A77730EAC"_guid,
 			    // // East Office
-			    // "49AF34BC-067C-4BB4-97A9-94FB6F83FBC1"_guid,
-			    // "76C43A01-0C25-4F3F-9F22-1762C9CF5577"_guid,
-			    // "AD84247C-A192-4EBA-B99D-412BD6F245B1"_guid,
-			    // "B15B8A2C-19D6-465F-A4BA-2B1CC9E1306A"_guid,
-			    // "DA2805DC-F487-0942-3C3D-5C4C65B04107"_guid,
-			    // "E47F659D-99A0-42BE-B1C8-E59FC1383708"_guid,
+			    // u8"49AF34BC-067C-4BB4-97A9-94FB6F83FBC1"_guid,
+			    // u8"76C43A01-0C25-4F3F-9F22-1762C9CF5577"_guid,
+			    // u8"AD84247C-A192-4EBA-B99D-412BD6F245B1"_guid,
+			    // u8"B15B8A2C-19D6-465F-A4BA-2B1CC9E1306A"_guid,
+			    // u8"DA2805DC-F487-0942-3C3D-5C4C65B04107"_guid,
+			    // u8"E47F659D-99A0-42BE-B1C8-E59FC1383708"_guid,
 			    // East Closet
-			    "21FA606C-B4D6-45C4-B097-2F439920F36C"_guid,
-			    "B39EC79F-23A5-4B84-8E26-4C82B1A5D4CE"_guid,
+			    u8"21FA606C-B4D6-45C4-B097-2F439920F36C"_guid,
+			    u8"B39EC79F-23A5-4B84-8E26-4C82B1A5D4CE"_guid,
 			    // Press Room
-			    "F71DDBE7-8CE3-4B98-B103-3F7AC4EC633F"_guid,
+			    u8"F71DDBE7-8CE3-4B98-B103-3F7AC4EC633F"_guid,
 			    // East Break Room (Save)
-			    "1E33C3D4-8971-4BA8-8F97-1FDA9E2F3F32"_guid,
-			    "2456358F-71BD-4F97-94CF-B225EF4018AF"_guid,
-			    "15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid,
-			    "4E68F4C7-8AEB-418F-B089-7F7CB2751783"_guid, // This is LEON only...!
-			    "92A9F2F6-4CC4-449A-9B68-B94874D72816"_guid,
-			    "03659087-CCD3-4032-A375-5DCCA3C339EE"_guid,
+			    u8"1E33C3D4-8971-4BA8-8F97-1FDA9E2F3F32"_guid,
+			    u8"2456358F-71BD-4F97-94CF-B225EF4018AF"_guid,
+			    u8"15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid,
+			    u8"4E68F4C7-8AEB-418F-B089-7F7CB2751783"_guid, // This is LEON only...!
+			    u8"92A9F2F6-4CC4-449A-9B68-B94874D72816"_guid,
+			    u8"03659087-CCD3-4032-A375-5DCCA3C339EE"_guid,
 			});
 			AddKeyItem(originals, candidates, gen);
 		}
 		// If KeyCourtyard is left, randomize it to these locations.
-		else if (originals[0] == "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid)
+		else if (originals[0] == u8"E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
 			    // East Guard Room
-			    "E27DF9E6-5944-47EA-AE8B-5B1097FA4AF2"_guid,
-			    "389292E7-42DB-49CE-8CF7-E42B324E46A2"_guid,
-			    "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
-			    "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid,
+			    u8"E27DF9E6-5944-47EA-AE8B-5B1097FA4AF2"_guid,
+			    u8"389292E7-42DB-49CE-8CF7-E42B324E46A2"_guid,
+			    u8"E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
+			    u8"D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid,
 			});
 			AddKeyItem(originals, candidates, gen);
 		}
 
 		// Main Hall Fuse or Spade Key
 		originals.append_range(std::initializer_list<GUID>{
-		    "15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid,
-		    "1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid,
+		    u8"15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid,
+		    u8"1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid,
 		});
 		AddKeyItem(originals, candidates, gen);
 
 		// If Main Hall Fuse is left, randomize it to these locations.
-		if (originals[0] == "15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid)
+		if (originals[0] == u8"15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
-			    //""_guid,
+			    // u8""_guid,
 			    // pretty much anywhere up to maiden medallion or stars office area.
 			});
 			AddKeyItem(originals, candidates, gen);
 		}
 		// If Spade Key is left, randomize it to these locations.
-		else if (originals[0] == "1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid)
+		else if (originals[0] == u8"1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid)
 		{
 			candidates.append_range(std::initializer_list<GUID>{
 			    // Main Hall
-			    "6002D460-036A-4CEA-BB6B-BC589EAFC3D5"_guid,
-			    "65CE3F5E-37B7-4F64-995B-3301EA6DFB9D"_guid,
-			    "F1E708F9-318D-4D29-8351-EB1AA8218188"_guid,
-			    "0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91"_guid,
-			    "4E718EA1-5BB3-4E98-A6F8-FD012C058DE5"_guid,
+			    u8"6002D460-036A-4CEA-BB6B-BC589EAFC3D5"_guid,
+			    u8"65CE3F5E-37B7-4F64-995B-3301EA6DFB9D"_guid,
+			    u8"F1E708F9-318D-4D29-8351-EB1AA8218188"_guid,
+			    u8"0C4C5EC2-0EE6-0175-15E3-74B9F4A22F91"_guid,
+			    u8"4E718EA1-5BB3-4E98-A6F8-FD012C058DE5"_guid,
 			    // 2nd floor waiting room
-			    "6A098F7F-81A3-4B2C-9144-8C28C9506C90"_guid,
-			    "C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"_guid,
+			    u8"6A098F7F-81A3-4B2C-9144-8C28C9506C90"_guid,
+			    u8"C0888EF1-C0AA-47B1-B241-CDE8A11AA29C"_guid,
 			    // Operations Room
-			    "65DB71B3-1BC3-4074-80FA-282C363DA0A0"_guid,
-			    "8A880186-D623-4B03-8820-DC06781D527F"_guid,
-			    "2D717007-20AC-4BD6-8563-138F3EECBD29"_guid,
-			    "4AD55D3D-CF04-0CC2-2563-6045F552BF7B"_guid,
-			    "A1B4B37D-7916-4F7B-B290-9E1500527828"_guid,
+			    u8"65DB71B3-1BC3-4074-80FA-282C363DA0A0"_guid,
+			    u8"8A880186-D623-4B03-8820-DC06781D527F"_guid,
+			    u8"2D717007-20AC-4BD6-8563-138F3EECBD29"_guid,
+			    u8"4AD55D3D-CF04-0CC2-2563-6045F552BF7B"_guid,
+			    u8"A1B4B37D-7916-4F7B-B290-9E1500527828"_guid,
 			    // West Hallway 1st floor
-			    "3B1822E5-3C5F-40E9-A7CC-2EA0E0869454"_guid,
-			    "A9FB31F3-03CE-4369-B897-3C25461F6634"_guid,
-			    "297ACBFC-1ECE-4079-824E-A8B0469E074F"_guid,
+			    u8"3B1822E5-3C5F-40E9-A7CC-2EA0E0869454"_guid,
+			    u8"A9FB31F3-03CE-4369-B897-3C25461F6634"_guid,
+			    u8"297ACBFC-1ECE-4079-824E-A8B0469E074F"_guid,
 			    // West Office
-			    "2A907E12-7FE3-4559-9AF4-3051473F8FAA"_guid,
-			    "89524D9A-972D-4608-A4D2-9DF8FD77F057"_guid,
-			    "9F00CC80-24E4-448D-B72D-78B39E4A5808"_guid,
-			    "E823B55D-3226-0FA9-2742-E0CEB2A3E4AD"_guid,
+			    u8"2A907E12-7FE3-4559-9AF4-3051473F8FAA"_guid,
+			    u8"89524D9A-972D-4608-A4D2-9DF8FD77F057"_guid,
+			    u8"9F00CC80-24E4-448D-B72D-78B39E4A5808"_guid,
+			    u8"E823B55D-3226-0FA9-2742-E0CEB2A3E4AD"_guid,
 			    // Darkroom (West Save Room)
-			    "A66B843C-DB59-49A8-B7DA-774944EB7298"_guid,
-			    "A8C3FD34-3F01-47E1-831D-784EF6822707"_guid,
-			    "FAF9B2E8-5373-48B7-AA5A-7554AB1A613C"_guid,
+			    u8"A66B843C-DB59-49A8-B7DA-774944EB7298"_guid,
+			    u8"A8C3FD34-3F01-47E1-831D-784EF6822707"_guid,
+			    u8"FAF9B2E8-5373-48B7-AA5A-7554AB1A613C"_guid,
 			    // lobby, etc.
 			});
 			AddKeyItem(originals, candidates, gen);
