@@ -3,7 +3,7 @@
 namespace RE2RR::Database
 {
 	using namespace RE2RR::Common::Guid::Guid_Literals;
-	std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames =
+	const std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames =
 	    {
 	        {RE2RR::Types::Enums::FloorID::CityArea_A, "Raccoon City A"},
 	        {RE2RR::Types::Enums::FloorID::CityArea_B, "Raccoon City B"},
@@ -29,7 +29,7 @@ namespace RE2RR::Database
 	        {RE2RR::Types::Enums::FloorID::WaterPlant_C, "Water Treatment Lower"},
 	};
 
-	std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames =
+	const std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames =
 	    {
 	        {RE2RR::Types::Enums::MapID::st1_411_0, "Gas Station"},
 	        {RE2RR::Types::Enums::MapID::st1_601_0, "Front Hall"},
@@ -173,12 +173,12 @@ namespace RE2RR::Database
 	        {RE2RR::Types::Enums::MapID::st8_410_0, "Raccoon City Streets (A Start)"},
 	};
 
-	std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames =
+	const std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames =
 	    {
 	        {RE2RR::Types::Enums::MapPartsID::st5_211_0e, "Mr. X Fight"},
 	};
 
-	std::vector<RE2RR::Types::ItemInformation> itemDB =
+	const std::vector<RE2RR::Types::ItemInformation> itemDB =
 	    {
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = u8"00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_A, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = u8"00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},

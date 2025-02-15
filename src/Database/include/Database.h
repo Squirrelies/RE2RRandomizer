@@ -10,10 +10,10 @@
 
 namespace RE2RR::Database
 {
-	extern std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames;
-	extern std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames;
-	extern std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames;
-	extern std::vector<RE2RR::Types::ItemInformation> itemDB;
+	extern const std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames;
+	extern const std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames;
+	extern const std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames;
+	extern const std::vector<RE2RR::Types::ItemInformation> itemDB;
 }
 
 #endif
