@@ -26,7 +26,7 @@ on:
 
 env:
   VCPKG_ROOT: C:/vcpkg
-  MSYSTEM: clang64
+  MSYS2SYSTEM: clang64
   ARCH: clang-x86_64
 
 jobs:
@@ -38,10 +38,10 @@ jobs:
       build-number: ${{steps.build-number.outputs.current_build_number}}
 
     steps:
-      - name: Setup MSYS2 ${{ env.MSYSTEM }} (${{ env.ARCH }})
+      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ env.MSYSTEM }}
+          msystem: ${{ env.MSYS2SYSTEM }}
           release: false
           update: true
           cache: true
@@ -51,7 +51,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: C:\msys64
-          key: msys2-${{ env.MSYSTEM }}-${{ env.ARCH }}
+          key: msys2-${{ env.MSYS2SYSTEM }}-${{ env.ARCH }}
 
       - name: Get new build number
         id: build-number
@@ -78,11 +78,11 @@ jobs:
         shell: pwsh
 
     steps:
-      - name: Restore MSYS2 ${{ env.MSYSTEM }} (${{ env.ARCH }})
+      - name: Restore MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
         uses: actions/cache@v4
         with:
           path: C:\msys64
-          key: msys2-${{ env.MSYSTEM }}-${{ env.ARCH }}
+          key: msys2-${{ env.MSYS2SYSTEM }}-${{ env.ARCH }}
 
       - name: Checkout code
         uses: actions/checkout@v4
