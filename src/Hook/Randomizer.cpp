@@ -93,6 +93,9 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 
 	if (seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::CLAIRE_A || seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::LEON_A) // A scenarios
 	{
+		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
+
+		// TODO: Redo this. Some of these can probably be randomized (KeySpade, BoltCutter).
 		for (const auto &[_, value] : originalItemInformation)
 		{
 			if (value.Item.ItemId == RE2RR::Types::Enums::ItemType::KeyStorageRoom ||
@@ -100,8 +103,8 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			    value.Item.ItemId == RE2RR::Types::Enums::ItemType::BoltCutter)
 				seed.seedData.insert(std::make_pair(value.ItemPositionGUID, RE2RR::Types::RandomizedItem{.OriginalGUID = value.ItemPositionGUID, .ReplacementItem = value.Item}));
 		}
-		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
 
+		// Marvin's CombatKnife
 		originals.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
 		candidates.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
 		AddKeyItem(originals, candidates, gen);
