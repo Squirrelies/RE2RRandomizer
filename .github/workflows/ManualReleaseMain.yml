@@ -38,6 +38,12 @@ jobs:
       build-number: ${{steps.build-number.outputs.current_build_number}}
 
     steps:
+      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ env.MSYS2SYSTEM }}
+          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
+
       - name: Get new build number
         id: build-number
         run: |
@@ -45,7 +51,7 @@ jobs:
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
   Build:
-    name: Build w/ MSYS2
+    name: Build ${{matrix.configuration}}
     runs-on: windows-latest
     needs: Setup
 
@@ -104,7 +110,33 @@ jobs:
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'README.md', 'README.md')
           $zipFile.Dispose()
 
-      - name: Publish release
+      - name: Upload publish artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}
+          path: |
+            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip
+
+  Publish:
+    name: Publish ${{matrix.configuration}}
+    runs-on: windows-latest
+    needs: [Setup, Build]
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}
+
+      - name: Publish
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -115,15 +147,21 @@ jobs:
             RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip
 
   PostRun:
-    name: Post-run
+    name: Post-Run
     runs-on: windows-latest
-    needs: [Setup, Build]
+    needs: [Setup, Build, Publish]
 
     defaults:
       run:
         shell: pwsh
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
       - name: Update build number variable
         env:
           GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
