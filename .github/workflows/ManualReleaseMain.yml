@@ -3,16 +3,6 @@ name: "Manual Release - Main"
 on:
   workflow_dispatch:
     inputs:
-      workflowPreset:
-        description: "Configure/Build/Test/Package configuration"
-        required: false
-        default: "Release"
-        type: choice
-        options:
-          - "Release"
-          - "RelWithDebInfo"
-          - "MinSizeRel"
-          - "Debug"
       versionMajor:
         description: "Major Version"
         required: false
@@ -40,17 +30,12 @@ env:
   ARCH: clang-x86_64
 
 jobs:
-  Build:
-    name: Build w/ MSYS2
+  Setup:
+    name: Setup Environment
     runs-on: windows-latest
-    permissions:
-      contents: write
-      actions: write
-      attestations: write
 
-    defaults:
-      run:
-        shell: pwsh
+    outputs:
+      build-number: ${{steps.build-number.outputs.current_build_number}}
 
     steps:
       - name: Setup MSYS2 ${{ env.MSYSTEM }} (${{ env.ARCH }})
@@ -62,11 +47,11 @@ jobs:
           cache: true
           install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Cache MSYS2
+        uses: actions/cache@v4
         with:
-          fetch-depth: 0
-          ref: ${{ github.ref }}
+          path: C:\msys64
+          key: msys2-${{ env.MSYSTEM }}-${{ env.ARCH }}
 
       - name: Get new build number
         id: build-number
@@ -74,26 +59,57 @@ jobs:
           $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
 
+  Build:
+    name: Build w/ MSYS2
+    runs-on: windows-latest
+    needs: Setup
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    permissions:
+      contents: write
+      actions: write
+      attestations: write
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Restore MSYS2 ${{ env.MSYSTEM }} (${{ env.ARCH }})
+        uses: actions/cache@v4
+        with:
+          path: C:\msys64
+          key: msys2-${{ env.MSYSTEM }}-${{ env.ARCH }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
       - name: Run CMake
         shell: msys2 {0}
         env:
           RC_VERSION_MAJOR: ${{inputs.versionMajor}}
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
-          RC_VERSION_BUILD: ${{steps.build-number.outputs.current_build_number}}
-        run: cmake --workflow --preset ${{inputs.workflowPreset}} --fresh
+          RC_VERSION_BUILD: ${{needs.Setup.outputs.build-number}}
+        run: cmake --workflow --preset ${{matrix.configuration}} --fresh
 
       - name: Run CTest
         if: ${{ success() && inputs.unitTests == 'true' }}
         shell: msys2 {0}
-        run: ctest --preset ${{inputs.workflowPreset}} --output-on-failure
+        run: ctest --preset ${{matrix.configuration}} --output-on-failure
 
       - name: Zip the publish artifacts
         working-directory: ${{github.workspace}}
         run: |
           Add-Type -assembly 'System.IO.Compression'
           Add-Type -assembly 'System.IO.Compression.FileSystem'
-          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.exe', 'RE2RRandomizer.exe')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR.Common.dll', 'RE2RR.Common.dll')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR.Database.dll', 'RE2RR.Database.dll')
@@ -107,13 +123,23 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{inputs.workflowPreset}}-build"
+          automatic_release_tag: "${{matrix.configuration}}-build"
           prerelease: true
-          title: "Manual Build [main] - v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}} Release"
+          title: "Manual Build [main] - v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}} Release"
           files: |
-            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{steps.build-number.outputs.current_build_number}}-${{inputs.workflowPreset}}.zip
+            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip
 
+  PostRun:
+    name: Post-run
+    runs-on: windows-latest
+    needs: [Setup, Build]
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
       - name: Update build number variable
         env:
           GH_TOKEN: ${{ secrets.GH_VARIABLE_RW_TOKEN }}
-        run: gh variable set BUILD_NUMBER -b${{ steps.build-number.outputs.current_build_number }}
+        run: gh variable set BUILD_NUMBER -b${{ needs.Setup.outputs.build-number }}
