@@ -265,36 +265,27 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 		return;
 	}
 
+	const std::string unlabeledSection = "N/A";
 	for (const auto &[key, value] : originalItemInformation)
 	{
-		// file
-		//     << "Guid [" << RE2RR::Common::Guid::ToString(key) << "] Map [" << *RE2RR::Types::Enums::EnumMapIDToString(value.Map).get() << "] Map Part [" << *RE2RR::Types::Enums::EnumMapPartsIDToString(value.MapPart).get() << "] Floor [" << *RE2RR::Types::Enums::EnumFloorIDToString(value.Floor).get() << "]" << std::endl
-		//     << "\tFrom: " << *value.Item.GetName().get() << std::endl
-		//     << "Guid [" << RE2RR::Common::Guid::ToString(seed.seedData[key].OriginalGUID) << "] Map [" << *RE2RR::Types::Enums::EnumMapIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].Map).get() << "] Map Part [" << *RE2RR::Types::Enums::EnumMapPartsIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].MapPart).get() << "] Floor [" << *RE2RR::Types::Enums::EnumFloorIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].Floor).get() << "]" << std::endl
-		//     << "\tTo  : " << *seed.seedData[key].ReplacementItem.GetName().get() << std::endl
-		//     << std::endl;
-		const std::string unlabeledSection = "N/A";
+		const GUID &oldItemGUID = key;
+		const RE2RR::Types::ItemInformation &oldItemInfo = value;
+		const GUID &newItemGUID = seed.seedData[key].OriginalGUID;
+		const RE2RR::Types::ItemInformation &newItemInfo = originalItemInformation[newItemGUID];
+
 		file
-		    << "From: " << std::format("{:<40}", *value.Item.GetName().get())
-		    << "\t"
-		    << "Floor [" << RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, value.Floor, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumFloorIDToString(value.Floor).get() << ")]"
-		    << " "
-		    << "Map [" << RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, value.Map, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumMapIDToString(value.Map).get() << ")]"
-		    << " "
-		    << "Map Part [" << RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, value.MapPart, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumMapPartsIDToString(value.MapPart).get() << ")]"
-		    << " "
-		    << "Guid [" << RE2RR::Common::Guid::ToString(key) << "]"
+		    << std::format("From: {:<40} ", *oldItemInfo.Item.GetName().get())
+		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, oldItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(oldItemInfo.Floor).get()))
+		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, oldItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(oldItemInfo.Map).get()))
+		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, oldItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(oldItemInfo.MapPart).get()))
+		    << std::format("Guid [{}]", RE2RR::Common::Guid::ToString(oldItemGUID))
 		    << std::endl
 
-		    << "To:   " << std::format("{:<40}", *seed.seedData[key].ReplacementItem.GetName().get())
-		    << "\t"
-		    << "Floor [" << RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, originalItemInformation[seed.seedData[key].OriginalGUID].Floor, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumFloorIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].Floor).get() << ")]"
-		    << " "
-		    << "Map [" << RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, originalItemInformation[seed.seedData[key].OriginalGUID].Map, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumMapIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].Map).get() << ")]"
-		    << " "
-		    << "Map Part [" << RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, originalItemInformation[seed.seedData[key].OriginalGUID].MapPart, unlabeledSection) << " (" << *RE2RR::Types::Enums::EnumMapPartsIDToString(originalItemInformation[seed.seedData[key].OriginalGUID].MapPart).get() << ")]"
-		    << " "
-		    << "Guid [" << RE2RR::Common::Guid::ToString(seed.seedData[key].OriginalGUID) << "]"
+		    << std::format("To  : {:<40} ", *newItemInfo.Item.GetName().get())
+		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, newItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(newItemInfo.Floor).get()))
+		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, newItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(newItemInfo.Map).get()))
+		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, newItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(newItemInfo.MapPart).get()))
+		    << std::format("Guid [{}]", RE2RR::Common::Guid::ToString(newItemGUID))
 		    << std::endl
 
 		    << std::endl;
