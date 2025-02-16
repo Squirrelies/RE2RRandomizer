@@ -3,6 +3,7 @@
 
 #include "Common.h"
 #include "Guid.h"
+#include <format>
 
 namespace RE2RR::Types
 {
@@ -1547,6 +1548,34 @@ namespace RE2RR::Types
 			         NAMEOF(WeaponParts), WeaponParts,
 			         NAMEOF(BulletId), BulletId,
 			         NAMEOF(Count), Count);
+
+			return std::make_unique<std::string>(toString.get());
+		}
+
+		std::unique_ptr<std::string> GetName() const noexcept
+		{
+			std::string toStringFormat;
+			std::string toStringName;
+
+			if (ItemId != RE2RR::Types::Enums::ItemType::None)
+			{
+				toStringFormat = "Item %s";
+				toStringName = *RE2RR::Types::Enums::EnumItemTypeToString(ItemId).get();
+			}
+			else if (WeaponId != RE2RR::Types::Enums::WeaponType::None)
+			{
+				toStringFormat = "Weapon %s";
+				toStringName = *RE2RR::Types::Enums::EnumWeaponTypeToString(WeaponId).get();
+			}
+			else
+			{
+				toStringFormat = "Unknown %s";
+				toStringName = std::format("{} / {}", RE2RR::Types::Enums::EnumItemTypeToString(ItemId).get()->c_str(), RE2RR::Types::Enums::EnumItemTypeToString(ItemId).get()->c_str()).data();
+			}
+
+			int bufferSize = snprintf(NULL, 0, toStringFormat.c_str(), toStringName.c_str()) + 1;
+			std::unique_ptr<char[]> toString = std::make_unique<char[]>(bufferSize);
+			snprintf(toString.get(), bufferSize, toStringFormat.c_str(), toStringName.c_str());
 
 			return std::make_unique<std::string>(toString.get());
 		}

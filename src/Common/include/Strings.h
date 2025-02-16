@@ -42,8 +42,6 @@ namespace RE2RR::Common::Strings
 	LIBRARY_EXPORT_API size_t GetStringSizeA(std::string string);
 
 	LIBRARY_EXPORT_API size_t GetStringSizeW(std::wstring string);
-
-	LIBRARY_EXPORT_API std::unique_ptr<std::string> GUIDToString(const GUID &guid);
 }
 
 #endif

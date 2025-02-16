@@ -45,88 +45,39 @@ namespace std
 
 namespace RE2RR::Common::Guid
 {
-	constexpr const char8_t hex_chars[] = u8"0123456789ABCDEF";
-	LIBRARY_EXPORT_API constexpr char8_t ToHighNibble(const uint8_t &chr) noexcept
+	LIBRARY_EXPORT_API constexpr std::string ToString(const GUID &guid) noexcept
 	{
-		return hex_chars[chr >> 4];
-	}
+		std::string guid_string((sizeof(GUID) * 2) + 4, ' ');
 
-	LIBRARY_EXPORT_API constexpr char8_t ToLowNibble(const uint8_t &chr) noexcept
-	{
-		return hex_chars[chr & 0x0F];
-	}
+		snprintf(
+		    guid_string.data(), guid_string.capacity(),
+		    "%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+		    guid.Data1,
+		    guid.Data2,
+		    guid.Data3,
+		    guid.Data4[0], guid.Data4[1],
+		    guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
 
-	LIBRARY_EXPORT_API constexpr std::u8string ToString(const GUID &ptr)
-	{
-		constexpr size_t digits = sizeof(GUID);
-		const uint8_t *guidBytes = reinterpret_cast<const uint8_t *>(&ptr);
-		std::u8string result(digits * 2 + 4, u8'-');
-
-		{
-			size_t i = 0;
-
-			result[i++] = ToHighNibble(guidBytes[3]);
-			result[i++] = ToLowNibble(guidBytes[3]);
-			result[i++] = ToHighNibble(guidBytes[2]);
-			result[i++] = ToLowNibble(guidBytes[2]);
-			result[i++] = ToHighNibble(guidBytes[1]);
-			result[i++] = ToLowNibble(guidBytes[1]);
-			result[i++] = ToHighNibble(guidBytes[0]);
-			result[i++] = ToLowNibble(guidBytes[0]);
-			++i;
-
-			result[i++] = ToHighNibble(guidBytes[5]);
-			result[i++] = ToLowNibble(guidBytes[5]);
-			result[i++] = ToHighNibble(guidBytes[4]);
-			result[i++] = ToLowNibble(guidBytes[4]);
-			++i;
-
-			result[i++] = ToHighNibble(guidBytes[7]);
-			result[i++] = ToLowNibble(guidBytes[7]);
-			result[i++] = ToHighNibble(guidBytes[6]);
-			result[i++] = ToLowNibble(guidBytes[6]);
-			++i;
-
-			result[i++] = ToHighNibble(guidBytes[8]);
-			result[i++] = ToLowNibble(guidBytes[8]);
-			result[i++] = ToHighNibble(guidBytes[9]);
-			result[i++] = ToLowNibble(guidBytes[9]);
-			++i;
-
-			result[i++] = ToHighNibble(guidBytes[10]);
-			result[i++] = ToLowNibble(guidBytes[10]);
-			result[i++] = ToHighNibble(guidBytes[11]);
-			result[i++] = ToLowNibble(guidBytes[11]);
-			result[i++] = ToHighNibble(guidBytes[12]);
-			result[i++] = ToLowNibble(guidBytes[12]);
-			result[i++] = ToHighNibble(guidBytes[13]);
-			result[i++] = ToLowNibble(guidBytes[13]);
-			result[i++] = ToHighNibble(guidBytes[14]);
-			result[i++] = ToLowNibble(guidBytes[14]);
-			result[i++] = ToHighNibble(guidBytes[15]);
-			result[i++] = ToLowNibble(guidBytes[15]);
-		}
-
-		return result;
+		return guid_string;
 	}
 
 	constexpr const size_t short_guid_form_length = 36; // XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 
-	LIBRARY_EXPORT_API constexpr char8_t ParseHexChar(const char8_t &c)
+	LIBRARY_EXPORT_API constexpr char ParseHexChar(const char &c)
 	{
 		using namespace std::string_literals;
-		if (u8'0' <= c && c <= u8'9')
-			return c - u8'0';
-		else if (u8'a' <= c && c <= u8'f')
-			return 10 + c - u8'a';
-		else if (u8'A' <= c && c <= u8'F')
-			return 10 + c - u8'A';
+		if ('0' <= c && c <= '9')
+			return c - '0';
+		else if ('a' <= c && c <= 'f')
+			return 10 + c - 'a';
+		else if ('A' <= c && c <= 'F')
+			return 10 + c - 'A';
 		else
 			throw std::domain_error{"Invalid character in GUID"s};
 	}
 
 	template <class T>
-	LIBRARY_EXPORT_API constexpr T ParseHexType(const char8_t *ptr)
+	LIBRARY_EXPORT_API constexpr T ParseHexType(const char *ptr)
 	{
 		constexpr size_t digits = sizeof(T) * 2;
 		T result{};
@@ -135,7 +86,7 @@ namespace RE2RR::Common::Guid
 		return result;
 	}
 
-	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char8_t *begin)
+	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char *begin)
 	{
 		GUID result{};
 		result.Data1 = ParseHexType<uint32_t>(begin);
@@ -154,7 +105,7 @@ namespace RE2RR::Common::Guid
 	}
 
 	template <size_t N>
-	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char8_t (&str)[N])
+	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char (&str)[N])
 	{
 		static_assert(N == (short_guid_form_length + 1), "String GUID of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX is expected");
 		return ToGUID(str);
@@ -162,21 +113,12 @@ namespace RE2RR::Common::Guid
 
 	inline namespace Guid_Literals
 	{
-		LIBRARY_EXPORT_API constexpr GUID operator"" _guid(const char8_t *str, size_t N)
-		{
-			using namespace std::string_literals;
-			if (N != short_guid_form_length)
-				throw std::domain_error{"String GUID of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX is expected"s};
-			return ToGUID(reinterpret_cast<const char8_t *>(str));
-		}
-
-		[[deprecated("Consider using the Utf8 literal instead")]]
 		LIBRARY_EXPORT_API constexpr GUID operator"" _guid(const char *str, size_t N)
 		{
 			using namespace std::string_literals;
 			if (N != short_guid_form_length)
 				throw std::domain_error{"String GUID of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX is expected"s};
-			return ToGUID(reinterpret_cast<const char8_t *>(str));
+			return ToGUID(str);
 		}
 	}
 }

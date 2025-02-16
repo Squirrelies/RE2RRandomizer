@@ -142,7 +142,7 @@ namespace RE2RR::Hook::UI
 				ImGui::Text("Floor: %s", randomizer->GetFloorName().get()->c_str());
 				ImGui::Text("Map: %s", randomizer->GetMapName().get()->c_str());
 				ImGui::Text("Map Part: %s", randomizer->GetMapPartsName().get()->c_str());
-				ImGui::Text("Last Guid: %s", RE2RR::Common::Strings::GUIDToString(randomizer->GetLastInteractedItemPositionGuid()).get()->c_str());
+				ImGui::Text("Last Guid: %s", RE2RR::Common::Guid::ToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
 				ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().get()->c_str());
 				ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().get()->c_str());
 			}

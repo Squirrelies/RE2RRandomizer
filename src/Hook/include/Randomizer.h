@@ -9,6 +9,7 @@
 #include "Strings.h"
 #include "Types.h"
 #include <algorithm>
+#include <format>
 #include <fstream>
 #include <future>
 #include <iostream>

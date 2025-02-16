@@ -43,6 +43,7 @@ target_sources(${PROJECT_NAME}
     PRIVATE
         ${PROJECT_BINARY_DIR}/VersionInfoCommon.rc
         extern/amosnier/sha-2/sha-256.c
+        Collections.cpp
         File.cpp
         Logging.cpp
         Memory.cpp
