@@ -38,15 +38,6 @@ jobs:
       build-number: ${{steps.build-number.outputs.current_build_number}}
 
     steps:
-      - name: Prepare MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ env.MSYS2SYSTEM }}
-          release: false
-          update: true
-          cache: true
-          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
-
       - name: Get new build number
         id: build-number
         run: |
@@ -76,9 +67,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ env.MSYS2SYSTEM }}
-          release: false
-          update: true
-          cache: true
+          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
 
       - name: Checkout code
         uses: actions/checkout@v4
