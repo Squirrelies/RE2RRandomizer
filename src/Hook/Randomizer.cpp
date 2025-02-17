@@ -30,6 +30,7 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	                  NAMEOF(scenario), RE2RR::Types::Enums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
 
+	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
 	auto filteredItemDB = RE2RR::Database::itemDB |
 	                      std::views::filter([difficulty, scenario](RE2RR::Types::ItemInformation i)
 	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
@@ -37,9 +38,7 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	                                            { return std::make_pair(i.ItemPositionGUID, i); });
 	originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
 
-	seed = RE2RR::Types::Seed{.gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
-	std::mt19937 gen(initialSeed);
-
+	std::mt19937 gen(seed.initialSeedValue);
 	HandleSoftLocks(gen);
 
 	std::vector<RE2RR::Types::RandomizedItem> values;
@@ -257,9 +256,9 @@ const RE2RR::Types::Seed &Randomizer::GetSeed(void)
 	return this->seed;
 }
 
-void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
+void Randomizer::ExportCheatSheet()
 {
-	std::string filename = std::format("RE2RR_CheatSheet_{:d}.txt", initialSeed);
+	std::string filename = std::format("RE2RR_CheatSheet_{:d}.txt", seed.initialSeedValue);
 	std::ofstream file(filename, std::ios::out);
 
 	if (!file.is_open())
@@ -267,6 +266,14 @@ void Randomizer::ExportCheatSheet(int_fast32_t initialSeed)
 		logger.LogMessage("Unable to open file for writing: %s\n", filename.c_str());
 		return;
 	}
+
+	file
+	    << "Resident Evil 2 (2019) Randomizer" << std::endl
+	    << std::format("v{:d}.{:d}.{:d} (Build #{:d})", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD) << std::endl
+	    << "Seed: " << seed.initialSeedValue << std::endl
+	    << "Scenario: " << *RE2RR::Types::Enums::EnumScenarioToString(seed.gameMode.Scenario).get() << std::endl
+	    << "Difficulty: " << *RE2RR::Types::Enums::EnumDifficultyToString(seed.gameMode.Difficulty).get() << std::endl
+	    << std::endl;
 
 	const std::string unlabeledSection = "N/A";
 	for (const auto &[key, value] : originalItemInformation)

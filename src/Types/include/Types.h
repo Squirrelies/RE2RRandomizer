@@ -1609,6 +1609,7 @@ namespace RE2RR::Types
 
 	struct Seed
 	{
+		int_fast32_t initialSeedValue;
 		GameModeKey gameMode;
 		std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
 	};

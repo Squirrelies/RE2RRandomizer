@@ -81,7 +81,7 @@ public:
 	GUID &GetLastInteractedItemPositionGuid(void);
 	void Randomize(const RE2RR::Types::Enums::Difficulty &, const RE2RR::Types::Enums::Scenario &, int_fast32_t);
 	const RE2RR::Types::Seed &GetSeed(void);
-	void ExportCheatSheet(int_fast32_t);
+	void ExportCheatSheet();
 };
 
 #endif
