@@ -258,6 +258,12 @@ const RE2RR::Types::Seed &Randomizer::GetSeed(void)
 
 void Randomizer::ExportCheatSheet()
 {
+	if (seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::INVALID)
+	{
+		logger.LogMessage("Seed not yet initialized!\n");
+		return;
+	}
+
 	std::string filename = std::format("RE2RR_CheatSheet_{:d}.txt", seed.initialSeedValue);
 	std::ofstream file(filename, std::ios::out);
 

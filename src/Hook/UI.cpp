@@ -38,7 +38,7 @@ namespace RE2RR::Hook::UI
 				if (ImGui::MenuItem("Export Cheat Sheet", NULL, false, true))
 				{
 					logger.LogMessage("Export Cheat Sheet clicked!\n");
-					randomizer->ExportCheatSheet(randomSeed);
+					randomizer->ExportCheatSheet();
 				}
 				ImGui::EndMenu();
 			}

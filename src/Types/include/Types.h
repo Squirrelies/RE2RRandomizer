@@ -1609,9 +1609,9 @@ namespace RE2RR::Types
 
 	struct Seed
 	{
-		int_fast32_t initialSeedValue;
-		GameModeKey gameMode;
-		std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData;
+		int_fast32_t initialSeedValue = 0;
+		GameModeKey gameMode = {.Scenario = RE2RR::Types::Enums::Scenario::INVALID, .Difficulty = RE2RR::Types::Enums::Difficulty::EASY};
+		std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData = {};
 	};
 	bool operator==(const Seed &lhs, const Seed &rhs);
 }
