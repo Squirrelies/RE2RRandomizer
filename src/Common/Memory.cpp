@@ -62,18 +62,27 @@ namespace RE2RR::Common::Memory
 	bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger)
 	{
 		logger.LogMessage("[TrySetPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
-		*object = (void *)pointer;
-		for (size_t i = 0; i < offsets.size(); ++i)
+		try
 		{
-			if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
+			*object = (void *)pointer;
+			for (size_t i = 0; i < offsets.size(); ++i)
 			{
-				logger.LogMessage("[TrySetPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(object), *object);
-				return false;
+				if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
+				{
+					logger.LogMessage("[TrySetPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(object), *object);
+					return false;
+				}
+				*object = (void *)((uintptr_t)*object + offsets[i]);
 			}
-			*object = (void *)((uintptr_t)*object + offsets[i]);
+			logger.LogMessage("[TrySetPointer: %s] Success %s: %p\n", pointerName, NAMEOF(object), *object);
+			return true;
 		}
-		logger.LogMessage("[TrySetPointer: %s] Success %s: %p\n", pointerName, NAMEOF(object), *object);
-		return true;
+		catch (const std::exception &ex)
+		{
+			RE2RR::Common::lastExceptionMessage = ex.what();
+			logger.LogMessage("[TrySetPointer: %s] Exception: %s\n", pointerName, ex.what());
+			return false;
+		}
 	}
 
 	consteval uint16_t EndianSwap(const uint16_t value) noexcept

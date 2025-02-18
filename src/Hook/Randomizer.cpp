@@ -14,13 +14,24 @@ void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &i
 
 void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2RR::Types::RE2RItem &originalItem, const RE2RR::Types::RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, ...).\n\t%s\n\t%s\n",
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, %s: %p, %s: %p).\n\t%s\n\t%s\n",
 	                  NAMEOF(itemToReplace), &itemToReplace,
+	                  NAMEOF(originalItem), &originalItem,
+	                  NAMEOF(newItem), &newItem,
 	                  originalItem.ToString().get()->c_str(),
 	                  newItem.ToString().get()->c_str());
 
-	// itemToReplace = newItem;
-	memmove(&itemToReplace, &newItem, sizeof(RE2RR::Types::RE2RItem));
+	try
+	{
+		// itemToReplace = newItem;
+		memmove(&itemToReplace, &newItem, sizeof(RE2RR::Types::RE2RItem));
+	}
+	catch (const std::exception &ex)
+	{
+		RE2RR::Common::lastExceptionMessage = ex.what();
+		logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem() Exception: %s\n",
+		                  ex.what());
+	}
 }
 
 void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, const RE2RR::Types::Enums::Scenario &scenario, int_fast32_t initialSeed)

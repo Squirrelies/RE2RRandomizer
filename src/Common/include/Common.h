@@ -83,6 +83,8 @@ namespace RE2RR::Common
 #else
 	static const bool IsDebug = false;
 #endif
+
+	static const char *lastExceptionMessage = "";
 }
 
 #endif

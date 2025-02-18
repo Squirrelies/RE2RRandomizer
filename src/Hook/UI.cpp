@@ -145,6 +145,7 @@ namespace RE2RR::Hook::UI
 				ImGui::Text("Last Guid: %s", RE2RR::Common::Guid::ToString(randomizer->GetLastInteractedItemPositionGuid()).c_str());
 				ImGui::Text("Last Original Item: { %s }", randomizer->GetLastInteractedItem().ToString().get()->c_str());
 				ImGui::Text("Last Randomized Item: { %s }", randomizer->GetLastRandomizedItem().ToString().get()->c_str());
+				ImGui::Text("Last Exception: %s", RE2RR::Common::lastExceptionMessage);
 			}
 			// if (font != nullptr)
 			// 	ImGui::PopFont();

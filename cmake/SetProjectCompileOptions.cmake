@@ -5,10 +5,9 @@ function(set_project_compile_options project_name)
     -Wpedantic
     -m64
     -masm=intel
+    -g -gcolumn-info -fuse-ld=lld
     $<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>,$<CONFIG:RELWITHDEBINFO>>:-O3> # Optimize.
     #$<$<OR:$<CONFIG:RELEASE>,$<CONFIG:MINSIZEREL>>:-s> # Debug symbol stripping. [Requires GCC]
-    $<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-g> # Set symbol type.
-    #$<$<OR:$<CONFIG:RELWITHDEBINFO>,$<CONFIG:DEBUG>>:-gcodeview> # Set symbol type. (MSVC++ format) [Requires GCC 14+ or clang]
     $<$<CONFIG:DEBUG>:-O0> # No optimizations.
     )
 

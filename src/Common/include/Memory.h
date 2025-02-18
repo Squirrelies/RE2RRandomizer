@@ -7,6 +7,7 @@
 #include "Strings.h"
 #include <psapi.h>
 #include <stdbool.h>
+#include <stdexcept>
 #include <stdint.h>
 #include <stdio.h>
 #include <vector>
