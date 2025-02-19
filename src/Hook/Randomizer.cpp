@@ -30,7 +30,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 	{
 		RE2RR::Common::lastExceptionMessage = ex.what();
 		logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem() Exception: %s\n",
-		                  ex.what());
+		                  RE2RR::Common::lastExceptionMessage);
 	}
 }
 

@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "runRandomizer",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/RE2RRandomizer.exe",
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true,
+                "focus": true
+            },
+            "problemMatcher": {
+                "owner": "RE2R",
+                "pattern": {
+                    "regexp": "^.*$",
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^.*$"
+                }
+            }
+        }
+    ]
+}

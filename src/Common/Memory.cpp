@@ -80,7 +80,9 @@ namespace RE2RR::Common::Memory
 		catch (const std::exception &ex)
 		{
 			RE2RR::Common::lastExceptionMessage = ex.what();
-			logger.LogMessage("[TrySetPointer: %s] Exception: %s\n", pointerName, ex.what());
+			logger.LogMessage("[TrySetPointer: %s] Exception: %s\n",
+			                  pointerName,
+			                  RE2RR::Common::lastExceptionMessage);
 			return false;
 		}
 	}

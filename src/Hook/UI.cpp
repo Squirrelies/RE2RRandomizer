@@ -108,6 +108,12 @@ namespace RE2RR::Hook::UI
 			delete randomizer;
 			randomizer = nullptr;
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Debugger Break"))
+		{
+			logger.LogMessage("Debugger break clicked!\n");
+			DebugBreak();
+		}
 
 		ImGui::End();
 	}
