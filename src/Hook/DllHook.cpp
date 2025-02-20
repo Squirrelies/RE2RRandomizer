@@ -200,7 +200,7 @@ void Shutdown()
 	// These would only have been setup if we succeeded Startup().
 	if (startupSuccess)
 	{
-		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplDX11_Shutdown(); // pD3D11Device is null already by the time this is called... somehow. This causes a C0000005 ACCESS VIOLATION for trying to dereference a null pointer.
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 		CleanupRenderTarget();

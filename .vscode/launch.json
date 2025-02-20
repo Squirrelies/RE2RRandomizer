@@ -22,8 +22,8 @@
             "name": "(lldb) Attach to RE2",
             "type": "lldb",
             "request": "attach",
-            "program": "re2.exe"
-            //"preLaunchTask": "runRandomizer"
+            "program": "re2.exe",
+            "preLaunchTask": "runRandomizer"
         }
     ]
 }

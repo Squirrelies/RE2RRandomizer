@@ -2,9 +2,15 @@
 
 int wmain(void)
 {
+	std::wcout << L"Searching for running process named re2.exe... ";
 	DWORD pid = RE2RR::Common::Process::GetProcessIdByName(L"re2.exe");
 	if (pid == 0)
+	{
+		std::wcout << L"not found!" << std::endl;
+		std::wcout << L"Failure, exiting..." << std::endl;
 		return 1;
+	}
+	std::wcout << L"found! PID: " << pid << std::endl;
 
 	HANDLE handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pid);
 	{
@@ -20,8 +26,10 @@ int wmain(void)
 		LPVOID pDllPath;
 		HANDLE hDllThread;
 
+		std::wcout << L"Injecting DLLs..." << std::endl;
 		for (size_t i = 0; i < dllPathsLength; ++i)
 		{
+			std::wcout << L"\tDLL: " << dllPaths[i] << " ";
 			dllPathSize = RE2RR::Common::Strings::GetStringSize(dllPaths[i]);
 			pDllPath = VirtualAllocEx(handle, 0, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
 			WriteProcessMemory(handle, pDllPath, (LPVOID)dllPaths[i].c_str(), dllPathSize, nullptr);
@@ -29,9 +37,12 @@ int wmain(void)
 			WaitForSingleObject(hDllThread, INFINITE);
 			VirtualFreeEx(handle, pDllPath, 0, MEM_RELEASE);
 			CloseHandle(hDllThread);
+			std::wcout << L"complete." << std::endl;
 		}
+		std::wcout << L"DLL injection completed." << std::endl;
 	}
 	CloseHandle(handle);
 
+	std::wcout << L"Success, exiting..." << std::endl;
 	return 0;
 }

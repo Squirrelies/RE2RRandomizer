@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Process.h"
 #include <filesystem>
+#include <iostream>
 #include <windows.h>
 
 #endif
