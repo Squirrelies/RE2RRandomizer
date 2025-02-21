@@ -230,15 +230,17 @@ __stdcall uintptr_t HookItemPickup(uintptr_t param1, uintptr_t param2, uintptr_t
 	    (randomizer = ui != nullptr ? ui->GetRandomizer() : nullptr) == nullptr) // If we're not randomizing, this will be null.
 		return itemPickupFunc(param1, param2, param3, param4);
 
-	RE2RR::Types::RE2RItem *itemToReplace = (RE2RR::Types::RE2RItem *)param3;
-	const GUID *itemPositionGuid = (GUID *)param4;
-	if (!RE2RR::Common::Memory::TryReadPointer((const void *)param3, {0x50, 0x10, 0x10}, (void **)&itemToReplace, NAMEOF(itemToReplace), *logger.get()) ||
-	    !RE2RR::Common::Memory::TryReadPointer((const void *)param4, {0x30}, (void **)&itemPositionGuid, NAMEOF(itemPositionGuid), *logger.get()))
-		return itemPickupFunc(param1, param2, param3, param4);
+	RE2RR::Types::RE2RItem *itemToReplace = (RE2RR::Types::RE2RItem *)param3;     // Sometimes uninitialized data, only write here.
+	const RE2RR::Types::RE2RItem *currentItem = (RE2RR::Types::RE2RItem *)param4; // This is where we want to read to get what the item is.
+	const GUID *itemPositionGuid = (GUID *)param4;                                // The item's position GUID.
 
-	// RE2RR::Types::RE2RItem *itemToReplace = (RE2RR::Types::RE2RItem *)(param3 + 0x50 + 0x10 + 0x10); // Sometimes uninitialized data, only write here.
-	// const RE2RR::Types::RE2RItem *currentItem = (RE2RR::Types::RE2RItem *)(param4 + 0x14);           // This is where we want to read to get what the item is.
-	// const GUID *itemPositionGuid = (GUID *)(param4 + 0x30); // The item's position GUID.
+	bool itemToReplaceSuccess = RE2RR::Common::Memory::TryReadPointer((const void *)param3, {0x50, 0x10, 0x10}, (void **)&itemToReplace, NAMEOF(itemToReplace), *logger.get());
+	bool UNUSED(currentItemSuccess) = RE2RR::Common::Memory::TryReadPointer((const void *)param4, {0x14}, (void **)&currentItem, NAMEOF(currentItem), *logger.get());
+	bool itemPositionGuidSuccess = RE2RR::Common::Memory::TryReadPointer((const void *)param4, {0x30}, (void **)&itemPositionGuid, NAMEOF(itemPositionGuid), *logger.get());
+
+	if (!itemToReplaceSuccess ||
+	    !itemPositionGuidSuccess)
+		return itemPickupFunc(param1, param2, param3, param4);
 
 	if (itemToReplace != nullptr && itemPositionGuid != nullptr)
 		randomizer->ItemPickup(*itemToReplace, *itemPositionGuid);

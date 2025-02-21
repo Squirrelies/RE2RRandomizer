@@ -64,7 +64,7 @@ namespace RE2RR::Common::Memory
 		logger.LogMessage("[TrySetPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
 		try
 		{
-			*object = (void *)pointer;
+			*object = const_cast<void *>(pointer);
 			for (size_t i = 0; i < offsets.size(); ++i)
 			{
 				if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
