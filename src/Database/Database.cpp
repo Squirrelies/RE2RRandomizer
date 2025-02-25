@@ -178,7 +178,7 @@ namespace RE2RR::Database
 	        {RE2RR::Types::Enums::MapPartsID::st5_211_0e, "Mr. X Fight"},
 	};
 
-	const std::vector<RE2RR::Types::ItemInformation> itemDB =
+	constinit const RE2RR::Types::ItemInformation itemDB[] =
 	    {
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_A, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},
@@ -2843,4 +2843,9 @@ namespace RE2RR::Database
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "7101CDE7-0206-4FB6-924F-1BD8EB88B345"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::None, .WeaponId = RE2RR::Types::Enums::WeaponType::CombatKnife, .WeaponParts = 0, .BulletId = 0, .Count = 1000}, .Floor = RE2RR::Types::Enums::FloorID::Laboratory_D4, .Map = RE2RR::Types::Enums::MapID::st5_223_0, .MapPart = RE2RR::Types::Enums::MapPartsID::st5_223_0, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::HARD},
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "23C998F3-917B-4EFA-9E7E-169E022F955B"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::Herb_Green1, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::CityArea_A, .Map = RE2RR::Types::Enums::MapID::st8_408_0, .MapPart = RE2RR::Types::Enums::MapPartsID::st8_408_0, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::HARD},
 	};
+
+	const std::span<const RE2RR::Types::ItemInformation> GetItemDB()
+	{
+		return std::span<const RE2RR::Types::ItemInformation>(itemDB, sizeof(itemDB) / sizeof(RE2RR::Types::ItemInformation));
+	}
 }

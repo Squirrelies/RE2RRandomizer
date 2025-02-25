@@ -14,10 +14,19 @@ void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &i
 
 void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2RR::Types::RE2RItem &originalItem, const RE2RR::Types::RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, %s: %p, %s: %p).\n\t%s\n\t%s\n",
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, %s: %p, %s: %p).\n",
 	                  NAMEOF(itemToReplace), &itemToReplace,
 	                  NAMEOF(originalItem), &originalItem,
-	                  NAMEOF(newItem), &newItem,
+	                  NAMEOF(newItem), &newItem);
+
+	// Bail out of this is an invalid address for any of these parameters.
+	// It may not be important for originalItem as we only use that for logging but for now, bail-a-saurus rex!
+	if (!RE2RR::Common::Memory::TryValidatePointerStart(&itemToReplace, NAMEOF(itemToReplace), logger) ||
+	    !RE2RR::Common::Memory::TryValidatePointerStart(&originalItem, NAMEOF(originalItem), logger) ||
+	    !RE2RR::Common::Memory::TryValidatePointerStart(&newItem, NAMEOF(newItem), logger))
+		return;
+
+	logger.LogMessage("\t%s\n\t%s\n",
 	                  originalItem.ToString().get()->c_str(),
 	                  newItem.ToString().get()->c_str());
 
@@ -42,10 +51,16 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	                  NAMEOF(initialSeed), initialSeed);
 
 	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
-	auto filteredItemDB = RE2RR::Database::itemDB |
-	                      std::views::filter([difficulty, scenario](RE2RR::Types::ItemInformation i)
-	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
-	                      std::views::transform([](RE2RR::Types::ItemInformation i)
+	// Seed 1250099193 somehow randomizes D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B into CLAIRE_B NORMAL even though this is a LEON_B NORMAL/HARD item.
+	auto filteredItemDB = RE2RR::Database::GetItemDB() |
+	                      std::views::filter([difficulty, scenario](const RE2RR::Types::ItemInformation &i)
+	                                         {
+												using namespace RE2RR::Common::Guid::Guid_Literals;
+												auto scenarioComparison = i.Scenario == scenario;
+												auto difficultyComparison = i.Difficulty == difficulty;
+												auto comparison = scenarioComparison && difficultyComparison;
+												return comparison; }) |
+	                      std::views::transform([](const RE2RR::Types::ItemInformation &i)
 	                                            { return std::make_pair(i.ItemPositionGUID, i); });
 	originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
 
@@ -299,6 +314,15 @@ void Randomizer::ExportCheatSheet()
 		const RE2RR::Types::ItemInformation &oldItemInfo = value;
 		const GUID &newItemGUID = seed.seedData[key].OriginalGUID;
 		const RE2RR::Types::ItemInformation &newItemInfo = originalItemInformation[newItemGUID];
+
+		// Seed 1250099193 somehow randomizes D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B into CLAIRE_B NORMAL even though this is a LEON_B NORMAL/HARD item.
+		using namespace RE2RR::Common::Guid::Guid_Literals;
+		if (oldItemGUID == "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid)
+		{
+		}
+		else if (newItemGUID == "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid)
+		{
+		}
 
 		file
 		    << std::format("From: {:<40} ", *oldItemInfo.Item.GetName().get())

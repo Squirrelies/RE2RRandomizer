@@ -4,16 +4,19 @@
 #include "Common.h"
 #include "Guid.h"
 #include "Types.h"
+#include <array>
 #include <ranges>
+#include <span>
 #include <unordered_map>
-#include <vector>
 
 namespace RE2RR::Database
 {
 	extern const std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames;
 	extern const std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames;
 	extern const std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames;
-	extern const std::vector<RE2RR::Types::ItemInformation> itemDB;
+
+	extern const RE2RR::Types::ItemInformation itemDB[];
+	extern const std::span<const RE2RR::Types::ItemInformation> GetItemDB();
 
 	template <typename K>
 	concept AllowedLookupKeyTypes = std::same_as<K, RE2RR::Types::Enums::FloorID> ||

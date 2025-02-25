@@ -61,7 +61,7 @@ namespace RE2RR::Common::Memory
 
 	bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger)
 	{
-		logger.LogMessage("[TrySetPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
+		logger.LogMessage("[TryReadPointer: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
 		try
 		{
 			*object = const_cast<void *>(pointer);
@@ -69,18 +69,57 @@ namespace RE2RR::Common::Memory
 			{
 				if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
 				{
-					logger.LogMessage("[TrySetPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(object), *object);
+					logger.LogMessage("[TryReadPointer: %s] Failure %s: %p\n", pointerName, NAMEOF(object), *object);
 					return false;
 				}
 				*object = (void *)((uintptr_t)*object + offsets[i]);
 			}
-			logger.LogMessage("[TrySetPointer: %s] Success %s: %p\n", pointerName, NAMEOF(object), *object);
+			logger.LogMessage("[TryReadPointer: %s] Success %s: %p\n", pointerName, NAMEOF(object), *object);
 			return true;
 		}
 		catch (const std::exception &ex)
 		{
 			RE2RR::Common::lastExceptionMessage = ex.what();
-			logger.LogMessage("[TrySetPointer: %s] Exception: %s\n",
+			logger.LogMessage("[TryReadPointer: %s] Exception: %s\n",
+			                  pointerName,
+			                  RE2RR::Common::lastExceptionMessage);
+			return false;
+		}
+	}
+
+	bool TryValidatePointerStart(const void *pointer, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger)
+	{
+		logger.LogMessage("[TryValidatePointerStart: %s] Begin %s: %p\n", pointerName, NAMEOF(pointer), pointer);
+
+		if (pointer == nullptr)
+		{
+			logger.LogMessage("[TryValidatePointerStart: %s] Error: Null Pointer\n",
+			                  pointerName);
+
+			return false;
+		}
+
+		try
+		{
+			MEMORY_BASIC_INFORMATION mbi{};
+			if (VirtualQuery(const_cast<void *>(pointer), &mbi, sizeof(MEMORY_BASIC_INFORMATION)) == 0)
+			{
+				uint32_t lastWin32Error = GetLastError();
+				logger.LogMessage("[TryValidatePointerStart: %s] Error: %u (0x%X)\n",
+				                  pointerName,
+				                  lastWin32Error,
+				                  lastWin32Error);
+
+				return false;
+			}
+
+			logger.LogMessage("[TryValidatePointerStart: %s] Success %s: %p\n", pointerName, NAMEOF(pointer), pointer);
+			return true;
+		}
+		catch (const std::exception &ex)
+		{
+			RE2RR::Common::lastExceptionMessage = ex.what();
+			logger.LogMessage("[TryValidatePointerStart: %s] Exception: %s\n",
 			                  pointerName,
 			                  RE2RR::Common::lastExceptionMessage);
 			return false;

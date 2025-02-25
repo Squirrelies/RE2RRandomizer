@@ -60,6 +60,13 @@ namespace RE2RR::Common::Memory
 	/// @return A boolean indicating whether we succeeded in traversing the pointer chain.
 	LIBRARY_EXPORT_API bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger);
 
+	/// @brief Tries to validate whether the pointer is valid or not to avoid access violation errors.
+	/// @param pointer The pointer to validate.
+	/// @param pointerName The name of the pointer for logging purposes.
+	/// @param logger An instance of ImmediateLogger to log messages to.
+	/// @return A boolean indicating whether the start of the pointer is valid.
+	LIBRARY_EXPORT_API bool TryValidatePointerStart(const void *pointer, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger);
+
 	/// @brief Swaps the endianness of a 16-bit unsigned integer.
 	/// @param value The value to swap endianness on.
 	/// @return The endian swapped value.
