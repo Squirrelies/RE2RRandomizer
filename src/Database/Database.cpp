@@ -3,7 +3,7 @@
 namespace RE2RR::Database
 {
 	using namespace RE2RR::Common::Guid::Guid_Literals;
-	const std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames =
+	static constinit const std::pair<const RE2RR::Types::Enums::FloorID, const char *> floorNames[] =
 	    {
 	        {RE2RR::Types::Enums::FloorID::CityArea_A, "Raccoon City A"},
 	        {RE2RR::Types::Enums::FloorID::CityArea_B, "Raccoon City B"},
@@ -29,7 +29,7 @@ namespace RE2RR::Database
 	        {RE2RR::Types::Enums::FloorID::WaterPlant_C, "Water Treatment Lower"},
 	};
 
-	const std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames =
+	static constinit const std::pair<const RE2RR::Types::Enums::MapID, const char *> mapNames[] =
 	    {
 	        {RE2RR::Types::Enums::MapID::st1_411_0, "Gas Station"},
 	        {RE2RR::Types::Enums::MapID::st1_601_0, "Front Hall"},
@@ -173,12 +173,12 @@ namespace RE2RR::Database
 	        {RE2RR::Types::Enums::MapID::st8_410_0, "Raccoon City Streets (A Start)"},
 	};
 
-	const std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames =
+	static constinit const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *> mapPartNames[] =
 	    {
 	        {RE2RR::Types::Enums::MapPartsID::st5_211_0e, "Mr. X Fight"},
 	};
 
-	constinit const RE2RR::Types::ItemInformation itemDB[] =
+	static constinit const RE2RR::Types::ItemInformation itemDB[] =
 	    {
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_A, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "00000000-0000-0000-0000-000000000000"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::ErrorBox, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::None, .Map = RE2RR::Types::Enums::MapID::Invalid, .MapPart = RE2RR::Types::Enums::MapPartsID::Invalid, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::NORMAL},
@@ -2844,8 +2844,27 @@ namespace RE2RR::Database
 	        RE2RR::Types::ItemInformation{.ItemPositionGUID = "23C998F3-917B-4EFA-9E7E-169E022F955B"_guid, .Item = RE2RR::Types::RE2RItem{.ItemId = RE2RR::Types::Enums::ItemType::Herb_Green1, .WeaponId = RE2RR::Types::Enums::WeaponType::None, .WeaponParts = 0, .BulletId = 0, .Count = 1}, .Floor = RE2RR::Types::Enums::FloorID::CityArea_A, .Map = RE2RR::Types::Enums::MapID::st8_408_0, .MapPart = RE2RR::Types::Enums::MapPartsID::st8_408_0, .Scenario = RE2RR::Types::Enums::Scenario::LEON_B, .Difficulty = RE2RR::Types::Enums::Difficulty::HARD},
 	};
 
+	static constinit const std::span<const RE2RR::Types::ItemInformation> itemDBSpan(itemDB);
 	const std::span<const RE2RR::Types::ItemInformation> GetItemDB()
 	{
-		return std::span<const RE2RR::Types::ItemInformation>(itemDB, sizeof(itemDB) / sizeof(RE2RR::Types::ItemInformation));
+		return itemDBSpan;
+	}
+
+	static constinit const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> floorNamesSpan(floorNames);
+	const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> GetFloorIDNames()
+	{
+		return floorNamesSpan;
+	}
+
+	static constinit const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> mapNamesSpan(mapNames);
+	const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> GetMapIDNames()
+	{
+		return mapNamesSpan;
+	}
+
+	static constinit const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> mapPartNamesSpan(mapPartNames);
+	const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> GetMapPartsIDNames()
+	{
+		return mapPartNamesSpan;
 	}
 }

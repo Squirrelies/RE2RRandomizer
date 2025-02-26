@@ -25,6 +25,10 @@
 class Randomizer
 {
 private:
+	std::unordered_map<const RE2RR::Types::Enums::FloorID, const char *> floorNames;
+	std::unordered_map<const RE2RR::Types::Enums::MapID, const char *> mapNames;
+	std::unordered_map<const RE2RR::Types::Enums::MapPartsID, const char *> mapPartNames;
+
 	RE2RR::Common::Logging::ImmediateLogger &logger;
 	bool &debugSkipRandomization;
 	std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>> originalItemInformation;
@@ -53,6 +57,15 @@ protected:
 public:
 	Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &debugSkipRandomization) : logger(logger), debugSkipRandomization(debugSkipRandomization)
 	{
+		auto floorIDNamesSpan = RE2RR::Database::GetFloorIDNames();
+		this->floorNames = std::unordered_map<const RE2RR::Types::Enums::FloorID, const char *>(floorIDNamesSpan.begin(), floorIDNamesSpan.end());
+
+		auto mapNamesSpan = RE2RR::Database::GetMapIDNames();
+		this->mapNames = std::unordered_map<const RE2RR::Types::Enums::MapID, const char *>(mapNamesSpan.begin(), mapNamesSpan.end());
+
+		auto mapPartNamesSpan = RE2RR::Database::GetMapPartsIDNames();
+		this->mapPartNames = std::unordered_map<const RE2RR::Types::Enums::MapPartsID, const char *>(mapPartNamesSpan.begin(), mapPartNamesSpan.end());
+
 		this->seed = {};
 		this->mapPartsId = RE2RR::Types::Enums::MapPartsID::Invalid;
 		this->mapId = RE2RR::Types::Enums::MapID::Invalid;

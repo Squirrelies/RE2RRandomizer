@@ -307,7 +307,7 @@ void Randomizer::ExportCheatSheet()
 	    << "Difficulty: " << *RE2RR::Types::Enums::EnumDifficultyToString(seed.gameMode.Difficulty).get() << std::endl
 	    << std::endl;
 
-	const std::string unlabeledSection = "N/A";
+	constexpr const char unlabeledSection[] = "N/A";
 	for (const auto &[key, value] : originalItemInformation)
 	{
 		const GUID &oldItemGUID = key;
@@ -326,16 +326,16 @@ void Randomizer::ExportCheatSheet()
 
 		file
 		    << std::format("From: {:<40} ", *oldItemInfo.Item.GetName().get())
-		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, oldItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(oldItemInfo.Floor).get()))
-		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, oldItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(oldItemInfo.Map).get()))
-		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, oldItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(oldItemInfo.MapPart).get()))
+		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(floorNames, oldItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(oldItemInfo.Floor).get()))
+		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(mapNames, oldItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(oldItemInfo.Map).get()))
+		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(mapPartNames, oldItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(oldItemInfo.MapPart).get()))
 		    << std::format("Guid [{}]", RE2RR::Common::Guid::ToString(oldItemGUID))
 		    << std::endl
 
 		    << std::format("To  : {:<40} ", *newItemInfo.Item.GetName().get())
-		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::floorNames, newItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(newItemInfo.Floor).get()))
-		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapNames, newItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(newItemInfo.Map).get()))
-		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(RE2RR::Database::mapPartNames, newItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(newItemInfo.MapPart).get()))
+		    << std::format("{:<50} ", std::format("Floor [{} ({})]", RE2RR::Database::GetLookupValue(floorNames, newItemInfo.Floor, unlabeledSection), *RE2RR::Types::Enums::EnumFloorIDToString(newItemInfo.Floor).get()))
+		    << std::format("{:<60} ", std::format("Map [{} ({})]", RE2RR::Database::GetLookupValue(mapNames, newItemInfo.Map, unlabeledSection), *RE2RR::Types::Enums::EnumMapIDToString(newItemInfo.Map).get()))
+		    << std::format("{:<50} ", std::format("Map Parts [{} ({})]", RE2RR::Database::GetLookupValue(mapPartNames, newItemInfo.MapPart, unlabeledSection), *RE2RR::Types::Enums::EnumMapPartsIDToString(newItemInfo.MapPart).get()))
 		    << std::format("Guid [{}]", RE2RR::Common::Guid::ToString(newItemGUID))
 		    << std::endl
 
@@ -397,8 +397,8 @@ RE2RR::Types::Enums::FloorID Randomizer::GetFloorID()
 
 const std::unique_ptr<std::string> Randomizer::GetFloorName()
 {
-	if (RE2RR::Database::floorNames.contains(floorId))
-		return std::make_unique<std::string>(std::format("{} ({})", RE2RR::Database::floorNames.at(floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
+	if (floorNames.contains(floorId))
+		return std::make_unique<std::string>(std::format("{} ({})", floorNames.at(floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
 	else
 		return RE2RR::Types::Enums::EnumFloorIDToString(floorId);
 }
@@ -410,8 +410,8 @@ RE2RR::Types::Enums::MapID Randomizer::GetMapID()
 
 const std::unique_ptr<std::string> Randomizer::GetMapName()
 {
-	if (RE2RR::Database::mapNames.contains(mapId))
-		return std::make_unique<std::string>(std::format("{} ({})", RE2RR::Database::mapNames.at(mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
+	if (mapNames.contains(mapId))
+		return std::make_unique<std::string>(std::format("{} ({})", mapNames.at(mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
 	else
 		return RE2RR::Types::Enums::EnumMapIDToString(mapId);
 }
@@ -423,8 +423,8 @@ RE2RR::Types::Enums::MapPartsID Randomizer::GetMapPartsID()
 
 const std::unique_ptr<std::string> Randomizer::GetMapPartsName()
 {
-	if (RE2RR::Database::mapPartNames.contains(mapPartsId))
-		return std::make_unique<std::string>(std::format("{} ({})", RE2RR::Database::mapPartNames.at(mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
+	if (mapPartNames.contains(mapPartsId))
+		return std::make_unique<std::string>(std::format("{} ({})", mapPartNames.at(mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
 	else
 		return RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId);
 }

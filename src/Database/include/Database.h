@@ -11,12 +11,10 @@
 
 namespace RE2RR::Database
 {
-	extern const std::unordered_map<RE2RR::Types::Enums::FloorID, std::string> floorNames;
-	extern const std::unordered_map<RE2RR::Types::Enums::MapID, std::string> mapNames;
-	extern const std::unordered_map<RE2RR::Types::Enums::MapPartsID, std::string> mapPartNames;
-
-	extern const RE2RR::Types::ItemInformation itemDB[];
 	extern const std::span<const RE2RR::Types::ItemInformation> GetItemDB();
+	extern const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> GetFloorIDNames();
+	extern const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> GetMapIDNames();
+	extern const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> GetMapPartsIDNames();
 
 	template <typename K>
 	concept AllowedLookupKeyTypes = std::same_as<K, RE2RR::Types::Enums::FloorID> ||
@@ -24,7 +22,7 @@ namespace RE2RR::Database
 	                                std::same_as<K, RE2RR::Types::Enums::MapPartsID>;
 
 	template <AllowedLookupKeyTypes K>
-	LIBRARY_EXPORT_API std::string GetLookupValue(const std::unordered_map<K, std::string> &map, const K &key, const std::string &defaultValue)
+	LIBRARY_EXPORT_API const char *GetLookupValue(const std::unordered_map<const K, const char *> &map, const K &key, const char (&defaultValue)[])
 	{
 		if (auto search = map.find(key); search != map.end())
 			return search->second;
