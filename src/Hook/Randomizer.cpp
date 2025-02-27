@@ -260,10 +260,30 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 
 void Randomizer::AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &destinations, std::mt19937 &gen)
 {
+	// Remove any GUIDs that aren't in originalItemInformation that may have slipped through.
+	originals.erase(
+	    std::remove_if(originals.begin(), originals.end(),
+	                   [this](const GUID &guid)
+	                   { return !originalItemInformation.contains(guid); }),
+	    originals.end());
+
+	destinations.erase(
+	    std::remove_if(destinations.begin(), destinations.end(),
+	                   [this](const GUID &guid)
+	                   { return !originalItemInformation.contains(guid); }),
+	    destinations.end());
+
+	// Don't proceed if we're empty...
+	if (originals.empty() || destinations.empty())
+	{
+		logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem: No valid GUIDs available after filtering\n");
+		return;
+	}
+
 	size_t origIndex = std::uniform_int_distribution<size_t>(0, originals.size() - 1)(gen);
 	size_t destIndex = std::uniform_int_distribution<size_t>(0, destinations.size() - 1)(gen);
 
-	logger.LogMessage("[RE2R-R] Randomizer::AddRandomItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
+	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
 	                  destIndex,
 	                  originalItemInformation[destinations[destIndex]].Item.ToString().get()->c_str(),
 	                  RE2RR::Common::Guid::ToString(destinations[destIndex]).c_str(),
