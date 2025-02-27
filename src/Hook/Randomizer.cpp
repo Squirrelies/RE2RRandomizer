@@ -51,7 +51,6 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	                  NAMEOF(initialSeed), initialSeed);
 
 	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
-	// Seed 1250099193 somehow randomizes D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B into CLAIRE_B NORMAL even though this is a LEON_B NORMAL/HARD item.
 	auto filteredItemDB = RE2RR::Database::GetItemDB() |
 	                      std::views::filter([difficulty, scenario](const RE2RR::Types::ItemInformation &i)
 	                                         {
@@ -334,15 +333,6 @@ void Randomizer::ExportCheatSheet()
 		const RE2RR::Types::ItemInformation &oldItemInfo = value;
 		const GUID &newItemGUID = seed.seedData[key].OriginalGUID;
 		const RE2RR::Types::ItemInformation &newItemInfo = originalItemInformation[newItemGUID];
-
-		// Seed 1250099193 somehow randomizes D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B into CLAIRE_B NORMAL even though this is a LEON_B NORMAL/HARD item.
-		using namespace RE2RR::Common::Guid::Guid_Literals;
-		if (oldItemGUID == "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid)
-		{
-		}
-		else if (newItemGUID == "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid)
-		{
-		}
 
 		file
 		    << std::format("From: {:<40} ", *oldItemInfo.Item.GetName().get())
