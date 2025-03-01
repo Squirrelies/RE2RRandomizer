@@ -2,7 +2,7 @@
 #define RE2RR_UI_H
 
 #include "Common.h"
-#include "DllHook.h"
+#include "GameHook.h"
 #include "Logging.h"
 #include "Strings.h"
 #include <debugapi.h>

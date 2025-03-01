@@ -30,7 +30,8 @@ target_sources(${PROJECT_NAME}
         Hashes.cpp
         UI.cpp
         Randomizer.cpp
-        DllHook.cpp
+        GameHook.cpp
+        DllMain.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
