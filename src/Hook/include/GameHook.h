@@ -46,16 +46,13 @@ namespace RE2RR::Hook
 	class GameHook
 	{
 	private:
-		// Singleton instance
-		static GameHook *instance;
-
 		// Static function offsets
 		static uintptr_t ItemPlacement1FuncOffset;
 		static uintptr_t ItemPlacement2FuncOffset;
 		static uintptr_t ItemPickupFuncOffset;
 		static uintptr_t UIMapManagerUpdateFuncOffset;
 
-		// Member variables (formerly globals)
+		// Member variables
 		HINSTANCE dllInstance;
 		HANDLE mainThreadHandle;
 		bool startupSuccess;
@@ -107,8 +104,8 @@ namespace RE2RR::Hook
 		void CleanupRenderTarget();
 
 		// Static hook callbacks
-		static DWORD WINAPI ShutdownThreadProc(LPVOID lpThreadParameter);
 		static DWORD WINAPI MainThreadStatic(LPVOID lpThreadParameter);
+		static DWORD WINAPI ShutdownThreadProc(LPVOID lpThreadParameter);
 		static LRESULT CALLBACK HookWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		static HRESULT CALLBACK HookPresent(IDXGISwapChain *swapChain, UINT syncInterval, UINT flags);
 		static HRESULT CALLBACK HookGetDeviceState(IDirectInputDevice8 *device, DWORD cbData, LPVOID lpvData);
@@ -116,6 +113,9 @@ namespace RE2RR::Hook
 		static void CALLBACK HookUIMapManagerUpdate(uintptr_t param1, uintptr_t param2);
 
 	public:
+		// Singleton access method
+		static GameHook &GetInstance();
+
 		// Deleted methods
 		// GameHook(void) = delete;                        // default ctor (1)
 		//~GameHook(void) = delete;                       // default dtor (2)
@@ -123,10 +123,6 @@ namespace RE2RR::Hook
 		// GameHook(const GameHook &&) = delete;            // move ctor (4)
 		GameHook &operator=(const GameHook &) = delete; // copy assignment (5)
 		// GameHook &operator=(const GameHook &&) = delete; // move assignment (6)
-
-		// Singleton access methods
-		static GameHook *GetInstance();
-		static void DestroyInstance();
 
 		// Public methods
 		bool Initialize(HINSTANCE hinstDLL);

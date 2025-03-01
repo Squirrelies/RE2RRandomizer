@@ -170,7 +170,7 @@ namespace RE2RR::Hook::UI
 			ImGui::End();
 			return;
 		}
-		GameHook *hook = GameHook::GetInstance();
+		GameHook &hook = GameHook::GetInstance();
 
 		ImGui::Text("Resident Evil 2 (2019) Randomizer");
 		ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
@@ -191,9 +191,9 @@ namespace RE2RR::Hook::UI
 			ImGui::Text("Resident Evil 2 (2019) Randomizer");
 			ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
 			ImGui::Text("%s %s (%s)",
-			            RE2RR::Types::Enums::EnumRE2RGameEditionToString(hook->GetGameEdition()).get()->c_str(),
-			            RE2RR::Types::Enums::EnumRE2RGameDXVersionToString(hook->GetGameDXVersion()).get()->c_str(),
-			            RE2RR::Types::Enums::EnumRE2RGameVersionToString(hook->GetGameVersion()).get()->c_str());
+			            RE2RR::Types::Enums::EnumRE2RGameEditionToString(hook.GetGameEdition()).get()->c_str(),
+			            RE2RR::Types::Enums::EnumRE2RGameDXVersionToString(hook.GetGameDXVersion()).get()->c_str(),
+			            RE2RR::Types::Enums::EnumRE2RGameVersionToString(hook.GetGameVersion()).get()->c_str());
 			ImGui::Separator();
 			ImGui::Text("Build datetime: %s %s", __DATE__, __TIME__);
 			ImGui::Text("Debug build: %s", RE2RR::Common::IsDebug ? "true" : "false");

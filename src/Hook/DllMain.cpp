@@ -8,19 +8,7 @@ BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID UNUSED(lpvRese
 		{
 			DisableThreadLibraryCalls(hinstDLL);
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-
-			RE2RR::Hook::GameHook *hook = RE2RR::Hook::GameHook::GetInstance();
-			if (!hook->Initialize(hinstDLL))
-			{
-				RE2RR::Hook::GameHook::DestroyInstance();
-				return FALSE;
-			}
-			break;
-		}
-		case DLL_PROCESS_DETACH: // 0
-		{
-			RE2RR::Hook::GameHook::DestroyInstance();
-			break;
+			return RE2RR::Hook::GameHook::GetInstance().Initialize(hinstDLL);
 		}
 	}
 
