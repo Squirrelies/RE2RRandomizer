@@ -52,7 +52,7 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 
 	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
 	auto filteredItemDB = RE2RR::Database::GetItemDB() |
-	                      std::views::filter([difficulty, scenario](const RE2RR::Types::ItemInformation &i)
+	                      std::views::filter([&difficulty, &scenario](const RE2RR::Types::ItemInformation &i)
 	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
 	                      std::views::transform([](const RE2RR::Types::ItemInformation &i)
 	                                            { return std::make_pair(i.ItemPositionGUID, i); });
@@ -101,7 +101,7 @@ const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const
 
 const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const std::initializer_list<GUID> &itemGuids)
 {
-	auto predicate = [itemGuids](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+	auto predicate = [&itemGuids](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
 	{ return std::ranges::any_of(itemGuids, [&kv](const GUID &guid)
 		                         { return guid == kv.first; }); };
 	return Randomizer::GetCandidates(predicate);
@@ -134,7 +134,8 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		    value.Item.ItemId == RE2RR::Types::Enums::ItemType::PlugKnight ||
 		    value.Item.ItemId == RE2RR::Types::Enums::ItemType::PlugPawn ||
 		    value.Item.ItemId == RE2RR::Types::Enums::ItemType::PlugQueen ||
-		    value.Item.ItemId == RE2RR::Types::Enums::ItemType::PlugRook)
+		    value.Item.ItemId == RE2RR::Types::Enums::ItemType::PlugRook ||
+		    value.ItemPositionGUID == "D8C1E40B-DB48-42B0-AA16-B4F366245998"_guid) // Statue arm that is inserted into the statue already
 			seed.seedData.insert(std::make_pair(value.ItemPositionGUID, RE2RR::Types::RandomizedItem{.OriginalGUID = value.ItemPositionGUID, .ReplacementItem = value.Item}));
 	}
 
