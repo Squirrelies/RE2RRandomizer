@@ -53,12 +53,6 @@ jobs:
       semver-string: ${{steps.semver-string.outputs.semver_string}}
 
     steps:
-      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ env.MSYS2SYSTEM }}
-          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
-
       - name: Get new build number
         id: build-number
         run: |
@@ -80,6 +74,12 @@ jobs:
           $semver_string += "+${{steps.build-number.outputs.current_build_number}}"
           $semver_string += ".${{steps.short-sha-hash.outputs.short_sha_hash}}"
           echo "semver_string=$semver_string" | Set-Content $env:GITHUB_OUTPUT
+
+      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ env.MSYS2SYSTEM }}
+          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
 
   Build:
     name: Build ${{matrix.configuration}}
