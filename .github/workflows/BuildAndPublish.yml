@@ -69,9 +69,8 @@ jobs:
         id: semver-string
         run: |
           [string]$semver_string = "${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}";
-          if (![string]::IsNullOrWhitespace(${{inputs.versionPreReleaseTag}})) {
+          if (![string]::IsNullOrWhitespace("${{inputs.versionPreReleaseTag}}"))
             $semver_string += "-${{inputs.versionPreReleaseTag}}";
-          }
           $semver_string += "+${{steps.build-number.outputs.current_build_number}}";
           $semver_string += ".${{steps.short-sha-hash.outputs.short_sha_hash}}";
           echo "semver_string=$semver_string" | Set-Content $env:GITHUB_OUTPUT;
