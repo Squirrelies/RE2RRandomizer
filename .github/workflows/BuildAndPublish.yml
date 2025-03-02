@@ -134,7 +134,7 @@ jobs:
         run: |
           Add-Type -assembly 'System.IO.Compression'
           Add-Type -assembly 'System.IO.Compression.FileSystem'
-          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer_v${{needs.Setup.outputs.semver-string}}_${{matrix.configuration}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.exe', 'RE2RRandomizer.exe')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.pdb', 'RE2RRandomizer.pdb')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR.Common.dll', 'RE2RR.Common.dll')
@@ -152,9 +152,9 @@ jobs:
       - name: Upload publish artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}
+          name: RE2RRandomizer_v${{needs.Setup.outputs.semver-string}}_${{matrix.configuration}}
           path: |
-            RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip
+            RE2RRandomizer_v${{needs.Setup.outputs.semver-string}}_${{matrix.configuration}}.zip
 
   Publish:
     name: Publish ${{matrix.configuration}}
@@ -173,7 +173,7 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}
+          name: RE2RRandomizer_v${{needs.Setup.outputs.semver-string}}_${{matrix.configuration}}
 
       - name: Publish
         uses: marvinpinto/action-automatic-releases@latest
@@ -183,7 +183,7 @@ jobs:
           prerelease: true
           title: "Manual Build [${{github.ref_type}}: ${{github.ref_name}}] - v${{needs.Setup.outputs.semver-string}} ${{matrix.configuration}}"
           files: |
-            RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip
+            RE2RRandomizer_v${{needs.Setup.outputs.semver-string}}_${{matrix.configuration}}.zip
 
   PostRun:
     name: Post-Run
