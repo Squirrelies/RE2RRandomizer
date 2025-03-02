@@ -90,7 +90,7 @@ namespace RE2RR::Common
 
 // Build number. This is defined at compile time so this is just a placeholder.
 #ifndef RE2RR_VERSION_BUILD
-#define RE2RR_VERSION_BUILD 0
+#define RE2RR_VERSION_BUILD 1
 #endif
 		constinit const uint8_t Build = RE2RR_VERSION_BUILD;
 
@@ -106,7 +106,11 @@ namespace RE2RR::Common
 #endif
 		constinit const std::string BuildHash = RE2RR_VERSION_BUILD_HASH;
 
-		const std::string GetVersionString();
+// Semantic Versioning string. This is defined at compile time so this is just a placeholder.
+#ifndef RE2RR_VERSION_SEMVER
+#define RE2RR_VERSION_SEMVER "0.1.0+1"
+#endif
+		constinit const std::string SemVer = RE2RR_VERSION_SEMVER;
 	}
 }
 
