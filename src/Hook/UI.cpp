@@ -23,8 +23,7 @@ namespace RE2RR::Hook::UI
 		ImGuiIO &io = ImGui::GetIO();
 		ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 4, io.DisplaySize.y / 4), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(400, 260), ImGuiCond_FirstUseEver);
-
-		if (!ImGui::Begin("Resident Evil 2 REmake Randomizer (RE2RR)", (bool *)&open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
+		if (!ImGui::Begin(std::format("RE2R Randomizer: v{:s}", RE2RR::Common::Version::GetVersionString()).c_str(), (bool *)&open, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::End();
 			return;
@@ -108,12 +107,6 @@ namespace RE2RR::Hook::UI
 			delete randomizer;
 			randomizer = nullptr;
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Debugger Break"))
-		{
-			logger.LogMessage("Debugger break clicked!\n");
-			DebugBreak();
-		}
 
 		ImGui::End();
 	}
@@ -173,7 +166,7 @@ namespace RE2RR::Hook::UI
 		GameHook &hook = GameHook::GetInstance();
 
 		ImGui::Text("Resident Evil 2 (2019) Randomizer");
-		ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
+		ImGui::Text("v%s", RE2RR::Common::Version::GetVersionString().c_str());
 		ImGui::Separator();
 		ImGui::BulletText("Contributors\n\tBenn Powell\n\tSquirrelies");
 		ImGui::Spacing();
@@ -189,7 +182,7 @@ namespace RE2RR::Hook::UI
 			}
 
 			ImGui::Text("Resident Evil 2 (2019) Randomizer");
-			ImGui::Text("v%d.%d.%d (Build #%d)", RE2RR_VERSION_MAJOR, RE2RR_VERSION_MINOR, RE2RR_VERSION_PATCH, RE2RR_VERSION_BUILD);
+			ImGui::Text("v%s", RE2RR::Common::Version::GetVersionString().c_str());
 			ImGui::Text("%s %s (%s)",
 			            RE2RR::Types::Enums::EnumRE2RGameEditionToString(hook.GetGameEdition()).get()->c_str(),
 			            RE2RR::Types::Enums::EnumRE2RGameDXVersionToString(hook.GetGameDXVersion()).get()->c_str(),

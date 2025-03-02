@@ -21,6 +21,16 @@ on:
         required: false
         default: 0
         type: number
+      versionPreReleaseTag: # Use alpha, beta, or rc for pre-release. An empty string for stable.
+        description: "Pre-Release Tag"
+        required: true
+        default: "alpha"
+        type: choice
+        options:
+          - "alpha"
+          - "beta"
+          - "RC"
+          - ""
       unitTests:
         description: "Run Unit Tests"
         required: false
@@ -39,6 +49,8 @@ jobs:
 
     outputs:
       build-number: ${{steps.build-number.outputs.current_build_number}}
+      short-sha-hash: ${{steps.short-sha-hash.outputs.short_sha_hash}}
+      semver-string: ${{steps.semver-string.outputs.semver_string}}
 
     steps:
       - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
@@ -52,6 +64,22 @@ jobs:
         run: |
           $build_number = $((${{ vars.BUILD_NUMBER }} + 1))
           echo "current_build_number=$build_number" | Set-Content $env:GITHUB_OUTPUT
+
+      - name: Get short SHA hash
+        id: short-sha-hash
+        run: |
+          $short_sha_hash = $((${{ github.sha }}.substring(0, 7)))
+          echo "short_sha_hash=$short_sha_hash" | Set-Content $env:GITHUB_OUTPUT
+
+      - name: Get SemVer string
+        id: semver-string
+        run: |
+          [string]$semver_string = "${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}"
+          if (![string]::IsNullOrWhitespace(${{inputs.versionPreReleaseTag}}))
+            $semver_string += "-${{inputs.versionPreReleaseTag}}"
+          $semver_string += "+${{steps.build-number.outputs.current_build_number}}"
+          $semver_string += ".${{steps.short-sha-hash.outputs.short_sha_hash}}"
+          echo "semver_string=$semver_string" | Set-Content $env:GITHUB_OUTPUT
 
   Build:
     name: Build ${{matrix.configuration}}
@@ -91,6 +119,8 @@ jobs:
           RC_VERSION_MINOR: ${{inputs.versionMinor}}
           RC_VERSION_PATCH: ${{inputs.versionPatch}}
           RC_VERSION_BUILD: ${{needs.Setup.outputs.build-number}}
+          RC_VERSION_PRERELEASE_TAG: ${{inputs.versionPreReleaseTag}}
+          RC_VERSION_BUILD_HASH: ${{needs.Setup.outputs.short-sha-hash}}
         run: cmake --workflow --preset ${{matrix.configuration}} --fresh
 
       - name: Run CTest
@@ -103,7 +133,7 @@ jobs:
         run: |
           Add-Type -assembly 'System.IO.Compression'
           Add-Type -assembly 'System.IO.Compression.FileSystem'
-          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
+          [System.IO.Compression.ZipArchive]$zipFile = [System.IO.Compression.ZipFile]::Open('RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip', ([System.IO.Compression.ZipArchiveMode]::Create))
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.exe', 'RE2RRandomizer.exe')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RRandomizer.pdb', 'RE2RRandomizer.pdb')
           [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipFile, 'build/RE2RR.Common.dll', 'RE2RR.Common.dll')
@@ -121,9 +151,9 @@ jobs:
       - name: Upload publish artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}
+          name: RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}
           path: |
-            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip
+            RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip
 
   Publish:
     name: Publish ${{matrix.configuration}}
@@ -142,7 +172,7 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}
+          name: RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}
 
       - name: Publish
         uses: marvinpinto/action-automatic-releases@latest
@@ -150,9 +180,9 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{matrix.configuration}}-latest"
           prerelease: true
-          title: "Manual Build [${{github.ref_type}}: ${{github.ref_name}}] - v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}} ${{matrix.configuration}}"
+          title: "Manual Build [${{github.ref_type}}: ${{github.ref_name}}] - v${{needs.Setup.outputs.semver-string}} ${{matrix.configuration}}"
           files: |
-            RE2RRandomizer-v${{inputs.versionMajor}}.${{inputs.versionMinor}}.${{inputs.versionPatch}}-${{needs.Setup.outputs.build-number}}-${{matrix.configuration}}.zip
+            RE2RRandomizer-v${{needs.Setup.outputs.semver-string}}-${{matrix.configuration}}.zip
 
   PostRun:
     name: Post-Run
