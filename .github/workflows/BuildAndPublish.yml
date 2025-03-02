@@ -68,7 +68,7 @@ jobs:
       - name: Get short SHA hash
         id: short-sha-hash
         run: |
-          $short_sha_hash = $((${{ github.sha }}.substring(0, 7)))
+          $short_sha_hash = $(("${{ github.sha }}".substring(0, 7)))
           echo "short_sha_hash=$short_sha_hash" | Set-Content $env:GITHUB_OUTPUT
 
       - name: Get SemVer string
