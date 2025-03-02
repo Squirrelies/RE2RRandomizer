@@ -66,7 +66,7 @@ namespace RE2RR::Common
 	constinit const bool IsDebug = false;
 #endif
 
-	static const char *lastExceptionMessage = "";
+	extern std::string lastExceptionMessage;
 
 	namespace Version
 	{

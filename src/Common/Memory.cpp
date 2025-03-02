@@ -82,7 +82,7 @@ namespace RE2RR::Common::Memory
 			RE2RR::Common::lastExceptionMessage = ex.what();
 			logger.LogMessage("[TryReadPointer: %s] Exception: %s\n",
 			                  pointerName,
-			                  RE2RR::Common::lastExceptionMessage);
+			                  RE2RR::Common::lastExceptionMessage.c_str());
 			return false;
 		}
 	}
@@ -121,7 +121,7 @@ namespace RE2RR::Common::Memory
 			RE2RR::Common::lastExceptionMessage = ex.what();
 			logger.LogMessage("[TryValidatePointerStart: %s] Exception: %s\n",
 			                  pointerName,
-			                  RE2RR::Common::lastExceptionMessage);
+			                  RE2RR::Common::lastExceptionMessage.c_str());
 			return false;
 		}
 	}

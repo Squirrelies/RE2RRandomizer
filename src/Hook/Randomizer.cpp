@@ -39,7 +39,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 	{
 		RE2RR::Common::lastExceptionMessage = ex.what();
 		logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem() Exception: %s\n",
-		                  RE2RR::Common::lastExceptionMessage);
+		                  RE2RR::Common::lastExceptionMessage.c_str());
 	}
 }
 
@@ -59,7 +59,16 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
 
 	std::mt19937 gen(seed.initialSeedValue);
-	HandleSoftLocks(gen);
+	try
+	{
+		HandleSoftLocks(gen);
+	}
+	catch (const std::exception &ex)
+	{
+		RE2RR::Common::lastExceptionMessage = ex.what();
+		logger.LogMessage("[RE2R-R] Randomizer::Randomize() Exception: %s\n",
+		                  RE2RR::Common::lastExceptionMessage.c_str());
+	}
 
 	std::vector<RE2RR::Types::RandomizedItem> values;
 	for (const auto &[key, value] : originalItemInformation)
@@ -219,21 +228,21 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			AddKeyItem(originals, candidates, gen);
 		}
 
-		auto fuseMainHall = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
-		                                  { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::FuseMainHall; })
-		                        .at(0);
+		auto fuseBreakRoom = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                                   { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::FuseBreakRoom; })
+		                         .at(0);
 
 		auto keySpade = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
 		                              { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::KeySpade; })
 		                    .at(0);
 
-		// Main Hall Fuse or Spade Key
-		originals.push_back(fuseMainHall);
+		// Break Room Fuse or Spade Key
+		originals.push_back(fuseBreakRoom);
 		originals.push_back(keySpade);
 		AddKeyItem(originals, candidates, gen);
 
-		// If Main Hall Fuse is left, randomize it to these locations.
-		if (originals[0] == fuseMainHall)
+		// If Break Room Fuse is left, randomize it to these locations.
+		if (originals[0] == fuseBreakRoom)
 		{
 			candidates.append_range(GetCandidates(std::initializer_list<GUID>{
 			    // ""_guid,
