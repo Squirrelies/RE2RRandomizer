@@ -13,6 +13,17 @@ namespace RE2RR::Types
 		       lhs.Count == rhs.Count;
 	}
 
+	bool operator==(const ItemInformation &lhs, const ItemInformation &rhs)
+	{
+		return lhs.ItemPositionGUID == rhs.ItemPositionGUID &&
+		       lhs.Item == rhs.Item &&
+		       lhs.Floor == rhs.Floor &&
+		       lhs.Map == rhs.Map &&
+		       lhs.MapPart == rhs.MapPart &&
+		       lhs.Scenario == rhs.Scenario &&
+		       lhs.Difficulty == rhs.Difficulty;
+	}
+
 	bool operator==(const GameModeKey &lhs, const GameModeKey &rhs)
 	{
 		return lhs.Scenario == rhs.Scenario &&

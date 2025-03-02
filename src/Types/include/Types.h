@@ -1592,6 +1592,7 @@ namespace RE2RR::Types
 		RE2RR::Types::Enums::Scenario Scenario;
 		RE2RR::Types::Enums::Difficulty Difficulty;
 	};
+	bool operator==(const ItemInformation &lhs, const ItemInformation &rhs);
 
 	struct GameModeKey
 	{

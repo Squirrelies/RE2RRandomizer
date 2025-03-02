@@ -44,6 +44,19 @@ private:
 	RE2RR::Types::RE2RItem GetItemByType(uint32_t);
 	void SetItemByGUID(RE2RR::Types::RE2RItem *, GUID *);
 	void SetLast(const RE2RR::Types::RE2RItem &, const RE2RR::Types::RE2RItem &, const GUID &);
+
+	/// @brief Gets a list of candidate items based on a predicate.
+	/// @tparam Predicate A lambda expression to filter the items we want to consider candidates.
+	/// @param predicate The predicate to filter the items.
+	/// @return An std::vector<RE2RR::Types::ItemInformation> containing the candidate items.
+	template <typename Predicate>
+	const std::vector<RE2RR::Types::ItemInformation> GetCandidates(const Predicate &predicate);
+
+	/// @brief Gets a list of candidate items based on a predicate.
+	/// @param itemGuids A list of candidate GUIDs to filter the items.
+	/// @return An std::vector<RE2RR::Types::ItemInformation> containing the candidate items.
+	const std::vector<RE2RR::Types::ItemInformation> GetCandidates(const std::initializer_list<GUID> &itemGuids);
+
 	/// @brief
 	/// @param gen
 	void HandleSoftLocks(std::mt19937 &gen);
@@ -51,7 +64,7 @@ private:
 	/// @param originals The original items' drop location.
 	/// @param destinations The candidate item drop locations we want this item to potentially be placed.
 	/// @param gen The random number generator instance.
-	void AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &destinations, std::mt19937 &gen);
+	void AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &originals, std::vector<RE2RR::Types::ItemInformation> &destinations, std::mt19937 &gen);
 
 protected:
 public:

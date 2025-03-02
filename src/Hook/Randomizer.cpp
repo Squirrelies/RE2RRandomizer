@@ -53,12 +53,7 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
 	auto filteredItemDB = RE2RR::Database::GetItemDB() |
 	                      std::views::filter([difficulty, scenario](const RE2RR::Types::ItemInformation &i)
-	                                         {
-												using namespace RE2RR::Common::Guid::Guid_Literals;
-												auto scenarioComparison = i.Scenario == scenario;
-												auto difficultyComparison = i.Difficulty == difficulty;
-												auto comparison = scenarioComparison && difficultyComparison;
-												return comparison; }) |
+	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
 	                      std::views::transform([](const RE2RR::Types::ItemInformation &i)
 	                                            { return std::make_pair(i.ItemPositionGUID, i); });
 	originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
@@ -84,6 +79,25 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	}
 }
 
+template <typename Predicate>
+const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const Predicate &predicate)
+{
+	auto filtered = this->originalItemInformation |
+	                std::views::filter(predicate) |
+	                std::views::transform([](const auto &kv)
+	                                      { return kv.second; });
+
+	return std::vector<RE2RR::Types::ItemInformation>(filtered.begin(), filtered.end());
+}
+
+const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const std::initializer_list<GUID> &itemGuids)
+{
+	auto predicate = [itemGuids](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+	{ return std::ranges::any_of(itemGuids, [&kv](const GUID &guid)
+		                         { return guid == kv.first; }); };
+	return Randomizer::GetCandidates(predicate);
+}
+
 // Seed (LEON_A NORMAL): 384451726
 // Seed (CLAIRE_B NORMAL): 566284478
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
@@ -91,8 +105,8 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	using namespace RE2RR::Common::Guid::Guid_Literals;
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
 	                  NAMEOF(gen), gen);
-	std::vector<GUID> originals;
-	std::vector<GUID> candidates;
+	std::vector<RE2RR::Types::ItemInformation> originals;
+	std::vector<RE2RR::Types::ItemInformation> candidates;
 
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
 	for (const auto &[_, value] : originalItemInformation)
@@ -129,32 +143,37 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		}
 
 		// Marvin's CombatKnife
-		originals.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
-		candidates.append_range(std::initializer_list<GUID>{"09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid});
+		auto marvinKnife = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                                 { return kv.first == "09749BFC-D1B4-09EA-3723-AC256D7E5630"_guid; });
+		originals.append_range(marvinKnife);
+		candidates.append_range(marvinKnife);
 		AddKeyItem(originals, candidates, gen);
 	}
 	else // B scenarios
 	{
 		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
 
-		// BoltCutter or KeyCourtyard
-		originals.append_range(std::initializer_list<GUID>{
-		    "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
-		    "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
-		});
+		auto boltCutter = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                                { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::BoltCutter; })
+		                      .at(0);
+		auto keyCourtyard = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                                  { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::KeyCourtyard; })
+		                        .at(0);
 
-		candidates.append_range(std::initializer_list<GUID>{
-		    // East Courtyard
-		    "65F7FE6D-5046-4E7D-B5AA-24747AAB03BB"_guid,
-		    "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid,
-		    "D79F6C57-3330-4396-82EC-EDD8A4CBE27F"_guid,
-		});
+		// BoltCutter or KeyCourtyard
+		originals.push_back(boltCutter);
+		originals.push_back(keyCourtyard);
+
+		candidates.append_range(
+		    GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                  { return kv.second.Map == RE2RR::Types::Enums::MapID::st4_301_0 && kv.second.MapPart == RE2RR::Types::Enums::MapPartsID::st4_301_0; }) // East Courtyard
+		);
 		AddKeyItem(originals, candidates, gen);
 
 		// If BoltCutter is left, randomize it to these locations. (TODO: This can actually be expanded to east hall and safe room)
-		if (originals[0] == "B70C9C24-93B9-4A2A-824A-A75700C67277"_guid)
+		if (originals[0] == boltCutter)
 		{
-			candidates.append_range(std::initializer_list<GUID>{
+			candidates.append_range(GetCandidates(std::initializer_list<GUID>{
 			    // Art room
 			    "CB32491D-679A-0168-07B4-D26FE88EBC72"_guid, // This is the statue arm that is on the table.
 			    // "D8C1E40B-DB48-42B0-AA16-B4F366245998"_guid, // This is the statue arm that is inserted into the statue already
@@ -184,42 +203,48 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			    "4E68F4C7-8AEB-418F-B089-7F7CB2751783"_guid, // This is LEON only...!
 			    "92A9F2F6-4CC4-449A-9B68-B94874D72816"_guid,
 			    "03659087-CCD3-4032-A375-5DCCA3C339EE"_guid,
-			});
+			}));
 			AddKeyItem(originals, candidates, gen);
 		}
 		// If KeyCourtyard is left, randomize it to these locations.
-		else if (originals[0] == "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid)
+		else if (originals[0] == keyCourtyard)
 		{
-			candidates.append_range(std::initializer_list<GUID>{
+			candidates.append_range(GetCandidates(std::initializer_list<GUID>{
 			    // East Guard Room
 			    "E27DF9E6-5944-47EA-AE8B-5B1097FA4AF2"_guid,
 			    "389292E7-42DB-49CE-8CF7-E42B324E46A2"_guid,
 			    "E49A8008-0A1F-4944-BF1E-F8DA443B82AD"_guid,
 			    "D4C49F95-9AB9-4CB3-9AAE-EC7A62B5A39B"_guid,
-			});
+			}));
 			AddKeyItem(originals, candidates, gen);
 		}
 
+		auto fuseMainHall = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                                  { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::FuseMainHall; })
+		                        .at(0);
+
+		auto keySpade = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
+		                              { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::KeySpade; })
+		                    .at(0);
+
 		// Main Hall Fuse or Spade Key
-		originals.append_range(std::initializer_list<GUID>{
-		    "15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid,
-		    "1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid,
-		});
+		originals.push_back(fuseMainHall);
+		originals.push_back(keySpade);
 		AddKeyItem(originals, candidates, gen);
 
 		// If Main Hall Fuse is left, randomize it to these locations.
-		if (originals[0] == "15F1C4E1-93B7-4AA3-9CFD-297C9E2C51CD"_guid)
+		if (originals[0] == fuseMainHall)
 		{
-			candidates.append_range(std::initializer_list<GUID>{
+			candidates.append_range(GetCandidates(std::initializer_list<GUID>{
 			    // ""_guid,
 			    // pretty much anywhere up to maiden medallion or stars office area.
-			});
+			}));
 			AddKeyItem(originals, candidates, gen);
 		}
 		// If Spade Key is left, randomize it to these locations.
-		else if (originals[0] == "1E671313-7622-0DB1-318D-4D3B5C9B1CA0"_guid)
+		else if (originals[0] == keySpade)
 		{
-			candidates.append_range(std::initializer_list<GUID>{
+			candidates.append_range(GetCandidates(std::initializer_list<GUID>{
 			    // Main Hall
 			    "6002D460-036A-4CEA-BB6B-BC589EAFC3D5"_guid,
 			    "65CE3F5E-37B7-4F64-995B-3301EA6DFB9D"_guid,
@@ -249,7 +274,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 			    "A8C3FD34-3F01-47E1-831D-784EF6822707"_guid,
 			    "FAF9B2E8-5373-48B7-AA5A-7554AB1A613C"_guid,
 			    // lobby, etc.
-			});
+			}));
 			AddKeyItem(originals, candidates, gen);
 		}
 	}
@@ -257,19 +282,19 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
 }
 
-void Randomizer::AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &destinations, std::mt19937 &gen)
+void Randomizer::AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &originals, std::vector<RE2RR::Types::ItemInformation> &destinations, std::mt19937 &gen)
 {
 	// Remove any GUIDs that aren't in originalItemInformation that may have slipped through.
 	originals.erase(
 	    std::remove_if(originals.begin(), originals.end(),
-	                   [this](const GUID &guid)
-	                   { return !originalItemInformation.contains(guid); }),
+	                   [this](const RE2RR::Types::ItemInformation &itemInfo)
+	                   { return !originalItemInformation.contains(itemInfo.ItemPositionGUID); }),
 	    originals.end());
 
 	destinations.erase(
 	    std::remove_if(destinations.begin(), destinations.end(),
-	                   [this](const GUID &guid)
-	                   { return !originalItemInformation.contains(guid); }),
+	                   [this](const RE2RR::Types::ItemInformation &itemInfo)
+	                   { return !originalItemInformation.contains(itemInfo.ItemPositionGUID); }),
 	    destinations.end());
 
 	// Don't proceed if we're empty...
@@ -284,12 +309,12 @@ void Randomizer::AddKeyItem(std::vector<GUID> &originals, std::vector<GUID> &des
 
 	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
 	                  destIndex,
-	                  originalItemInformation[destinations[destIndex]].Item.ToString().get()->c_str(),
-	                  RE2RR::Common::Guid::ToString(destinations[destIndex]).c_str(),
-	                  originalItemInformation[originals[origIndex]].Item.ToString().get()->c_str(),
-	                  RE2RR::Common::Guid::ToString(originals[origIndex]).c_str());
+	                  destinations[destIndex].Item.ToString().get()->c_str(),
+	                  RE2RR::Common::Guid::ToString(destinations[destIndex].ItemPositionGUID).c_str(),
+	                  originals[origIndex].Item.ToString().get()->c_str(),
+	                  RE2RR::Common::Guid::ToString(originals[origIndex].ItemPositionGUID).c_str());
 
-	seed.seedData.insert(std::make_pair(destinations[destIndex], RE2RR::Types::RandomizedItem{.OriginalGUID = originals[origIndex], .ReplacementItem = originalItemInformation[originals[origIndex]].Item}));
+	seed.seedData.insert(std::make_pair(destinations[destIndex].ItemPositionGUID, RE2RR::Types::RandomizedItem{.OriginalGUID = originals[origIndex].ItemPositionGUID, .ReplacementItem = originals[origIndex].Item}));
 
 	originals.erase(originals.begin() + origIndex);       // Remove this entry as an original since we've handled it now.
 	destinations.erase(destinations.begin() + destIndex); // Remove this entry as a candidate since we're using it now.
