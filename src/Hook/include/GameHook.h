@@ -47,8 +47,8 @@ namespace RE2RR::Hook
 	{
 	private:
 		// Static function offsets
-		static uintptr_t ItemPlacement1FuncOffset;
-		static uintptr_t ItemPlacement2FuncOffset;
+		// static uintptr_t ItemPlacement1FuncOffset;
+		// static uintptr_t ItemPlacement2FuncOffset;
 		static uintptr_t ItemPickupFuncOffset;
 		static uintptr_t UIMapManagerUpdateFuncOffset;
 

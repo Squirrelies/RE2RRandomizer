@@ -37,9 +37,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 	}
 	catch (const std::exception &ex)
 	{
-		RE2RR::Common::lastExceptionMessage = ex.what();
-		logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem() Exception: %s\n",
-		                  RE2RR::Common::lastExceptionMessage.c_str());
+		logger.LogException(ex);
 	}
 }
 
@@ -65,9 +63,7 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	}
 	catch (const std::exception &ex)
 	{
-		RE2RR::Common::lastExceptionMessage = ex.what();
-		logger.LogMessage("[RE2R-R] Randomizer::Randomize() Exception: %s\n",
-		                  RE2RR::Common::lastExceptionMessage.c_str());
+		logger.LogException(ex);
 	}
 
 	std::vector<RE2RR::Types::RandomizedItem> values;

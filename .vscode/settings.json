@@ -116,7 +116,8 @@
         "shared_mutex": "cpp",
         "stack": "cpp",
         "__config": "cpp",
-        "version": "cpp"
+        "version": "cpp",
+        "source_location": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++23",
     "cmake.generator": "MSYS Makefiles",

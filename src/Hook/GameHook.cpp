@@ -3,8 +3,8 @@
 
 namespace RE2RR::Hook
 {
-	uintptr_t GameHook::ItemPlacement1FuncOffset = 0;
-	uintptr_t GameHook::ItemPlacement2FuncOffset = 0;
+	// uintptr_t GameHook::ItemPlacement1FuncOffset = 0;
+	// uintptr_t GameHook::ItemPlacement2FuncOffset = 0;
 	uintptr_t GameHook::ItemPickupFuncOffset = 0;
 	uintptr_t GameHook::UIMapManagerUpdateFuncOffset = 0;
 
@@ -152,8 +152,8 @@ namespace RE2RR::Hook
 			{
 				if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230421_1)
 				{
-					ItemPlacement1FuncOffset = 0x12CDA20;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gamemastering.InventoryManager.ItemData, app.ropeway.gamemastering.Location.ID, app.ropeway.gamemastering.Map.ID, System.Guid)
-					ItemPlacement2FuncOffset = 0x12CC740;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gimmick.action.SetItem.SetItemSaveData)
+					// ItemPlacement1FuncOffset = 0x12CDA20;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gamemastering.InventoryManager.ItemData, app.ropeway.gamemastering.Location.ID, app.ropeway.gamemastering.Map.ID, System.Guid)
+					// ItemPlacement2FuncOffset = 0x12CC740;    // app.ropeway.gamemastering.InventoryManager.addSelectedStock(app.ropeway.gimmick.action.SetItem.SetItemSaveData)
 					ItemPickupFuncOffset = 0xB912D0;         // app.ropeway.gui.GUIMaster.openInventoryGetItemMode(app.ropeway.gamemastering.InventoryManager.StockItem, app.ropeway.gimmick.action.SetItem.SetItemSaveData)
 					UIMapManagerUpdateFuncOffset = 0x95E430; // app.ropeway.gamemastering.UIMapManager.update()
 				}
@@ -162,8 +162,8 @@ namespace RE2RR::Hook
 			{
 				if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230814_1)
 				{
-					ItemPlacement1FuncOffset = 0x0;
-					ItemPlacement2FuncOffset = 0x0;
+					// ItemPlacement1FuncOffset = 0x0;
+					// ItemPlacement2FuncOffset = 0x0;
 					ItemPickupFuncOffset = 0x0;
 					UIMapManagerUpdateFuncOffset = 0x0;
 				}
@@ -175,8 +175,8 @@ namespace RE2RR::Hook
 			{
 				if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230421_1)
 				{
-					ItemPlacement1FuncOffset = 0x0;
-					ItemPlacement2FuncOffset = 0x0;
+					// ItemPlacement1FuncOffset = 0x0;
+					// ItemPlacement2FuncOffset = 0x0;
 					ItemPickupFuncOffset = 0x0;
 					UIMapManagerUpdateFuncOffset = 0x0;
 				}
@@ -185,8 +185,8 @@ namespace RE2RR::Hook
 			{
 				if (gameVersion == RE2RR::Types::Enums::RE2RGameVersion::RE2R_20230814_1)
 				{
-					ItemPlacement1FuncOffset = 0x0;
-					ItemPlacement2FuncOffset = 0x0;
+					// ItemPlacement1FuncOffset = 0x0;
+					// ItemPlacement2FuncOffset = 0x0;
 					ItemPickupFuncOffset = 0x0;
 					UIMapManagerUpdateFuncOffset = 0x0;
 				}

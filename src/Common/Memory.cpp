@@ -79,10 +79,7 @@ namespace RE2RR::Common::Memory
 		}
 		catch (const std::exception &ex)
 		{
-			RE2RR::Common::lastExceptionMessage = ex.what();
-			logger.LogMessage("[TryReadPointer: %s] Exception: %s\n",
-			                  pointerName,
-			                  RE2RR::Common::lastExceptionMessage.c_str());
+			logger.LogException(ex);
 			return false;
 		}
 	}
@@ -118,10 +115,7 @@ namespace RE2RR::Common::Memory
 		}
 		catch (const std::exception &ex)
 		{
-			RE2RR::Common::lastExceptionMessage = ex.what();
-			logger.LogMessage("[TryValidatePointerStart: %s] Exception: %s\n",
-			                  pointerName,
-			                  RE2RR::Common::lastExceptionMessage.c_str());
+			logger.LogException(ex);
 			return false;
 		}
 	}

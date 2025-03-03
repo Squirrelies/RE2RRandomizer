@@ -9,7 +9,16 @@ namespace RE2RR::Common::Logging
 		LineOffsets.push_back(0);
 	}
 
-	void UILog::AddLog(const char *fmt, ...)
+	void UILog::AddLog(const char *str)
+	{
+		int old_size = Buf.size();
+		Buf.append(str);
+		for (int new_size = Buf.size(); old_size < new_size; old_size++)
+			if (Buf[old_size] == '\n')
+				LineOffsets.push_back(old_size + 1);
+	}
+
+	void UILog::AddLogF(const char *fmt, ...)
 	{
 		int old_size = Buf.size();
 		va_list args;
@@ -117,6 +126,22 @@ namespace RE2RR::Common::Logging
 		va_start(args, format);
 		this->uiLog.AddLogV(format, args);
 		va_end(args);
+	}
+
+	void ImmediateLogger::LogException(const std::exception &ex, const std::source_location &location)
+	{
+		RE2RR::Common::lastExceptionMessage = ex.what();
+		const std::string format = std::format("[RE2R-R] {:s} Exception: {:s}\n{:s} @ {:s}:{:d}:{:d}\n",
+		                                       typeid(ex).name(),
+		                                       RE2RR::Common::lastExceptionMessage,
+		                                       location.function_name(),
+		                                       location.file_name(),
+		                                       location.line(),
+		                                       location.column());
+		puts(format.c_str());
+		fputs(format.c_str(), out);
+		fflush(out);
+		this->uiLog.AddLog(format.c_str());
 	}
 
 	UILog &ImmediateLogger::GetUILog()
