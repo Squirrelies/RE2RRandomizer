@@ -1,6 +1,7 @@
 ### Self-defined
 
 build/
+build-tidy/
 vcpkg_installed/
 extern/
 
