@@ -45,7 +45,8 @@ on:
 env:
   VCPKG_ROOT: C:/vcpkg
   MSYS2SYSTEM: clang64
-  ARCH: clang-x86_64
+  COMPILERTYPE: clang
+  ARCH: x86_64
 
 jobs:
   Setup:
@@ -108,11 +109,11 @@ jobs:
       RC_VERSION_BUILD_HASH: ${{needs.Setup.outputs.short-sha-hash}}
 
     steps:
-      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
+      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.COMPILERTYPE }} ${{ env.ARCH }})
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ env.MSYS2SYSTEM }}
-          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake mingw-w64-${{ env.ARCH }}-tools-extra
+          install: base-devel mingw-w64-${{ env.COMPILERTYPE }}-${{ env.ARCH }}-toolchain mingw-w64-${{ env.COMPILERTYPE }}-${{ env.ARCH }}-cmake mingw-w64-${{ env.ARCH }}-${{ env.COMPILERTYPE }}-tools-extra
 
       - name: Checkout code
         uses: actions/checkout@v4
