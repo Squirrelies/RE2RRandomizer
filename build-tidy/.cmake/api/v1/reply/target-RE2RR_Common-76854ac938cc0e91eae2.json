@@ -1,0 +1,656 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "RE2RR.Common.dll"
+		},
+		{
+			"path" : "libRE2RR.Common.dll.a"
+		},
+		{
+			"path" : "RE2RR.Common.pdb"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"_add_library",
+			"add_library",
+			"install",
+			"target_link_options",
+			"set_project_link_options",
+			"target_link_libraries",
+			"target_compile_options",
+			"set_project_compile_options",
+			"add_definitions",
+			"include",
+			"target_compile_definitions",
+			"set_project_compile_definitions",
+			"target_include_directories",
+			"target_sources"
+		],
+		"files" : 
+		[
+			"C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"src/Common/CMakeLists.txt",
+			"cmake/SetProjectLinkOptions.cmake",
+			"cmake/SetProjectCompileOptions.cmake",
+			"cmake/ProjectSettings.cmake",
+			"CMakeLists.txt",
+			"cmake/SetProjectCompileDefinitions.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 35,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 639,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 75,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 40,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 8,
+				"parent" : 4
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 63,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 14,
+				"parent" : 7
+			},
+			{
+				"file" : 5
+			},
+			{
+				"command" : 9,
+				"file" : 5,
+				"line" : 12,
+				"parent" : 9
+			},
+			{
+				"file" : 4,
+				"parent" : 10
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 6,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 55,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 54,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 50,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 51,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 52,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 53,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 56,
+				"parent" : 11
+			},
+			{
+				"command" : 11,
+				"file" : 1,
+				"line" : 39,
+				"parent" : 0
+			},
+			{
+				"command" : 10,
+				"file" : 6,
+				"line" : 10,
+				"parent" : 20
+			},
+			{
+				"command" : 12,
+				"file" : 1,
+				"line" : 55,
+				"parent" : 0
+			},
+			{
+				"command" : 13,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"defines" : 
+			[
+				{
+					"backtrace" : 12,
+					"define" : "BUILD_STATIC_LIBS"
+				},
+				{
+					"define" : "RE2RR_Common_EXPORTS"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "RE2RR_VERSION_BUILD=1"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "RE2RR_VERSION_BUILD_HASH=\"\""
+				},
+				{
+					"backtrace" : 15,
+					"define" : "RE2RR_VERSION_MAJOR=0"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "RE2RR_VERSION_MINOR=1"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "RE2RR_VERSION_PATCH=0"
+				},
+				{
+					"backtrace" : 18,
+					"define" : "RE2RR_VERSION_PRERELEASE_TAG=\"\""
+				},
+				{
+					"backtrace" : 19,
+					"define" : "RE2RR_VERSION_SEMVER=\"0.1.0+1\""
+				},
+				{
+					"backtrace" : 21,
+					"define" : "UNICODE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "WIN32_LEAN_AND_MEAN"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_UNICODE"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/src/Common/include"
+				},
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/src/Common/extern/amosnier/sha-2"
+				},
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/vcpkg_installed/x64-mingw-static-custom/include"
+				}
+			],
+			"language" : "RC",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-std=gnu23"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wpedantic"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-m64"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-masm=intel"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-gcolumn-info"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-fuse-ld=lld"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 12,
+					"define" : "BUILD_STATIC_LIBS"
+				},
+				{
+					"define" : "RE2RR_Common_EXPORTS"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "RE2RR_VERSION_BUILD=1"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "RE2RR_VERSION_BUILD_HASH=\"\""
+				},
+				{
+					"backtrace" : 15,
+					"define" : "RE2RR_VERSION_MAJOR=0"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "RE2RR_VERSION_MINOR=1"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "RE2RR_VERSION_PATCH=0"
+				},
+				{
+					"backtrace" : 18,
+					"define" : "RE2RR_VERSION_PRERELEASE_TAG=\"\""
+				},
+				{
+					"backtrace" : 19,
+					"define" : "RE2RR_VERSION_SEMVER=\"0.1.0+1\""
+				},
+				{
+					"backtrace" : 21,
+					"define" : "UNICODE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "WIN32_LEAN_AND_MEAN"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_UNICODE"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/src/Common/include"
+				},
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/src/Common/extern/amosnier/sha-2"
+				},
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/vcpkg_installed/x64-mingw-static-custom/include"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					2
+				],
+				"standard" : "23"
+			},
+			"sourceIndexes" : 
+			[
+				1
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-stdlib=libc++ -std=gnu++23"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-Wpedantic"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-m64"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-masm=intel"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-gcolumn-info"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-fuse-ld=lld"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 12,
+					"define" : "BUILD_STATIC_LIBS"
+				},
+				{
+					"define" : "RE2RR_Common_EXPORTS"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "RE2RR_VERSION_BUILD=1"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "RE2RR_VERSION_BUILD_HASH=\"\""
+				},
+				{
+					"backtrace" : 15,
+					"define" : "RE2RR_VERSION_MAJOR=0"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "RE2RR_VERSION_MINOR=1"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "RE2RR_VERSION_PATCH=0"
+				},
+				{
+					"backtrace" : 18,
+					"define" : "RE2RR_VERSION_PRERELEASE_TAG=\"\""
+				},
+				{
+					"backtrace" : 19,
+					"define" : "RE2RR_VERSION_SEMVER=\"0.1.0+1\""
+				},
+				{
+					"backtrace" : 21,
+					"define" : "UNICODE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "WIN32_LEAN_AND_MEAN"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_UNICODE"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/src/Common/include"
+				},
+				{
+					"backtrace" : 22,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/src/Common/extern/amosnier/sha-2"
+				},
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy/vcpkg_installed/x64-mingw-static-custom/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					6
+				],
+				"standard" : "23"
+			},
+			"sourceIndexes" : 
+			[
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8
+			]
+		}
+	],
+	"id" : "RE2RR_Common::@29aabc9fbfb9b5406d55",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 3,
+				"path" : "lib"
+			},
+			{
+				"backtrace" : 3,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "C:/Program Files (x86)/RE2RRandomizer"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-municode",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-static",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-gcolumn-info",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-fuse-ld=lld",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-Wl,--pdb=",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "../../vcpkg_installed/x64-mingw-static-custom/debug/lib/libimguid.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lc++ -lc++abi",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "RE2RR_Common",
+	"nameOnDisk" : "RE2RR.Common.dll",
+	"paths" : 
+	{
+		"build" : "src/Common",
+		"source" : "src/Common"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 0,
+			"path" : "build-tidy/src/Common/VersionInfoCommon.rc",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 1,
+			"path" : "build-tidy/src/Common/extern/amosnier/sha-2/sha-256.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Common.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Collections.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/File.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Logging.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Memory.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Process.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 23,
+			"compileGroupIndex" : 2,
+			"path" : "src/Common/Strings.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "SHARED_LIBRARY"
+}

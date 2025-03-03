@@ -1,0 +1,304 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						6
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						6,
+						7
+					]
+				},
+				{
+					"build" : "src/Common",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.Common-8e3860fa5a32efc09757.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "src/Common",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src/Types",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.Types-2abae6f4568f8e5c45e7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "src/Types",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/Database",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.Database-99172e7085cb18de2f24.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "src/Database",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/Hook",
+					"childIndexes" : 
+					[
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.Hook-bf67a5380ceee6a83369.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 4,
+					"source" : "src/Hook",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "_deps/minhook-build",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.minhook-build-c6746a883cd4865650d9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 5,
+					"source" : "build-tidy/src/Hook/extern/TsudaKageyu/minhook",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "src/App",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src.App-c1cac64c38221cac1689.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 6,
+					"source" : "src/App",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						6
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "RE2RRandomizer",
+					"targetIndexes" : 
+					[
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "RE2RR_Common",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "RE2RR_Types",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "RE2RR_Database",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						5
+					],
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "RE2RR_Hook",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "minhook",
+					"parentIndex" : 4,
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "RE2RR_App",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 6,
+					"id" : "RE2RR_App::@12714508d24a4bb4e515",
+					"jsonFile" : "target-RE2RR_App-c8831deaa46f909f1473.json",
+					"name" : "RE2RR_App",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "RE2RR_Common::@29aabc9fbfb9b5406d55",
+					"jsonFile" : "target-RE2RR_Common-76854ac938cc0e91eae2.json",
+					"name" : "RE2RR_Common",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "RE2RR_Database::@5eb6e4339f171c30ab95",
+					"jsonFile" : "target-RE2RR_Database-2700801f90444cba9e87.json",
+					"name" : "RE2RR_Database",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "RE2RR_Hook::@d942080976a04519a68e",
+					"jsonFile" : "target-RE2RR_Hook-017c84f9432632b0e90e.json",
+					"name" : "RE2RR_Hook",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "RE2RR_Types::@3feaeefb9a4168064375",
+					"jsonFile" : "target-RE2RR_Types-e141f913f712b2feb00e.json",
+					"name" : "RE2RR_Types",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "minhook::@62b594682224f686d07c",
+					"jsonFile" : "target-minhook-a4d91b980459a78b5afb.json",
+					"name" : "minhook",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tidy::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tidy-0629d7da2fcd6cee8714.json",
+					"name" : "tidy",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tidy-fix::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tidy-fix-ce7fa65b3ca5cfaf3c57.json",
+					"name" : "tidy-fix",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer/build-tidy",
+		"source" : "C:/Users/Squirrelies/source/repos/Squirrelies/RE2RRandomizer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

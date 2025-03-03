@@ -124,5 +124,15 @@
     "cmake.environment": {
         "MSYSTEM": "CLANG64",
         "PATH": "C:\\msys64\\clang64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+    },
+    "cmake.allowUnsupportedPresetsVersions": true,
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_path": "clang-format",
+    "C_Cpp.clang_format_style": "file",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.clangTidy.path": "clang-tidy",
+    "C_Cpp.codeAnalysis.runAutomatically": true,
+    "C_Cpp.codeAnalysis.exclude": {
+        "**/extern/**": true
     }
 }

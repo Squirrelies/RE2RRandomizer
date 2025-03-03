@@ -1,8 +1,8 @@
 {
-    "version": 6,
+    "version": 10,
     "cmakeMinimumRequired": {
         "major": 3,
-        "minor": 25,
+        "minor": 31,
         "patch": 0
     },
     "configurePresets": [
@@ -19,12 +19,31 @@
             }
         },
         {
+            "name": "tidy",
+            "binaryDir": "${sourceDir}/build-tidy",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
             "name": "Debug",
             "inherits": [
                 "default"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Debug-Tidy",
+            "inherits": [
+                "Debug",
+                "tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
             }
         },
         {
@@ -37,12 +56,34 @@
             }
         },
         {
+            "name": "Release-Tidy",
+            "inherits": [
+                "Release",
+                "tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
             "name": "RelWithDebInfo",
             "inherits": [
                 "default"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "RelWithDebInfo-Tidy",
+            "inherits": [
+                "RelWithDebInfo",
+                "tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
             }
         },
         {
@@ -53,6 +94,17 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
             }
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "inherits": [
+                "MinSizeRel",
+                "tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
         }
     ],
     "buildPresets": [
@@ -61,16 +113,32 @@
             "configurePreset": "Debug"
         },
         {
+            "name": "Debug-Tidy",
+            "configurePreset": "Debug-Tidy"
+        },
+        {
             "name": "Release",
             "configurePreset": "Release"
+        },
+        {
+            "name": "Release-Tidy",
+            "configurePreset": "Release-Tidy"
         },
         {
             "name": "RelWithDebInfo",
             "configurePreset": "RelWithDebInfo"
         },
         {
+            "name": "RelWithDebInfo-Tidy",
+            "configurePreset": "RelWithDebInfo-Tidy"
+        },
+        {
             "name": "MinSizeRel",
             "configurePreset": "MinSizeRel"
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "configurePreset": "MinSizeRel-Tidy"
         }
     ],
     "testPresets": [
@@ -129,6 +197,19 @@
             ]
         },
         {
+            "name": "Debug-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Debug-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "Debug-Tidy"
+                }
+            ]
+        },
+        {
             "name": "Release",
             "steps": [
                 {
@@ -138,6 +219,19 @@
                 {
                     "type": "build",
                     "name": "Release"
+                }
+            ]
+        },
+        {
+            "name": "Release-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Release-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "Release-Tidy"
                 }
             ]
         },
@@ -155,6 +249,19 @@
             ]
         },
         {
+            "name": "RelWithDebInfo-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "RelWithDebInfo-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "RelWithDebInfo-Tidy"
+                }
+            ]
+        },
+        {
             "name": "MinSizeRel",
             "steps": [
                 {
@@ -164,6 +271,19 @@
                 {
                     "type": "build",
                     "name": "MinSizeRel"
+                }
+            ]
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "MinSizeRel-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "MinSizeRel-Tidy"
                 }
             ]
         }

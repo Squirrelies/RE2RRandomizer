@@ -10,6 +10,7 @@ include(SetProjectCompileOptions)
 include(SetProjectCompileDefinitions)
 include(SetProjectLinkOptions)
 include(ProjectSettings)
+include(ClangTidy)
 
 add_subdirectory(src/Common)
 add_subdirectory(src/Types)

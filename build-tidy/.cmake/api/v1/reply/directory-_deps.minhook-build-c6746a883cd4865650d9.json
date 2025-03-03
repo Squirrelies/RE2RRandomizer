@@ -1,0 +1,102 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"build-tidy/src/Hook/extern/TsudaKageyu/minhook/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 111,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 123,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 130,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 139,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib/minhook",
+			"paths" : 
+			[
+				"build-tidy/_deps/minhook-build/minhook-config.cmake",
+				"build-tidy/_deps/minhook-build/minhook-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"minhook.lib"
+			],
+			"targetId" : "minhook::@62b594682224f686d07c",
+			"targetIndex" : 5,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/minhook",
+			"exportName" : "minhook-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "minhook::@62b594682224f686d07c",
+					"index" : 5
+				}
+			],
+			"paths" : 
+			[
+				"_deps/minhook-build/CMakeFiles/Export/8cd3caeda11d93f7061ac4b1345c5ed7/minhook-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : ".",
+			"paths" : 
+			[
+				"build-tidy/src/Hook/extern/TsudaKageyu/minhook/include"
+			],
+			"type" : "directory"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/minhook-build",
+		"source" : "build-tidy/src/Hook/extern/TsudaKageyu/minhook"
+	}
+}

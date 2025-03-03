@@ -31,10 +31,15 @@ on:
           - "beta"
           - "RC"
           - ""
+      clangTidy:
+        description: "Run Clang-Tidy"
+        required: false
+        default: false
+        type: boolean
       unitTests:
         description: "Run Unit Tests"
         required: false
-        default: true
+        default: false
         type: boolean
 
 env:
@@ -76,12 +81,6 @@ jobs:
           $semver_string += ".${{steps.short-sha-hash.outputs.short_sha_hash}}";
           echo "semver_string=$semver_string" | Set-Content $env:GITHUB_OUTPUT;
 
-      - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ env.MSYS2SYSTEM }}
-          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
-
   Build:
     name: Build ${{matrix.configuration}}
     runs-on: windows-latest
@@ -100,12 +99,20 @@ jobs:
       run:
         shell: pwsh
 
+    env:
+      RC_VERSION_MAJOR: ${{inputs.versionMajor}}
+      RC_VERSION_MINOR: ${{inputs.versionMinor}}
+      RC_VERSION_PATCH: ${{inputs.versionPatch}}
+      RC_VERSION_BUILD: ${{needs.Setup.outputs.build-number}}
+      RC_VERSION_PRERELEASE_TAG: ${{inputs.versionPreReleaseTag}}
+      RC_VERSION_BUILD_HASH: ${{needs.Setup.outputs.short-sha-hash}}
+
     steps:
       - name: Setup MSYS2 ${{ env.MSYS2SYSTEM }} (${{ env.ARCH }})
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ env.MSYS2SYSTEM }}
-          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake
+          install: base-devel mingw-w64-${{ env.ARCH }}-toolchain mingw-w64-${{ env.ARCH }}-cmake mingw-w64-${{ env.ARCH }}-tools-extra
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -115,17 +122,15 @@ jobs:
 
       - name: Run CMake
         shell: msys2 {0}
-        env:
-          RC_VERSION_MAJOR: ${{inputs.versionMajor}}
-          RC_VERSION_MINOR: ${{inputs.versionMinor}}
-          RC_VERSION_PATCH: ${{inputs.versionPatch}}
-          RC_VERSION_BUILD: ${{needs.Setup.outputs.build-number}}
-          RC_VERSION_PRERELEASE_TAG: ${{inputs.versionPreReleaseTag}}
-          RC_VERSION_BUILD_HASH: ${{needs.Setup.outputs.short-sha-hash}}
         run: cmake --workflow --preset ${{matrix.configuration}} --fresh
 
+      - name: Run Clang-Tidy
+        if: ${{ !cancelled() && inputs.clangTidy == 'true' }}
+        shell: msys2 {0}
+        run: cmake --workflow --preset ${{matrix.configuration}}-Tidy --fresh
+
       - name: Run CTest
-        if: ${{ success() && inputs.unitTests == 'true' }}
+        if: ${{ !cancelled() && inputs.unitTests == 'true' }}
         shell: msys2 {0}
         run: ctest --preset ${{matrix.configuration}} --output-on-failure
 
