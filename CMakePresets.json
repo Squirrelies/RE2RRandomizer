@@ -7,7 +7,7 @@
     },
     "configurePresets": [
         {
-            "name": "default",
+            "name": "baseConfigure",
             "generator": "MSYS Makefiles",
             "hidden": true,
             "binaryDir": "${sourceDir}/build",
@@ -19,7 +19,8 @@
             }
         },
         {
-            "name": "tidy",
+            "name": "baseConfigure-Tidy",
+            "hidden": true,
             "binaryDir": "${sourceDir}/build-tidy",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -29,7 +30,7 @@
         {
             "name": "Debug",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
@@ -39,7 +40,7 @@
             "name": "Debug-Tidy",
             "inherits": [
                 "Debug",
-                "tidy"
+                "baseConfigure-Tidy"
             ],
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -49,7 +50,7 @@
         {
             "name": "Release",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
@@ -59,7 +60,7 @@
             "name": "Release-Tidy",
             "inherits": [
                 "Release",
-                "tidy"
+                "baseConfigure-Tidy"
             ],
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -69,7 +70,7 @@
         {
             "name": "RelWithDebInfo",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
@@ -79,7 +80,7 @@
             "name": "RelWithDebInfo-Tidy",
             "inherits": [
                 "RelWithDebInfo",
-                "tidy"
+                "baseConfigure-Tidy"
             ],
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -89,7 +90,7 @@
         {
             "name": "MinSizeRel",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
@@ -99,7 +100,7 @@
             "name": "MinSizeRel-Tidy",
             "inherits": [
                 "MinSizeRel",
-                "tidy"
+                "baseConfigure-Tidy"
             ],
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -143,7 +144,7 @@
     ],
     "testPresets": [
         {
-            "name": "default",
+            "name": "baseTest",
             "hidden": true,
             "output": {
                 "outputOnFailure": true
@@ -156,28 +157,28 @@
         {
             "name": "Debug",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "Debug"
         },
         {
             "name": "Release",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "Release"
         },
         {
             "name": "RelWithDebInfo",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "RelWithDebInfo"
         },
         {
             "name": "MinSizeRel",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "MinSizeRel"
         }

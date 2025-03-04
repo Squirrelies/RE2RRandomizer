@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.31)
 project (RE2RRandomizer)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
