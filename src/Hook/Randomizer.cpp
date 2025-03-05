@@ -48,39 +48,40 @@ void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, co
 	                  NAMEOF(scenario), RE2RR::Types::Enums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
 
-	seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
-	auto filteredItemDB = RE2RR::Database::GetItemDB() |
-	                      std::views::filter([&difficulty, &scenario](const RE2RR::Types::ItemInformation &i)
-	                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
-	                      std::views::transform([](const RE2RR::Types::ItemInformation &i)
-	                                            { return std::make_pair(i.ItemPositionGUID, i); });
-	originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
-
-	std::mt19937 gen(seed.initialSeedValue);
 	try
 	{
+		seed = RE2RR::Types::Seed{.initialSeedValue = initialSeed, .gameMode = RE2RR::Types::GameModeKey{.Scenario = scenario, .Difficulty = difficulty}, .seedData = {}};
+		auto filteredItemDB = RE2RR::Database::GetItemDB() |
+		                      std::views::filter([&difficulty, &scenario](const RE2RR::Types::ItemInformation &i)
+		                                         { return i.Scenario == scenario && i.Difficulty == difficulty; }) |
+		                      std::views::transform([](const RE2RR::Types::ItemInformation &i)
+		                                            { return std::make_pair(i.ItemPositionGUID, i); });
+		originalItemInformation = std::unordered_map<GUID, RE2RR::Types::ItemInformation, std::hash<GUID>, std::equal_to<GUID>>(filteredItemDB.begin(), filteredItemDB.end());
+
+		std::mt19937 gen(seed.initialSeedValue);
+
 		HandleSoftLocks(gen);
+
+		std::vector<RE2RR::Types::RandomizedItem> values;
+		for (const auto &[key, value] : originalItemInformation)
+		{
+			if (!std::ranges::any_of(seed.seedData, [&key](const std::pair<GUID, RE2RR::Types::RandomizedItem> &kv)
+			                         { return key == kv.second.OriginalGUID; }))
+				values.push_back(RE2RR::Types::RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item});
+		}
+
+		std::shuffle(values.begin(), values.end(), gen);
+
+		auto value = values.begin();
+		for (const auto &[key, _] : originalItemInformation)
+		{
+			if (!seed.seedData.contains(key))
+				seed.seedData.insert(std::make_pair(key, *value++));
+		}
 	}
 	catch (const std::exception &ex)
 	{
 		logger.LogException(ex);
-	}
-
-	std::vector<RE2RR::Types::RandomizedItem> values;
-	for (const auto &[key, value] : originalItemInformation)
-	{
-		if (!std::ranges::any_of(seed.seedData, [&key](const std::pair<GUID, RE2RR::Types::RandomizedItem> &kv)
-		                         { return key == kv.second.OriginalGUID; }))
-			values.push_back(RE2RR::Types::RandomizedItem{.OriginalGUID = key, .ReplacementItem = value.Item});
-	}
-
-	std::shuffle(values.begin(), values.end(), gen);
-
-	auto value = values.begin();
-	for (const auto &[key, _] : originalItemInformation)
-	{
-		if (!seed.seedData.contains(key))
-			seed.seedData.insert(std::make_pair(key, *value++));
 	}
 }
 
