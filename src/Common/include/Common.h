@@ -18,15 +18,10 @@
 #endif
 
 #ifndef LIBRARY_EXPORT_API
-// Windows Static or non-Windows
-#if !defined(BUILD_RE2RR_SHARED_LIBS) || !defined(WIN32) || !defined(WIN64)
+#if !defined(WIN32) || !defined(WIN64)
 #define LIBRARY_EXPORT_API
-// Windows Shared (Build/Export)
-#elif defined(BUILD_RE2RR_SHARED_LIBS)
-#define LIBRARY_EXPORT_API __declspec(dllexport)
-// Windows Shared (Usage/Import)
 #else
-#define LIBRARY_EXPORT_API __declspec(dllimport)
+#define LIBRARY_EXPORT_API __declspec(dllexport)
 #endif
 #endif
 
