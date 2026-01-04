@@ -17,6 +17,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(minhook)
 FetchContent_GetProperties(minhook)
 
+set_property(TARGET Git::Git PROPERTY IMPORTED_IMPLIB "${GIT_EXECUTABLE}")
+
 add_library(${PROJECT_NAME} SHARED)
 add_library(RE2RR::Hook ALIAS ${PROJECT_NAME})
 

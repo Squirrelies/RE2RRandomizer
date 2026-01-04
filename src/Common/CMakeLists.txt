@@ -17,8 +17,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SHA-2)
 FetchContent_GetProperties(SHA-2)
 
-message(STATUS "ENV{WindowsSdkDir}='$ENV{WindowsSdkDir}'")
-message(STATUS "ENV{WindowsSDKLibVersion}='$ENV{WindowsSDKLibVersion}'")
+set_property(TARGET Git::Git PROPERTY IMPORTED_IMPLIB "${GIT_EXECUTABLE}")
 
 # vcpkg dependencies.
 find_package(imgui CONFIG REQUIRED)
