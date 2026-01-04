@@ -5,6 +5,7 @@ function(set_project_compile_definitions project_name)
     UNICODE
     _UNICODE
     WIN32_LEAN_AND_MEAN
+    _AMD64_
     )
 
     target_compile_definitions(${project_name} PRIVATE ${CLANG_COMPILE_DEFINITIONS} ${ARGN})
