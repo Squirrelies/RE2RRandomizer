@@ -11,13 +11,13 @@ set(FETCHCONTENT_QUIET off)
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
-    GIT_TAG        c1a7c3843bd1a5fe3eb779b64c0d823bca3dc339 # origin/master
+    GIT_TAG        1e9ad1eb42db11bfcb65461f687c656612d1b555 # origin/master
     SOURCE_DIR extern/TsudaKageyu/minhook
 )
 FetchContent_MakeAvailable(minhook)
 FetchContent_GetProperties(minhook)
 
-add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
+add_library(${PROJECT_NAME} SHARED)
 add_library(RE2RR::Hook ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})

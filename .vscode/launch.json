@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/RE2RRandomizer.exe",
+            "program": "${workspaceFolder}/bin/Debug/Win/x64/MSVC/Debug/RE2RRandomizer.exe",
             "args": [],
             "cwd": "${workspaceFolder}/build",
         },
@@ -16,7 +16,7 @@
             "name": "(lldb) Attach",
             "type": "lldb",
             "request": "attach",
-            "program": "${workspaceFolder}/build/RE2RRandomizer.exe",
+            "program": "${workspaceFolder}/bin/Debug/Win/x64/MSVC/Debug/RE2RRandomizer.exe",
         },
         {
             "name": "(lldb) Attach to RE2",

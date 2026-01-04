@@ -12,7 +12,7 @@
                 "close": false
             },
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}/bin/Debug/Win/x64/MSVC/Debug"
             }
         }
     ]

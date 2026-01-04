@@ -11,11 +11,14 @@ set(FETCHCONTENT_QUIET off)
 FetchContent_Declare(
     SHA-2
     GIT_REPOSITORY https://github.com/amosnier/sha-2.git
-    GIT_TAG        b29613850d6e54e7159197ef42c7d22d012b6367 # origin/master
+    GIT_TAG        565f65009bdd98267361b17d50cddd7c9beb3e6c # origin/master
     SOURCE_DIR extern/amosnier/sha-2
 )
 FetchContent_MakeAvailable(SHA-2)
 FetchContent_GetProperties(SHA-2)
+
+message(STATUS "ENV{WindowsSdkDir}='$ENV{WindowsSdkDir}'")
+message(STATUS "ENV{WindowsSDKLibVersion}='$ENV{WindowsSDKLibVersion}'")
 
 # vcpkg dependencies.
 find_package(imgui CONFIG REQUIRED)
@@ -32,7 +35,7 @@ find_library(DXGUID_LIBRARY dxguid REQUIRED)
 find_library(DINPUT8_LIBRARY dinput8 REQUIRED)
 find_library(RPCRT4_LIBRARY Rpcrt4 REQUIRED)
 
-add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
+add_library(${PROJECT_NAME} SHARED)
 add_library(RE2RR::Common ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})

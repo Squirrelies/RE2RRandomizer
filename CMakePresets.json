@@ -7,139 +7,114 @@
     },
     "configurePresets": [
         {
-            "name": "baseConfigure",
-            "generator": "MSYS Makefiles",
+            "name": "base-windows-x64",
             "hidden": true,
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "${sourceDir}/bin/${presetName}",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/toolchains/clang-toolchain.cmake",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-static-custom",
-                "VCPKG_HOST_TRIPLET": "x64-mingw-static-custom"
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "clangTidyChecks": "-*,bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-cppcoreguidelines-avoid-non-const-global-variables,-modernize-use-trailing-return-type",
+                    "enableMicrosoftCodeAnalysis": true,
+                    "enableClangTidyCodeAnalysis": true
+                }
             }
         },
         {
-            "name": "baseConfigure-Tidy",
+            "name": "base-windows-x64-msvc",
             "hidden": true,
-            "binaryDir": "${sourceDir}/build-tidy",
-            "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ENABLE_CLANG_TIDY": "ON"
+            "inherits": [
+                "base-windows-x64"
+            ],
+            "generator": "Visual Studio 18 2026",
+            "architecture": "x64,version=10.0",
+            "toolset": "v145,host=x64",
+            "debug": {
+                "find": false
             }
         },
         {
-            "name": "Debug",
+            "name": "base-windows-x64-clang-msvcabi",
+            "hidden": true,
             "inherits": [
-                "baseConfigure"
+                "base-windows-x64"
             ],
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+            "generator": "Visual Studio 18 2026",
+            "architecture": "x64,version=10.0",
+            "toolset": "ClangCL",
+            "environment": {
+                "LLVMInstallDir": "C:/Program Files/LLVM",
+                "LLVMToolsVersion": "21"
             }
         },
         {
-            "name": "Debug-Tidy",
+            "name": "Debug/Win/x64/MSVC",
+            "displayName": "Debug (Windows x64 - MSVC)",
             "inherits": [
-                "Debug",
-                "baseConfigure-Tidy"
+                "base-windows-x64-msvc"
             ],
             "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ENABLE_CLANG_TIDY": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDebugDLL"
             }
         },
         {
-            "name": "Release",
+            "name": "Release/Win/x64/MSVC",
+            "displayName": "Release (Windows x64 - MSVC)",
             "inherits": [
-                "baseConfigure"
+                "base-windows-x64-msvc"
             ],
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL"
             }
         },
         {
-            "name": "Release-Tidy",
+            "name": "Debug/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Debug (Windows x64 - Clang (MSVC ABI))",
             "inherits": [
-                "Release",
-                "baseConfigure-Tidy"
+                "base-windows-x64-clang-msvcabi"
             ],
             "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ENABLE_CLANG_TIDY": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDebugDLL"
             }
         },
         {
-            "name": "RelWithDebInfo",
+            "name": "Release/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Release (Windows x64 - Clang (MSVC ABI))",
             "inherits": [
-                "baseConfigure"
+                "base-windows-x64-clang-msvcabi"
             ],
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            }
-        },
-        {
-            "name": "RelWithDebInfo-Tidy",
-            "inherits": [
-                "RelWithDebInfo",
-                "baseConfigure-Tidy"
-            ],
-            "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ENABLE_CLANG_TIDY": "ON"
-            }
-        },
-        {
-            "name": "MinSizeRel",
-            "inherits": [
-                "baseConfigure"
-            ],
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "MinSizeRel"
-            }
-        },
-        {
-            "name": "MinSizeRel-Tidy",
-            "inherits": [
-                "MinSizeRel",
-                "baseConfigure-Tidy"
-            ],
-            "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ENABLE_CLANG_TIDY": "ON"
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "Debug",
-            "configurePreset": "Debug"
+            "name": "Debug/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Debug (Windows x64 - Clang (MSVC ABI))",
+            "configurePreset": "Debug/Win/x64/ClangCL-MSVCABI"
         },
         {
-            "name": "Debug-Tidy",
-            "configurePreset": "Debug-Tidy"
+            "name": "Release/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Release (Windows x64 - Clang (MSVC ABI))",
+            "configurePreset": "Release/Win/x64/ClangCL-MSVCABI"
         },
         {
-            "name": "Release",
-            "configurePreset": "Release"
+            "name": "Debug/Win/x64/MSVC",
+            "displayName": "Debug (Windows x64 - MSVC)",
+            "configurePreset": "Debug/Win/x64/MSVC"
         },
         {
-            "name": "Release-Tidy",
-            "configurePreset": "Release-Tidy"
-        },
-        {
-            "name": "RelWithDebInfo",
-            "configurePreset": "RelWithDebInfo"
-        },
-        {
-            "name": "RelWithDebInfo-Tidy",
-            "configurePreset": "RelWithDebInfo-Tidy"
-        },
-        {
-            "name": "MinSizeRel",
-            "configurePreset": "MinSizeRel"
-        },
-        {
-            "name": "MinSizeRel-Tidy",
-            "configurePreset": "MinSizeRel-Tidy"
+            "name": "Release/Win/x64/MSVC",
+            "displayName": "Release (Windows x64 - MSVC)",
+            "configurePreset": "Release/Win/x64/MSVC"
         }
     ],
     "testPresets": [
@@ -155,136 +130,92 @@
             }
         },
         {
-            "name": "Debug",
+            "name": "Debug/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Debug (Windows x64 - Clang (MSVC ABI))",
             "inherits": [
                 "baseTest"
             ],
-            "configurePreset": "Debug"
+            "configurePreset": "Debug/Win/x64/ClangCL-MSVCABI"
         },
         {
-            "name": "Release",
+            "name": "Release/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Release (Windows x64 - Clang (MSVC ABI))",
             "inherits": [
                 "baseTest"
             ],
-            "configurePreset": "Release"
+            "configurePreset": "Release/Win/x64/ClangCL-MSVCABI"
         },
         {
-            "name": "RelWithDebInfo",
+            "name": "Debug/Win/x64/MSVC",
+            "displayName": "Debug (Windows x64 - MSVC)",
             "inherits": [
                 "baseTest"
             ],
-            "configurePreset": "RelWithDebInfo"
+            "configurePreset": "Debug/Win/x64/MSVC"
         },
         {
-            "name": "MinSizeRel",
+            "name": "Release/Win/x64/MSVC",
+            "displayName": "Release (Windows x64 - MSVC)",
             "inherits": [
                 "baseTest"
             ],
-            "configurePreset": "MinSizeRel"
+            "configurePreset": "Release/Win/x64/MSVC"
         }
     ],
     "workflowPresets": [
         {
-            "name": "Debug",
+            "name": "Debug/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Debug (Windows x64 - Clang (MSVC ABI))",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "Debug"
+                    "name": "Debug/Win/x64/ClangCL-MSVCABI"
                 },
                 {
                     "type": "build",
-                    "name": "Debug"
+                    "name": "Debug/Win/x64/ClangCL-MSVCABI"
                 }
             ]
         },
         {
-            "name": "Debug-Tidy",
+            "name": "Release/Win/x64/ClangCL-MSVCABI",
+            "displayName": "Release (Windows x64 - Clang (MSVC ABI))",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "Debug-Tidy"
+                    "name": "Release/Win/x64/ClangCL-MSVCABI"
                 },
                 {
                     "type": "build",
-                    "name": "Debug-Tidy"
+                    "name": "Release/Win/x64/ClangCL-MSVCABI"
                 }
             ]
         },
         {
-            "name": "Release",
+            "name": "Debug/Win/x64/MSVC",
+            "displayName": "Debug (Windows x64 - MSVC)",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "Release"
+                    "name": "Debug/Win/x64/MSVC"
                 },
                 {
                     "type": "build",
-                    "name": "Release"
+                    "name": "Debug/Win/x64/MSVC"
                 }
             ]
         },
         {
-            "name": "Release-Tidy",
+            "name": "Release/Win/x64/MSVC",
+            "displayName": "Release (Windows x64 - MSVC)",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "Release-Tidy"
+                    "name": "Release/Win/x64/MSVC"
                 },
                 {
                     "type": "build",
-                    "name": "Release-Tidy"
-                }
-            ]
-        },
-        {
-            "name": "RelWithDebInfo",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "RelWithDebInfo"
-                },
-                {
-                    "type": "build",
-                    "name": "RelWithDebInfo"
-                }
-            ]
-        },
-        {
-            "name": "RelWithDebInfo-Tidy",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "RelWithDebInfo-Tidy"
-                },
-                {
-                    "type": "build",
-                    "name": "RelWithDebInfo-Tidy"
-                }
-            ]
-        },
-        {
-            "name": "MinSizeRel",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "MinSizeRel"
-                },
-                {
-                    "type": "build",
-                    "name": "MinSizeRel"
-                }
-            ]
-        },
-        {
-            "name": "MinSizeRel-Tidy",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "MinSizeRel-Tidy"
-                },
-                {
-                    "type": "build",
-                    "name": "MinSizeRel-Tidy"
+                    "name": "Release/Win/x64/MSVC"
                 }
             ]
         }

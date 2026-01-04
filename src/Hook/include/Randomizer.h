@@ -93,15 +93,16 @@ public:
 
 	void ItemPickup(RE2RR::Types::RE2RItem &, const GUID &);
 	bool ChangeArea(RE2RR::Types::Enums::MapPartsID, RE2RR::Types::Enums::MapID, RE2RR::Types::Enums::FloorID);
-	RE2RR::Types::Enums::Difficulty GetDifficulty(void);
-	RE2RR::Types::Enums::Scenario GetScenario(void);
 
-	RE2RR::Types::Enums::FloorID GetFloorID(void);
-	const std::unique_ptr<std::string> GetFloorName(void);
-	RE2RR::Types::Enums::MapID GetMapID(void);
-	const std::unique_ptr<std::string> GetMapName(void);
-	RE2RR::Types::Enums::MapPartsID GetMapPartsID(void);
-	const std::unique_ptr<std::string> GetMapPartsName(void);
+	const RE2RR::Types::Enums::Difficulty GetDifficulty(void);
+	const RE2RR::Types::Enums::Scenario GetScenario(void);
+	const RE2RR::Types::Enums::FloorID GetFloorID(void);
+	const RE2RR::Types::Enums::MapID GetMapID(void);
+	const RE2RR::Types::Enums::MapPartsID GetMapPartsID(void);
+	const std::unique_ptr<const std::string> GetFloorName(void);
+	const std::unique_ptr<const std::string> GetMapName(void);
+	const std::unique_ptr<const std::string> GetMapPartsName(void);
+
 	const RE2RR::Types::RE2RItem &GetLastInteractedItem(void);
 	const RE2RR::Types::RE2RItem &GetLastRandomizedItem(void);
 	GUID &GetLastInteractedItemPositionGuid(void);

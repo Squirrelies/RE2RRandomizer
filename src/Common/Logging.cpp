@@ -13,30 +13,24 @@ namespace RE2RR::Common::Logging
 	{
 		int old_size = Buf.size();
 		Buf.append(str);
-		for (int new_size = Buf.size(); old_size < new_size; old_size++)
+		for (const int new_size = Buf.size(); old_size < new_size; old_size++)
 			if (Buf[old_size] == '\n')
 				LineOffsets.push_back(old_size + 1);
 	}
 
-	void UILog::AddLogF(const char *fmt, ...)
+	void UILog::AddLog(const std::string_view str)
 	{
 		int old_size = Buf.size();
-		va_list args;
-		va_start(args, fmt);
-		Buf.appendfv(fmt, args);
-		va_end(args);
-		for (int new_size = Buf.size(); old_size < new_size; old_size++)
+		Buf.append(std::string(str).c_str());
+		for (const int new_size = Buf.size(); old_size < new_size; old_size++)
 			if (Buf[old_size] == '\n')
 				LineOffsets.push_back(old_size + 1);
 	}
 
-	void UILog::AddLogV(const char *fmt, __builtin_va_list args)
+	template <typename... Args>
+	inline void UILog::AddLogF(std::string_view fmt, Args &&...args)
 	{
-		int old_size = Buf.size();
-		Buf.appendfv(fmt, args);
-		for (int new_size = Buf.size(); old_size < new_size; old_size++)
-			if (Buf[old_size] == '\n')
-				LineOffsets.push_back(old_size + 1);
+		AddLog(std::format(fmt, std::forward<Args>(args)...).c_str());
 	}
 
 	void UILog::Draw(const char *title, bool *p_open)
@@ -58,11 +52,11 @@ namespace RE2RR::Common::Logging
 		if (ImGui::Button("Options"))
 			ImGui::OpenPopup("Options");
 		ImGui::SameLine();
-		bool clear = ImGui::Button("Clear");
+		const bool clear = ImGui::Button("Clear");
 		ImGui::SameLine();
-		bool copy = ImGui::Button("Copy");
+		const bool copy = ImGui::Button("Copy");
 		ImGui::SameLine();
-		Filter.Draw("Filter", -100.0f);
+		Filter.Draw("Filter", -100.0F);
 
 		ImGui::Separator();
 
@@ -104,28 +98,24 @@ namespace RE2RR::Common::Logging
 			ImGui::PopStyleVar();
 
 			if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-				ImGui::SetScrollHereY(1.0f);
+				ImGui::SetScrollHereY(1.0F);
 		}
 		ImGui::EndChild();
 		ImGui::End();
 	}
 
-	void ImmediateLogger::LogMessage(const char *format, ...)
+	void ImmediateLogger::LogMessage(const std::string_view message)
 	{
-		va_list args;
+		std::print("{:s}", message.data());
+		std::print(out, "{:s}", message.data());
+		std::fflush(out);
+		this->uiLog.AddLog(message);
+	}
 
-		va_start(args, format);
-		vprintf(format, args);
-		va_end(args);
-
-		va_start(args, format);
-		vfprintf(out, format, args);
-		fflush(out);
-		va_end(args);
-
-		va_start(args, format);
-		this->uiLog.AddLogV(format, args);
-		va_end(args);
+	template <typename... Args>
+	inline void LogMessage(const std::string_view fmt, const Args &&...args)
+	{
+		LogMessage(std::format(fmt, std::forward<Args>(args)...));
 	}
 
 	void ImmediateLogger::LogException(const std::exception &ex, const std::source_location &location)

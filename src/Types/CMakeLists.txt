@@ -5,7 +5,7 @@ set(RC_INTERNALNAME "RE2RR.Types")
 set(RC_ORIGINALFILENAME "${RC_INTERNALNAME}.dll")
 configure_file(${CMAKE_SOURCE_DIR}/src/VersionInfo.rc.in ${PROJECT_BINARY_DIR}/VersionInfoTypes.rc @ONLY)
 
-add_library(${PROJECT_NAME} ${RE2RR_LIBRARY_TYPE})
+add_library(${PROJECT_NAME} SHARED)
 add_library(RE2RR::Types ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})

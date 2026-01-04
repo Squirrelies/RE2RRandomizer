@@ -1,17 +1,15 @@
 {
   "default-registry": {
     "kind": "git",
-    "baseline": "37d46edf0f2024c3d04997a2d432d59278ca1dff",
+    "baseline": "af752f21c9d79ba3df9cb0250ce2233933f58486",
     "repository": "https://github.com/microsoft/vcpkg"
   },
   "registries": [
     {
       "kind": "artifact",
-      "location": "https://github.com/microsoft/vcpkg-ce-catalog/archive/refs/heads/main.zip",
-      "name": "microsoft"
+      "name": "microsoft",
+      "location": "https://github.com/microsoft/vcpkg-ce-catalog/archive/refs/heads/main.zip"
     }
   ],
-  "overlay-triplets": [
-    "./vcpkg/triplets"
-  ]
+  "overlay-triplets": []
 }

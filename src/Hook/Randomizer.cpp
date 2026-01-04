@@ -2,7 +2,7 @@
 
 void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &itemPositionGuid)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup(%s: %p, *%s: %s) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup({:s}: {:p}, *{:s}: {:s}) called.\n",
 	                  NAMEOF(itemToReplace), &itemToReplace,
 	                  NAMEOF(itemPositionGuid), RE2RR::Common::Guid::ToString(itemPositionGuid).c_str());
 
@@ -14,7 +14,7 @@ void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &i
 
 void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2RR::Types::RE2RItem &originalItem, const RE2RR::Types::RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem(%s: %p, %s: %p, %s: %p).\n",
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem({:s}: {:p}, {:s}: {:p}, {:s}: {:p}).\n",
 	                  NAMEOF(itemToReplace), &itemToReplace,
 	                  NAMEOF(originalItem), &originalItem,
 	                  NAMEOF(newItem), &newItem);
@@ -26,7 +26,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 	    !RE2RR::Common::Memory::TryValidatePointerStart(&newItem, NAMEOF(newItem), logger))
 		return;
 
-	logger.LogMessage("\t%s\n\t%s\n",
+	logger.LogMessage("\t{:s}\n\t{:s}\n",
 	                  originalItem.ToString().get()->c_str(),
 	                  newItem.ToString().get()->c_str());
 
@@ -43,7 +43,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 
 void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, const RE2RR::Types::Enums::Scenario &scenario, int_fast32_t initialSeed)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::Randomize(%s: %s, %s: %s, %s: %d) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::Randomize({:s}: {:s}, {:s}: {:s}, {:s}: {:d}) called.\n",
 	                  NAMEOF(difficulty), RE2RR::Types::Enums::EnumDifficultyToString(difficulty).get()->c_str(),
 	                  NAMEOF(scenario), RE2RR::Types::Enums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
@@ -109,7 +109,7 @@ const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	using namespace RE2RR::Common::Guid::Guid_Literals;
-	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks(%s: %p) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks({:s}: {:p}) called.\n",
 	                  NAMEOF(gen), gen);
 	std::vector<RE2RR::Types::ItemInformation> originals;
 	std::vector<RE2RR::Types::ItemInformation> candidates;
@@ -314,7 +314,7 @@ void Randomizer::AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &original
 	size_t origIndex = std::uniform_int_distribution<size_t>(0, originals.size() - 1)(gen);
 	size_t destIndex = std::uniform_int_distribution<size_t>(0, destinations.size() - 1)(gen);
 
-	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[%d]\n\t%s (%s)\n\t%s (%s)\n",
+	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[{:d}]\n\t{:s} ({:s})\n\t{:s} ({:s})\n",
 	                  destIndex,
 	                  destinations[destIndex].Item.ToString().get()->c_str(),
 	                  RE2RR::Common::Guid::ToString(destinations[destIndex].ItemPositionGUID).c_str(),
@@ -346,7 +346,7 @@ void Randomizer::ExportCheatSheet()
 
 	if (!file.is_open())
 	{
-		logger.LogMessage("Unable to open file for writing: %s\n", filename.c_str());
+		logger.LogMessage("Unable to open file for writing: {:s}\n", filename.c_str());
 		return;
 	}
 
@@ -422,51 +422,51 @@ bool Randomizer::ChangeArea(RE2RR::Types::Enums::MapPartsID mapPartsId, RE2RR::T
 	return returnValue;
 }
 
-RE2RR::Types::Enums::Difficulty Randomizer::GetDifficulty()
+const RE2RR::Types::Enums::Difficulty Randomizer::GetDifficulty()
 {
 	return seed.gameMode.Difficulty;
 }
 
-RE2RR::Types::Enums::Scenario Randomizer::GetScenario()
+const RE2RR::Types::Enums::Scenario Randomizer::GetScenario()
 {
 	return seed.gameMode.Scenario;
 }
 
-RE2RR::Types::Enums::FloorID Randomizer::GetFloorID()
+const RE2RR::Types::Enums::FloorID Randomizer::GetFloorID()
 {
 	return floorId;
 }
 
-const std::unique_ptr<std::string> Randomizer::GetFloorName()
-{
-	if (floorNames.contains(floorId))
-		return std::make_unique<std::string>(std::format("{} ({})", floorNames.at(floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
-	else
-		return RE2RR::Types::Enums::EnumFloorIDToString(floorId);
-}
-
-RE2RR::Types::Enums::MapID Randomizer::GetMapID()
+const RE2RR::Types::Enums::MapID Randomizer::GetMapID()
 {
 	return mapId;
 }
 
-const std::unique_ptr<std::string> Randomizer::GetMapName()
-{
-	if (mapNames.contains(mapId))
-		return std::make_unique<std::string>(std::format("{} ({})", mapNames.at(mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
-	else
-		return RE2RR::Types::Enums::EnumMapIDToString(mapId);
-}
-
-RE2RR::Types::Enums::MapPartsID Randomizer::GetMapPartsID()
+const RE2RR::Types::Enums::MapPartsID Randomizer::GetMapPartsID()
 {
 	return mapPartsId;
 }
 
-const std::unique_ptr<std::string> Randomizer::GetMapPartsName()
+const std::unique_ptr<const std::string> Randomizer::GetFloorName()
+{
+	if (floorNames.contains(floorId))
+		return std::make_unique<const std::string>(std::format("{} ({})", floorNames.at(floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
+	else
+		return RE2RR::Types::Enums::EnumFloorIDToString(floorId);
+}
+
+const std::unique_ptr<const std::string> Randomizer::GetMapName()
+{
+	if (mapNames.contains(mapId))
+		return std::make_unique<const std::string>(std::format("{} ({})", mapNames.at(mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
+	else
+		return RE2RR::Types::Enums::EnumMapIDToString(mapId);
+}
+
+const std::unique_ptr<const std::string> Randomizer::GetMapPartsName()
 {
 	if (mapPartNames.contains(mapPartsId))
-		return std::make_unique<std::string>(std::format("{} ({})", mapPartNames.at(mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
+		return std::make_unique<const std::string>(std::format("{} ({})", mapPartNames.at(mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
 	else
 		return RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId);
 }
