@@ -98,19 +98,19 @@ namespace RE2RR::Common
 #ifndef RE2RR_VERSION_PRERELEASE_TAG
 #define RE2RR_VERSION_PRERELEASE_TAG ""
 #endif
-		constinit const std::string PreReleaseTag = RE2RR_VERSION_PRERELEASE_TAG;
+		constinit const std::string_view PreReleaseTag = RE2RR_VERSION_PRERELEASE_TAG;
 
 // Build SHA hash. This is defined at compile time so this is just a placeholder.
 #ifndef RE2RR_VERSION_BUILD_HASH
 #define RE2RR_VERSION_BUILD_HASH ""
 #endif
-		constinit const std::string BuildHash = RE2RR_VERSION_BUILD_HASH;
+		constinit const std::string_view BuildHash = RE2RR_VERSION_BUILD_HASH;
 
 // Semantic Versioning string. This is defined at compile time so this is just a placeholder.
 #ifndef RE2RR_VERSION_SEMVER
 #define RE2RR_VERSION_SEMVER "0.1.0+1"
 #endif
-		constinit const std::string SemVer = RE2RR_VERSION_SEMVER;
+		constinit const std::string_view SemVer = RE2RR_VERSION_SEMVER;
 	}
 }
 

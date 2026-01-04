@@ -6,9 +6,12 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
+                "DEBUG",
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "WIN32_LEAN_AND_MEAN",
+                "_AMD64_"
             ],
             "cStandard": "c23",
             "cppStandard": "c++23",

@@ -6,23 +6,23 @@ namespace RE2RR::Common::File
 	bool FileExists(const char *filePath)
 	{
 		FILE *file;
-		return (file = fopen64(filePath, "rb")) && !fclose(file);
+		return !fopen_s(&file, filePath, "rb") && !fclose(file);
 	}
 
 	size_t GetFileSizeT(const char *filePath)
 	{
-		FILE *file = fopen64(filePath, "rb");
+		FILE *file;
 
-		if (file == nullptr)
+		if (fopen_s(&file, filePath, "rb"))
 			return -1LL; // Unable to open!
 
-		if (fseeko64(file, 0LL, SEEK_END) < 0LL)
+		if (_fseeki64(file, 0LL, SEEK_END) < 0LL)
 		{
 			fclose(file);
 			return -1LL; // Unable to seek!
 		}
 
-		size_t size = ftello64(file);
+		size_t size = _ftelli64(file);
 		fclose(file);
 		return size;
 	}
@@ -31,8 +31,8 @@ namespace RE2RR::Common::File
 	{
 		const int bufferSize = SIZE_OF_SHA_256_CHUNK * SIZE_OF_SHA_256_CHUNK;
 
-		FILE *file = fopen64(filePath, "rb");
-		if (file == nullptr)
+		FILE *file;
+		if (fopen_s(&file, filePath, "rb"))
 			return nullptr;
 
 		std::unique_ptr<uint8_t[]> hash = std::make_unique<uint8_t[]>(SIZE_OF_SHA_256_HASH);
