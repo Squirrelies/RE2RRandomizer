@@ -18,15 +18,27 @@
 #endif
 
 #ifndef LIBRARY_EXPORT_API
-#if !defined(WIN32) || !defined(WIN64)
-#define LIBRARY_EXPORT_API
-#else
+#if defined(_WIN32) || defined(_WIN64)
 #define LIBRARY_EXPORT_API __declspec(dllexport)
+#else
+#define LIBRARY_EXPORT_API
 #endif
 #endif
 
-#ifndef PACKED_DATA
-#define PACKED_DATA __attribute__((packed))
+#ifdef _MSC_VER
+#ifndef PACKED_STRUCT
+#define PACKED_STRUCT(name) __pragma(pack(push, 1)) struct name
+#endif
+#ifndef END_PACKED_STRUCT
+#define END_PACKED_STRUCT __pragma(pack(pop))
+#endif
+#else
+#ifndef PACKED_STRUCT
+#define PACKED_STRUCT(name) struct __attribute__((packed)) name
+#endif
+#ifndef END_PACKED_STRUCT
+#define END_PACKED_STRUCT
+#endif
 #endif
 
 #ifndef CONCATENATION

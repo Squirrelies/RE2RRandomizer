@@ -1473,7 +1473,7 @@ namespace RE2RR::Types
 #endif
 	//
 
-	struct PACKED_DATA via_vec3
+	PACKED_STRUCT(via_vec3)
 	{
 		float x; // 0x00-0x0F
 		float y; // 0x10-0x13
@@ -1496,9 +1496,10 @@ namespace RE2RR::Types
 
 			return std::make_unique<std::string>(toString.get());
 		}
-	};
+	}
+	END_PACKED_STRUCT;
 
-	struct PACKED_DATA app_ropeway_MansionManager_MapIdentifier
+	PACKED_STRUCT(app_ropeway_MansionManager_MapIdentifier)
 	{
 		uint8_t _Reserved[0x10];           // 0x00-0x0F
 		RE2RR::Types::Enums::MapID ID;     // 0x10-0x13
@@ -1519,9 +1520,10 @@ namespace RE2RR::Types
 
 			return std::make_unique<std::string>(toString.get());
 		}
-	};
+	}
+	END_PACKED_STRUCT;
 
-	typedef struct PACKED_DATA app_ropeway_gamemastering_InventoryManager_PrimitiveItem
+	typedef PACKED_STRUCT(app_ropeway_gamemastering_InventoryManager_PrimitiveItem)
 	{
 		// uint8_t _Reserved[0x10]; // 0x00-0x0F
 		RE2RR::Types::Enums::ItemType ItemId;     // 0x10-0x13
@@ -1579,10 +1581,11 @@ namespace RE2RR::Types
 
 			return std::make_unique<std::string>(toString.get());
 		}
-	} RE2RItem;
+	}
+	END_PACKED_STRUCT RE2RItem;
 	bool operator==(const RE2RItem &, const RE2RItem &);
 
-	struct PACKED_DATA ItemInformation
+	PACKED_STRUCT(ItemInformation)
 	{
 		GUID ItemPositionGUID;
 		RE2RItem Item;
@@ -1591,7 +1594,8 @@ namespace RE2RR::Types
 		RE2RR::Types::Enums::MapPartsID MapPart;
 		RE2RR::Types::Enums::Scenario Scenario;
 		RE2RR::Types::Enums::Difficulty Difficulty;
-	};
+	}
+	END_PACKED_STRUCT;
 	bool operator==(const ItemInformation &lhs, const ItemInformation &rhs);
 
 	struct GameModeKey

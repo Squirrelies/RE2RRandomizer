@@ -29,7 +29,10 @@ namespace RE2RR::Common::Logging
 		LIBRARY_EXPORT_API void AddLog(const char *str);
 		LIBRARY_EXPORT_API void AddLog(const std::string_view str);
 		template <typename... Args>
-		LIBRARY_EXPORT_API inline void AddLogF(std::string_view fmt, Args &&...args);
+		LIBRARY_EXPORT_API inline void AddLogF(std::string_view fmt, Args &&...args)
+		{
+			AddLog(std::vformat(fmt, std::make_format_args(args...)));
+		}
 		LIBRARY_EXPORT_API void Draw(const char *title, bool *p_open = NULL);
 	};
 
@@ -52,7 +55,10 @@ namespace RE2RR::Common::Logging
 
 		LIBRARY_EXPORT_API void LogMessage(std::string_view message);
 		template <typename... Args>
-		LIBRARY_EXPORT_API void LogMessage(std::string_view fmt, Args &&...args);
+		LIBRARY_EXPORT_API inline void LogMessage(std::string_view fmt, Args &&...args)
+		{
+			LogMessage(std::vformat(fmt, std::make_format_args(args...)));
+		}
 		LIBRARY_EXPORT_API void LogException(const std::exception &ex, const std::source_location &location = std::source_location::current());
 		LIBRARY_EXPORT_API UILog &GetUILog();
 	};

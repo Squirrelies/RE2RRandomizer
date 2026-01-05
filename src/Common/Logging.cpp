@@ -27,12 +27,6 @@ namespace RE2RR::Common::Logging
 				LineOffsets.push_back(old_size + 1);
 	}
 
-	template <typename... Args>
-	inline void UILog::AddLogF(std::string_view fmt, Args &&...args)
-	{
-		AddLog(std::format(fmt, std::forward<Args>(args)...).c_str());
-	}
-
 	void UILog::Draw(const char *title, bool *p_open)
 	{
 		if (!ImGui::Begin(title, p_open))
@@ -110,12 +104,6 @@ namespace RE2RR::Common::Logging
 		std::print(out, "{:s}", message.data());
 		std::fflush(out);
 		this->uiLog.AddLog(message);
-	}
-
-	template <typename... Args>
-	inline void LogMessage(const std::string_view fmt, const Args &&...args)
-	{
-		LogMessage(std::format(fmt, std::forward<Args>(args)...));
 	}
 
 	void ImmediateLogger::LogException(const std::exception &ex, const std::source_location &location)

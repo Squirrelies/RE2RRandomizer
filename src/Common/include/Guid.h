@@ -20,9 +20,9 @@
 namespace std
 {
 	template <>
-	LIBRARY_EXPORT_API struct hash<GUID>
+	struct hash<GUID>
 	{
-		constexpr size_t operator()(const GUID &guid) const noexcept
+		const size_t operator()(const GUID &guid) const noexcept
 		{
 			const uint64_t *p = reinterpret_cast<const uint64_t *>(&guid);
 			std::hash<uint64_t> hash;
@@ -31,7 +31,7 @@ namespace std
 	};
 
 	template <>
-	LIBRARY_EXPORT_API struct equal_to<GUID>
+	struct equal_to<GUID>
 	{
 		constexpr bool operator()(const GUID &lhs, const GUID &rhs) const noexcept
 		{
@@ -45,7 +45,7 @@ namespace std
 
 namespace RE2RR::Common::Guid
 {
-	LIBRARY_EXPORT_API constexpr std::string ToString(const GUID &guid) noexcept
+	LIBRARY_EXPORT_API const std::string ToString(const GUID &guid) noexcept
 	{
 		std::string guid_string((sizeof(GUID) * 2) + 4, ' ');
 

@@ -166,7 +166,7 @@ namespace RE2RR::Hook::UI
 		GameHook &hook = GameHook::GetInstance();
 
 		ImGui::Text("Resident Evil 2 (2019) Randomizer");
-		ImGui::Text("v%s", RE2RR::Common::Version::SemVer.c_str());
+		ImGui::Text("v%s", RE2RR::Common::Version::SemVer.data());
 		ImGui::Separator();
 		ImGui::BulletText("Contributors\n\tBenn Powell\n\tSquirrelies");
 		ImGui::Spacing();
@@ -182,7 +182,7 @@ namespace RE2RR::Hook::UI
 			}
 
 			ImGui::Text("Resident Evil 2 (2019) Randomizer");
-			ImGui::Text("v%s", RE2RR::Common::Version::SemVer.c_str());
+			ImGui::Text("v%s", RE2RR::Common::Version::SemVer.data());
 			ImGui::Text("%s %s (%s)",
 			            RE2RR::Types::Enums::EnumRE2RGameEditionToString(hook.GetGameEdition()).get()->c_str(),
 			            RE2RR::Types::Enums::EnumRE2RGameDXVersionToString(hook.GetGameDXVersion()).get()->c_str(),

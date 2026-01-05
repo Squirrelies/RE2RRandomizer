@@ -3,7 +3,7 @@
 void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &itemPositionGuid)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup({:s}: {:p}, *{:s}: {:s}) called.\n",
-	                  NAMEOF(itemToReplace), &itemToReplace,
+	                  NAMEOF(itemToReplace), (void *)&itemToReplace,
 	                  NAMEOF(itemPositionGuid), RE2RR::Common::Guid::ToString(itemPositionGuid).c_str());
 
 	SetLast(this->originalItemInformation[itemPositionGuid].Item, this->seed.seedData[itemPositionGuid].ReplacementItem, itemPositionGuid);
@@ -15,9 +15,9 @@ void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &i
 void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2RR::Types::RE2RItem &originalItem, const RE2RR::Types::RE2RItem &newItem)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem({:s}: {:p}, {:s}: {:p}, {:s}: {:p}).\n",
-	                  NAMEOF(itemToReplace), &itemToReplace,
-	                  NAMEOF(originalItem), &originalItem,
-	                  NAMEOF(newItem), &newItem);
+	                  NAMEOF(itemToReplace), (void *)&itemToReplace,
+	                  NAMEOF(originalItem), (void *)&originalItem,
+	                  NAMEOF(newItem), (void *)&newItem);
 
 	// Bail out of this is an invalid address for any of these parameters.
 	// It may not be important for originalItem as we only use that for logging but for now, bail-a-saurus rex!
@@ -110,7 +110,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	using namespace RE2RR::Common::Guid::Guid_Literals;
 	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks({:s}: {:p}) called.\n",
-	                  NAMEOF(gen), gen);
+	                  NAMEOF(gen), (void *)&gen);
 	std::vector<RE2RR::Types::ItemInformation> originals;
 	std::vector<RE2RR::Types::ItemInformation> candidates;
 
