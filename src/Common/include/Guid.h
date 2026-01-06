@@ -45,7 +45,7 @@ namespace std
 
 namespace RE2RR::Common::Guid
 {
-	LIBRARY_EXPORT_API const std::string ToString(const GUID &guid) noexcept
+	inline LIBRARY_EXPORT_API const std::string ToString(const GUID &guid) noexcept
 	{
 		std::string guid_string((sizeof(GUID) * 2) + 4, ' ');
 
@@ -63,7 +63,7 @@ namespace RE2RR::Common::Guid
 
 	constexpr const size_t short_guid_form_length = 36; // XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 
-	LIBRARY_EXPORT_API constexpr char ParseHexChar(const char &c)
+	inline LIBRARY_EXPORT_API constexpr char ParseHexChar(const char &c)
 	{
 		using namespace std::string_literals;
 		if ('0' <= c && c <= '9')
@@ -77,7 +77,7 @@ namespace RE2RR::Common::Guid
 	}
 
 	template <class T>
-	LIBRARY_EXPORT_API constexpr T ParseHexType(const char *ptr)
+	inline LIBRARY_EXPORT_API constexpr T ParseHexType(const char *ptr)
 	{
 		constexpr size_t digits = sizeof(T) * 2;
 		T result{};
@@ -86,7 +86,7 @@ namespace RE2RR::Common::Guid
 		return result;
 	}
 
-	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char *begin)
+	inline LIBRARY_EXPORT_API constexpr GUID ToGUID(const char *begin)
 	{
 		GUID result{};
 		result.Data1 = ParseHexType<uint32_t>(begin);
@@ -105,7 +105,7 @@ namespace RE2RR::Common::Guid
 	}
 
 	template <size_t N>
-	LIBRARY_EXPORT_API constexpr GUID ToGUID(const char (&str)[N])
+	inline LIBRARY_EXPORT_API constexpr GUID ToGUID(const char (&str)[N])
 	{
 		static_assert(N == (short_guid_form_length + 1), "String GUID of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX is expected");
 		return ToGUID(str);
@@ -113,7 +113,7 @@ namespace RE2RR::Common::Guid
 
 	inline namespace Guid_Literals
 	{
-		LIBRARY_EXPORT_API constexpr GUID operator"" _guid(const char *str, size_t N)
+		inline LIBRARY_EXPORT_API constexpr GUID operator"" _guid(const char *str, size_t N)
 		{
 			using namespace std::string_literals;
 			if (N != short_guid_form_length)

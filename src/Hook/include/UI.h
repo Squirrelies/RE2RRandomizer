@@ -5,6 +5,7 @@
 #include "GameHook.h"
 #include "Logging.h"
 #include "Strings.h"
+#include "Types.h"
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
@@ -29,29 +30,8 @@ namespace RE2RR::Hook::UI
 
 	protected:
 	public:
-		UI(RE2RR::Common::Logging::ImmediateLogger &logger) : logger(logger)
-		{
-			// this->logger = logger;
-			this->scenario = new RE2RR::Types::Enums::Scenario(RE2RR::Types::Enums::Scenario::LEON_A);
-			this->difficulty = new RE2RR::Types::Enums::Difficulty(RE2RR::Types::Enums::Difficulty::NORMAL);
-			this->randomizer = nullptr;
-			this->font = nullptr;
-		}
-		~UI()
-		{
-			// this->logger = nullptr;
-
-			delete this->scenario;
-			this->scenario = nullptr;
-
-			delete this->difficulty;
-			this->difficulty = nullptr;
-
-			delete this->randomizer;
-			this->randomizer = nullptr;
-
-			this->font = nullptr;
-		}
+		UI(RE2RR::Common::Logging::ImmediateLogger &logger);
+		~UI();
 
 		void __stdcall DrawMainUI(const bool &);
 		void __stdcall DrawLogUI(const bool &);

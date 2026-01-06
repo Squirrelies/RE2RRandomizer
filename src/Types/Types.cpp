@@ -1,6 +1,4 @@
-#define RE2RR_TYPES_CPP
 #include "Types.h"
-#undef RE2RR_TYPES_CPP
 
 namespace RE2RR::Types
 {

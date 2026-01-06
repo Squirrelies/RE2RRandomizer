@@ -25,9 +25,9 @@
 class Randomizer
 {
 private:
-	const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> floorNames = RE2RR::Database::GetFloorIDNames();
-	const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> mapNames = RE2RR::Database::GetMapIDNames();
-	const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> mapPartNames = RE2RR::Database::GetMapPartsIDNames();
+	std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> floorNames;
+	std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> mapNames;
+	std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> mapPartNames;
 
 	RE2RR::Common::Logging::ImmediateLogger &logger;
 	bool &debugSkipRandomization;
@@ -60,6 +60,7 @@ private:
 	/// @brief
 	/// @param gen
 	void HandleSoftLocks(std::mt19937 &gen);
+
 	/// @brief Adds a key item to a random one of the item drop candidates.
 	/// @param originals The original items' drop location.
 	/// @param destinations The candidate item drop locations we want this item to potentially be placed.
@@ -68,19 +69,8 @@ private:
 
 protected:
 public:
-	Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &debugSkipRandomization) : logger(logger), debugSkipRandomization(debugSkipRandomization)
-	{
-		this->seed = {};
-		this->mapPartsId = RE2RR::Types::Enums::MapPartsID::Invalid;
-		this->mapId = RE2RR::Types::Enums::MapID::Invalid;
-		this->floorId = RE2RR::Types::Enums::FloorID::None;
-
-		logger.LogMessage("[RE2R-R] Randomizer::ctor(%s: %p) called.\n",
-		                  NAMEOF(logger), (void *)&logger);
-	}
-	~Randomizer(void)
-	{
-	}
+	Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &debugSkipRandomization);
+	~Randomizer(void);
 
 	void ItemPickup(RE2RR::Types::RE2RItem &, const GUID &);
 	bool ChangeArea(RE2RR::Types::Enums::MapPartsID, RE2RR::Types::Enums::MapID, RE2RR::Types::Enums::FloorID);

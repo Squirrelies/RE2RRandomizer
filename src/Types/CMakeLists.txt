@@ -9,13 +9,14 @@ add_library(${PROJECT_NAME} SHARED)
 add_library(RE2RR::Types ALIAS ${PROJECT_NAME})
 
 set_project_compile_options(${PROJECT_NAME})
-set_project_compile_definitions(${PROJECT_NAME})
+set_project_compile_definitions(${PROJECT_NAME} RE2RR_TYPES_CPP)
 set_project_link_options(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
         ${PROJECT_BINARY_DIR}/VersionInfoTypes.rc
         Types.cpp
+        Types_Enum.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

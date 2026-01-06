@@ -73,7 +73,7 @@ namespace RE2RR::Common
 	constinit const bool IsDebug = false;
 #endif
 
-	extern std::string lastExceptionMessage;
+	extern LIBRARY_EXPORT_API std::string lastExceptionMessage;
 
 	namespace Version
 	{

@@ -1,5 +1,24 @@
 #include "Randomizer.h"
 
+Randomizer::Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &debugSkipRandomization) : logger(logger), debugSkipRandomization(debugSkipRandomization)
+{
+	this->seed = {};
+	this->mapPartsId = RE2RR::Types::Enums::MapPartsID::Invalid;
+	this->mapId = RE2RR::Types::Enums::MapID::Invalid;
+	this->floorId = RE2RR::Types::Enums::FloorID::None;
+
+	this->floorNames = RE2RR::Database::GetFloorIDNames();
+	this->mapNames = RE2RR::Database::GetMapIDNames();
+	this->mapPartNames = RE2RR::Database::GetMapPartsIDNames();
+
+	logger.LogMessage("[RE2R-R] Randomizer::ctor(%s: %p) called.\n",
+	                  NAMEOF(logger), (void *)&logger);
+}
+
+Randomizer::~Randomizer(void)
+{
+}
+
 void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &itemPositionGuid)
 {
 	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup({:s}: {:p}, *{:s}: {:s}) called.\n",

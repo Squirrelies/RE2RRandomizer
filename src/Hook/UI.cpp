@@ -2,6 +2,31 @@
 
 namespace RE2RR::Hook::UI
 {
+	UI::UI(RE2RR::Common::Logging::ImmediateLogger &logger) : logger(logger)
+	{
+		// this->logger = logger;
+		this->scenario = new RE2RR::Types::Enums::Scenario(RE2RR::Types::Enums::Scenario::LEON_A);
+		this->difficulty = new RE2RR::Types::Enums::Difficulty(RE2RR::Types::Enums::Difficulty::NORMAL);
+		this->randomizer = nullptr;
+		this->font = nullptr;
+	}
+
+	UI::~UI()
+	{
+		// this->logger = nullptr;
+
+		delete this->scenario;
+		this->scenario = nullptr;
+
+		delete this->difficulty;
+		this->difficulty = nullptr;
+
+		delete this->randomizer;
+		this->randomizer = nullptr;
+
+		this->font = nullptr;
+	}
+
 	void __stdcall UI::DrawMainUI(const bool &open)
 	{
 		// Always shown items (shown even if the Main UI is hidden)
