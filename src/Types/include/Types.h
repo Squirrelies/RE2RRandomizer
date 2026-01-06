@@ -1583,7 +1583,7 @@ namespace RE2RR::Types
 		}
 	}
 	END_PACKED_STRUCT RE2RItem;
-	extern bool operator==(const RE2RItem &, const RE2RItem &);
+	extern LIBRARY_EXPORT_API bool operator==(const RE2RItem &, const RE2RItem &);
 
 	PACKED_STRUCT(ItemInformation)
 	{
@@ -1596,21 +1596,21 @@ namespace RE2RR::Types
 		RE2RR::Types::Enums::Difficulty Difficulty;
 	}
 	END_PACKED_STRUCT;
-	extern bool operator==(const ItemInformation &lhs, const ItemInformation &rhs);
+	extern LIBRARY_EXPORT_API bool operator==(const ItemInformation &lhs, const ItemInformation &rhs);
 
 	struct GameModeKey
 	{
 		RE2RR::Types::Enums::Scenario Scenario;
 		RE2RR::Types::Enums::Difficulty Difficulty;
 	};
-	extern bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
+	extern LIBRARY_EXPORT_API bool operator==(const GameModeKey &lhs, const GameModeKey &rhs);
 
 	struct RandomizedItem
 	{
 		GUID OriginalGUID;
 		RE2RItem ReplacementItem;
 	};
-	extern bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs);
+	extern LIBRARY_EXPORT_API bool operator==(const RandomizedItem &lhs, const RandomizedItem &rhs);
 
 	struct Seed
 	{
@@ -1618,7 +1618,7 @@ namespace RE2RR::Types
 		GameModeKey gameMode = {.Scenario = RE2RR::Types::Enums::Scenario::INVALID, .Difficulty = RE2RR::Types::Enums::Difficulty::EASY};
 		std::unordered_map<GUID, RandomizedItem, std::hash<GUID>, std::equal_to<GUID>> seedData = {};
 	};
-	extern bool operator==(const Seed &lhs, const Seed &rhs);
+	extern LIBRARY_EXPORT_API bool operator==(const Seed &lhs, const Seed &rhs);
 }
 
 namespace std

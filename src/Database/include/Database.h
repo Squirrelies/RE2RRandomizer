@@ -11,10 +11,10 @@
 
 namespace RE2RR::Database
 {
-	extern const std::span<const RE2RR::Types::ItemInformation> GetItemDB();
-	extern const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> GetFloorIDNames();
-	extern const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> GetMapIDNames();
-	extern const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> GetMapPartsIDNames();
+	extern LIBRARY_EXPORT_API const std::span<const RE2RR::Types::ItemInformation> GetItemDB();
+	extern LIBRARY_EXPORT_API const std::span<const std::pair<const RE2RR::Types::Enums::FloorID, const char *>> GetFloorIDNames();
+	extern LIBRARY_EXPORT_API const std::span<const std::pair<const RE2RR::Types::Enums::MapID, const char *>> GetMapIDNames();
+	extern LIBRARY_EXPORT_API const std::span<const std::pair<const RE2RR::Types::Enums::MapPartsID, const char *>> GetMapPartsIDNames();
 
 	template <typename K>
 	concept AllowedLookupKeyTypes = std::same_as<K, RE2RR::Types::Enums::FloorID> ||
