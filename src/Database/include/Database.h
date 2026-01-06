@@ -22,12 +22,33 @@ namespace RE2RR::Database
 	                                std::same_as<K, RE2RR::Types::Enums::MapPartsID>;
 
 	template <AllowedLookupKeyTypes K>
-	LIBRARY_EXPORT_API const char *GetLookupValue(const std::unordered_map<const K, const char *> &map, const K &key, const char (&defaultValue)[])
+	LIBRARY_EXPORT_API const char *GetLookupValue(const std::span<const std::pair<const K, const char *>> &map, const K &key)
 	{
-		if (auto search = map.find(key); search != map.end())
-			return search->second;
+		if (auto it = std::ranges::find_if(map, [&key](const auto &p)
+		                                   { return p.first == key; });
+		    it != map.end())
+			return it->second;
+		else
+			throw new std::out_of_range("Key not found in span pair");
+	}
+
+	template <AllowedLookupKeyTypes K>
+	LIBRARY_EXPORT_API const char *GetLookupValue(const std::span<const std::pair<const K, const char *>> &map, const K &key, const char (&defaultValue)[])
+	{
+		if (auto it = std::ranges::find_if(map, [&key](const auto &p)
+		                                   { return p.first == key; });
+		    it != map.end())
+			return it->second;
 		else
 			return defaultValue;
+	}
+
+	template <AllowedLookupKeyTypes K>
+	LIBRARY_EXPORT_API const bool Contains(const std::span<const std::pair<const K, const char *>> &map, const K &key)
+	{
+		auto it = std::ranges::find_if(map, [&key](const auto &p)
+		                               { return p.first == key; });
+		return it != map.end();
 	}
 }
 

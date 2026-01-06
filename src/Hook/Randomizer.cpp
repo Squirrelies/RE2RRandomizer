@@ -449,24 +449,24 @@ const RE2RR::Types::Enums::MapPartsID Randomizer::GetMapPartsID()
 
 const std::unique_ptr<const std::string> Randomizer::GetFloorName()
 {
-	if (floorNames.contains(floorId))
-		return std::make_unique<const std::string>(std::format("{} ({})", floorNames.at(floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
+	if (RE2RR::Database::Contains(floorNames, floorId))
+		return std::make_unique<const std::string>(std::format("{} ({})", RE2RR::Database::GetLookupValue(floorNames, floorId), *RE2RR::Types::Enums::EnumFloorIDToString(floorId).get()));
 	else
 		return RE2RR::Types::Enums::EnumFloorIDToString(floorId);
 }
 
 const std::unique_ptr<const std::string> Randomizer::GetMapName()
 {
-	if (mapNames.contains(mapId))
-		return std::make_unique<const std::string>(std::format("{} ({})", mapNames.at(mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
+	if (RE2RR::Database::Contains(mapNames, mapId))
+		return std::make_unique<const std::string>(std::format("{} ({})", RE2RR::Database::GetLookupValue(mapNames, mapId), *RE2RR::Types::Enums::EnumMapIDToString(mapId).get()));
 	else
 		return RE2RR::Types::Enums::EnumMapIDToString(mapId);
 }
 
 const std::unique_ptr<const std::string> Randomizer::GetMapPartsName()
 {
-	if (mapPartNames.contains(mapPartsId))
-		return std::make_unique<const std::string>(std::format("{} ({})", mapPartNames.at(mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
+	if (RE2RR::Database::Contains(mapPartNames, mapPartsId))
+		return std::make_unique<const std::string>(std::format("{} ({})", RE2RR::Database::GetLookupValue(mapPartNames, mapPartsId), *RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId).get()));
 	else
 		return RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsId);
 }
