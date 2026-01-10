@@ -3,6 +3,8 @@
 
 namespace RE2RR::Hook
 {
+	using namespace std::string_view_literals;
+
 	// uintptr_t GameHook::ItemPlacement1FuncOffset = 0;
 	// uintptr_t GameHook::ItemPlacement2FuncOffset = 0;
 	uintptr_t GameHook::ItemPickupFuncOffset = 0;
@@ -38,7 +40,7 @@ namespace RE2RR::Hook
 	{
 		// This might not have been setup properly if Startup() failed.
 		if (startupSuccess)
-			logger->LogMessage("[RE2R-R] Shutdown called.\n");
+			logger->LogMessage("[RE2R-R] Shutdown called.\n"sv);
 
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_RemoveHook(MH_ALL_HOOKS);
@@ -110,14 +112,14 @@ namespace RE2RR::Hook
 			return false;
 		}
 
-		logger->LogMessage("[RE2R-R] GameHook::Initialize called.\n");
+		logger->LogMessage("[RE2R-R] GameHook::Initialize called.\n"sv);
 
 		window = FindWindow(L"via", L"RESIDENT EVIL 2");
 		if (window == nullptr)
 			window = FindWindow(L"via", L"BIOHAZARD RE:2 Z Version");
 		if (window == nullptr)
 		{
-			logger->LogMessage("[RE2R-R] GameHook::Initialize unable to find game window handle!\n");
+			logger->LogMessage("[RE2R-R] GameHook::Initialize unable to find game window handle!\n"sv);
 			Shutdown();
 			return FALSE;
 		}
@@ -134,13 +136,13 @@ namespace RE2RR::Hook
 	// Main thread
 	DWORD WINAPI GameHook::MainThreadProc()
 	{
-		logger->LogMessage("[RE2R-R] MainThreadProc called.\n");
+		logger->LogMessage("[RE2R-R] MainThreadProc called.\n"sv);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
 		const std::unique_ptr<char[]> gameExePath = RE2RR::Common::Process::GetProcessModulePathByNameA(GetCurrentProcess(), "re2.exe");
 		if (!RE2RR::Hook::Hashes::DetectVersion(gameExePath.get(), gameVersion, gameEdition, gameDXVersion, *logger))
 		{
-			logger->LogMessage("[RE2R-R] Unable to detect game version, shutting down...\n");
+			logger->LogMessage("[RE2R-R] Unable to detect game version, shutting down...\n"sv);
 			Shutdown();
 			return FALSE; // Bail out if we can't detect version.
 		}
@@ -203,19 +205,19 @@ namespace RE2RR::Hook
 		} while (!TryHookFunction<Present>((Present)vtableDXGISwapChain[8], (Present)HookPresent, &presentFunc, status));
 
 		if (!TryHookFunction<GetDeviceState>((GetDeviceState)vtableDirectInputDevice8[9], (GetDeviceState)HookGetDeviceState, &getDeviceStateFunc, status))
-			logger->LogMessage("[RE2R-R] Hook failed (HookGetDeviceState): %s\n", MH_StatusToString(status));
+			logger->LogMessage("[RE2R-R] Hook failed (HookGetDeviceState): {:s}\n"sv, MH_StatusToString(status));
 
 		if (!TryHookFunction<ItemPickup>(itemPickupFuncTarget, (ItemPickup)HookItemPickup, &itemPickupFunc, status))
-			logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): %s\n", MH_StatusToString(status));
+			logger->LogMessage("[RE2R-R] Hook failed (HookItemPickup): {:s}\n"sv, MH_StatusToString(status));
 
 		if (!TryHookFunction<UIMapManagerUpdate>(uiMapManagerUpdateFuncTarget, (UIMapManagerUpdate)HookUIMapManagerUpdate, &uiMapManagerUpdateFunc, status))
-			logger->LogMessage("[RE2R-R] Hook failed (HookUIMapManagerUpdate): %s\n", MH_StatusToString(status));
+			logger->LogMessage("[RE2R-R] Hook failed (HookUIMapManagerUpdate): {:s}\n"sv, MH_StatusToString(status));
 
-		logger->LogMessage("[RE2R-R] Hooked.\n");
+		logger->LogMessage("[RE2R-R] Hooked.\n"sv);
 
-		logger->LogMessage("[RE2R-R] Usage:\n");
-		logger->LogMessage("\t(F7): Toggle UI)\n");
-		logger->LogMessage("\t(F8): Exit)\n");
+		logger->LogMessage("[RE2R-R] Usage:\n"sv);
+		logger->LogMessage("\t(F7): Toggle UI)\n"sv);
+		logger->LogMessage("\t(F8): Exit)\n"sv);
 
 		return TRUE;
 	}
@@ -253,7 +255,7 @@ namespace RE2RR::Hook
 		SetLastError(lastError);
 		wndProcFunc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)HookWndProc);
 		if ((wndProcFunc == nullptr) && ((lastError = GetLastError()) != 0))
-			logger->LogMessage("Error in InitImGui() [SetWindowLongPtr]: %d (0x%lX)\n", lastError, lastError);
+			logger->LogMessage("Error in InitImGui() [SetWindowLongPtr]: {:d} (0x{:lX})\n"sv, lastError, lastError);
 		device->GetImmediateContext(&deviceContext);
 		CreateRenderTarget(swapChain);
 		ImGui::CreateContext();
@@ -272,7 +274,7 @@ namespace RE2RR::Hook
 	// Set up vtables
 	void GameHook::SetVTables()
 	{
-		logger->LogMessage("SetVTables() 1.0\n");
+		logger->LogMessage("SetVTables() 1.0\n"sv);
 
 		DXGI_SWAP_CHAIN_DESC sd;
 		memset(&sd, 0, sizeof(sd));
@@ -315,7 +317,7 @@ namespace RE2RR::Hook
 		         &directInputDevice8,
 		         NULL)) == DI_OK)
 		{
-			logger->LogMessage("SetVTables() 1.1t\n");
+			logger->LogMessage("SetVTables() 1.1t\n"sv);
 
 			vtableDXGISwapChain = (void **)calloc(40, sizeof(void *));
 			memcpy(vtableDXGISwapChain, *(void ***)dxgiSwapChain, 40 * sizeof(void *));
@@ -338,11 +340,11 @@ namespace RE2RR::Hook
 			d3d11Device->Release();
 			dxgiSwapChain->Release();
 
-			logger->LogMessage("SetVTables() 1.2 (IDXGISwapChain::Present: %p, IDXGISwapChain1::Present1: %p)\n", vtableDXGISwapChain[8], vtableDXGISwapChain[22]);
+			logger->LogMessage("SetVTables() 1.2 (IDXGISwapChain::Present: {:p}, IDXGISwapChain1::Present1: {:p})\n"sv, vtableDXGISwapChain[8], vtableDXGISwapChain[22]);
 		}
 
 		if (result != S_OK)
-			logger->LogMessage("SetVTables() 1.1f (HRESULT %d (0x%lX))\n", result, result);
+			logger->LogMessage("SetVTables() 1.1f (HRESULT {:d} (0x{:lX}))\n"sv, result, result);
 	}
 
 	// Create render target
@@ -476,31 +478,31 @@ namespace RE2RR::Hook
 
 		if (!hook.initGetDeviceStateKB && cbData == 256)
 		{
-			hook.logger->LogMessage("HookGetDeviceState() -> KB Init\n");
+			hook.logger->LogMessage("HookGetDeviceState() -> KB Init\n"sv);
 			device->SetCooperativeLevel(hook.window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 			hook.initGetDeviceStateKB = true;
 		}
 		else if (!hook.initGetDeviceStateM1 && cbData == sizeof(DIMOUSESTATE))
 		{
-			hook.logger->LogMessage("HookGetDeviceState() -> Mouse 1 Init\n");
+			hook.logger->LogMessage("HookGetDeviceState() -> Mouse 1 Init\n"sv);
 			device->SetCooperativeLevel(hook.window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 			hook.initGetDeviceStateM1 = true;
 		}
 		else if (!hook.initGetDeviceStateM2 && cbData == sizeof(DIMOUSESTATE2))
 		{
-			hook.logger->LogMessage("HookGetDeviceState() -> Mouse 2 Init\n");
+			hook.logger->LogMessage("HookGetDeviceState() -> Mouse 2 Init\n"sv);
 			device->SetCooperativeLevel(hook.window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 			hook.initGetDeviceStateM2 = true;
 		}
 		else if (!hook.initGetDeviceStateJ1 && cbData == sizeof(DIJOYSTATE))
 		{
-			hook.logger->LogMessage("HookGetDeviceState() -> Joypad 1 Init\n");
+			hook.logger->LogMessage("HookGetDeviceState() -> Joypad 1 Init\n"sv);
 			device->SetCooperativeLevel(hook.window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 			hook.initGetDeviceStateJ1 = true;
 		}
 		else if (!hook.initGetDeviceStateJ2 && cbData == sizeof(DIJOYSTATE2))
 		{
-			hook.logger->LogMessage("HookGetDeviceState() -> Joypad 2 Init\n");
+			hook.logger->LogMessage("HookGetDeviceState() -> Joypad 2 Init\n"sv);
 			device->SetCooperativeLevel(hook.window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 			hook.initGetDeviceStateJ2 = true;
 		}
@@ -552,7 +554,7 @@ namespace RE2RR::Hook
 			RE2RR::Types::Enums::FloorID floorID = *(RE2RR::Types::Enums::FloorID *)(param2 + 0xD4);
 
 			if (randomizer->ChangeArea(mapPartsID, mapID, floorID))
-				hook.logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. %s / %s / %s\n",
+				hook.logger->LogMessage("[RE2R-R] HookUIMapManagerUpdate called. {:s} / {:s} / {:s}\n"sv,
 				                        RE2RR::Types::Enums::EnumMapPartsIDToString(mapPartsID).get()->c_str(),
 				                        RE2RR::Types::Enums::EnumMapIDToString(mapID).get()->c_str(),
 				                        RE2RR::Types::Enums::EnumFloorIDToString(floorID).get()->c_str());

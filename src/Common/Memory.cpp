@@ -2,6 +2,8 @@
 
 namespace RE2RR::Common::Memory
 {
+	using namespace std::string_view_literals;
+
 	bool TryFindPatternOffset(HANDLE hProcess, HMODULE hModule, std::vector<char16_t> pattern, uint64_t *offset, uint64_t startOffset)
 	{
 		MODULEINFO moduleInfo;
@@ -61,7 +63,7 @@ namespace RE2RR::Common::Memory
 
 	bool TryReadPointer(const void *pointer, const std::vector<uint32_t> &&offsets, void **object, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger)
 	{
-		logger.LogMessage("[TryReadPointer: {:s}] Begin {:s}: {:p}\n", pointerName, NAMEOF(pointer), pointer);
+		logger.LogMessage("[TryReadPointer: {:s}] Begin {:s}: {:p}\n"sv, pointerName, NAMEOF(pointer), pointer);
 		try
 		{
 			*object = const_cast<void *>(pointer);
@@ -69,12 +71,12 @@ namespace RE2RR::Common::Memory
 			{
 				if ((void *)((uintptr_t)*object + offsets[i]) == nullptr)
 				{
-					logger.LogMessage("[TryReadPointer: {:s}] Failure {:s}: {:p}\n", pointerName, NAMEOF(object), *object);
+					logger.LogMessage("[TryReadPointer: {:s}] Failure {:s}: {:p}\n"sv, pointerName, NAMEOF(object), *object);
 					return false;
 				}
 				*object = (void *)((uintptr_t)*object + offsets[i]);
 			}
-			logger.LogMessage("[TryReadPointer: {:s}] Success {:s}: {:p}\n", pointerName, NAMEOF(object), *object);
+			logger.LogMessage("[TryReadPointer: {:s}] Success {:s}: {:p}\n"sv, pointerName, NAMEOF(object), *object);
 			return true;
 		}
 		catch (const std::exception &ex)
@@ -86,11 +88,11 @@ namespace RE2RR::Common::Memory
 
 	bool TryValidatePointerStart(const void *pointer, const char *pointerName, RE2RR::Common::Logging::ImmediateLogger &logger)
 	{
-		logger.LogMessage("[TryValidatePointerStart: {:s}] Begin {:s}: {:p}\n", pointerName, NAMEOF(pointer), pointer);
+		logger.LogMessage("[TryValidatePointerStart: {:s}] Begin {:s}: {:p}\n"sv, pointerName, NAMEOF(pointer), pointer);
 
 		if (pointer == nullptr)
 		{
-			logger.LogMessage("[TryValidatePointerStart: {:s}] Error: Null Pointer\n",
+			logger.LogMessage("[TryValidatePointerStart: {:s}] Error: Null Pointer\n"sv,
 			                  pointerName);
 
 			return false;
@@ -102,7 +104,7 @@ namespace RE2RR::Common::Memory
 			if (VirtualQuery(const_cast<void *>(pointer), &mbi, sizeof(MEMORY_BASIC_INFORMATION)) == 0)
 			{
 				uint32_t lastWin32Error = GetLastError();
-				logger.LogMessage("[TryValidatePointerStart: {:s}] Error: {:u} (0x{:X})\n",
+				logger.LogMessage("[TryValidatePointerStart: {:s}] Error: {:u} (0x{:X})\n"sv,
 				                  pointerName,
 				                  lastWin32Error,
 				                  lastWin32Error);
@@ -110,7 +112,7 @@ namespace RE2RR::Common::Memory
 				return false;
 			}
 
-			logger.LogMessage("[TryValidatePointerStart: {:s}] Success {:s}: {:p}\n", pointerName, NAMEOF(pointer), pointer);
+			logger.LogMessage("[TryValidatePointerStart: {:s}] Success {:s}: {:p}\n"sv, pointerName, NAMEOF(pointer), pointer);
 			return true;
 		}
 		catch (const std::exception &ex)

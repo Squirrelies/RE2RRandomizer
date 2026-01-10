@@ -29,7 +29,7 @@ namespace RE2RR::Common::Logging
 		LIBRARY_EXPORT_API void AddLog(const char *str);
 		LIBRARY_EXPORT_API void AddLog(const std::string_view str);
 		template <typename... Args>
-		LIBRARY_EXPORT_API inline void AddLogF(std::string_view fmt, Args &&...args)
+		LIBRARY_EXPORT_API inline void AddLogF(const std::string_view fmt, Args &&...args)
 		{
 			AddLog(std::vformat(fmt, std::make_format_args(args...)));
 		}
@@ -53,9 +53,9 @@ namespace RE2RR::Common::Logging
 			std::fflush(out);
 		}
 
-		LIBRARY_EXPORT_API void LogMessage(std::string_view message);
+		LIBRARY_EXPORT_API void LogMessage(const std::string_view message);
 		template <typename... Args>
-		LIBRARY_EXPORT_API inline void LogMessage(std::string_view fmt, Args &&...args)
+		LIBRARY_EXPORT_API inline void LogMessage(const std::string_view fmt, Args &&...args)
 		{
 			LogMessage(std::vformat(fmt, std::make_format_args(args...)));
 		}

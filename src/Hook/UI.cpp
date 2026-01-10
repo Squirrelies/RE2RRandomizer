@@ -2,6 +2,8 @@
 
 namespace RE2RR::Hook::UI
 {
+	using namespace std::string_view_literals;
+
 	UI::UI(RE2RR::Common::Logging::ImmediateLogger &logger) : logger(logger)
 	{
 		// this->logger = logger;
@@ -61,7 +63,7 @@ namespace RE2RR::Hook::UI
 			{
 				if (ImGui::MenuItem("Export Cheat Sheet", NULL, false, true))
 				{
-					logger.LogMessage("Export Cheat Sheet clicked!\n");
+					logger.LogMessage("Export Cheat Sheet clicked!\n"sv);
 					randomizer->ExportCheatSheet();
 				}
 				ImGui::EndMenu();
@@ -116,19 +118,19 @@ namespace RE2RR::Hook::UI
 		ImGui::InputInt("Seed", &randomSeed, 1, 1000);
 		if (ImGui::Button("Generate New Seed"))
 		{
-			logger.LogMessage("Generate New Seed clicked!\n");
+			logger.LogMessage("Generate New Seed clicked!\n"sv);
 			randomSeed = randomDevice();
 		}
 		ImGui::SameLine();
 		if (randomizer == nullptr && ImGui::Button("Attach"))
 		{
-			logger.LogMessage("Attach clicked for seed %d!\n", randomSeed);
+			logger.LogMessage("Attach clicked for seed {:d}!\n"sv, randomSeed);
 			randomizer = new Randomizer(logger, show_Debug_DisableRandomize);
 			randomizer->Randomize(*difficulty, *scenario, randomSeed);
 		}
 		else if (randomizer != nullptr && ImGui::Button("Detach"))
 		{
-			logger.LogMessage("Detach clicked!\n");
+			logger.LogMessage("Detach clicked!\n"sv);
 			delete randomizer;
 			randomizer = nullptr;
 		}

@@ -1,5 +1,7 @@
 #include "Randomizer.h"
 
+using namespace std::string_view_literals;
+
 Randomizer::Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &debugSkipRandomization) : logger(logger), debugSkipRandomization(debugSkipRandomization)
 {
 	this->seed = {};
@@ -11,7 +13,7 @@ Randomizer::Randomizer(RE2RR::Common::Logging::ImmediateLogger &logger, bool &de
 	this->mapNames = RE2RR::Database::GetMapIDNames();
 	this->mapPartNames = RE2RR::Database::GetMapPartsIDNames();
 
-	logger.LogMessage("[RE2R-R] Randomizer::ctor(%s: %p) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::ctor({:s}: {:p}) called.\n"sv,
 	                  NAMEOF(logger), (void *)&logger);
 }
 
@@ -21,7 +23,7 @@ Randomizer::~Randomizer(void)
 
 void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &itemPositionGuid)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup({:s}: {:p}, *{:s}: {:s}) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::ItemPickup({:s}: {:p}, *{:s}: {:s}) called.\n"sv,
 	                  NAMEOF(itemToReplace), (void *)&itemToReplace,
 	                  NAMEOF(itemPositionGuid), RE2RR::Common::Guid::ToString(itemPositionGuid).c_str());
 
@@ -33,7 +35,7 @@ void Randomizer::ItemPickup(RE2RR::Types::RE2RItem &itemToReplace, const GUID &i
 
 void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2RR::Types::RE2RItem &originalItem, const RE2RR::Types::RE2RItem &newItem)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem({:s}: {:p}, {:s}: {:p}, {:s}: {:p}).\n",
+	logger.LogMessage("[RE2R-R] Randomizer::RandomizeItem({:s}: {:p}, {:s}: {:p}, {:s}: {:p}).\n"sv,
 	                  NAMEOF(itemToReplace), (void *)&itemToReplace,
 	                  NAMEOF(originalItem), (void *)&originalItem,
 	                  NAMEOF(newItem), (void *)&newItem);
@@ -45,7 +47,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 	    !RE2RR::Common::Memory::TryValidatePointerStart(&newItem, NAMEOF(newItem), logger))
 		return;
 
-	logger.LogMessage("\t{:s}\n\t{:s}\n",
+	logger.LogMessage("\t{:s}\n\t{:s}\n"sv,
 	                  originalItem.ToString().get()->c_str(),
 	                  newItem.ToString().get()->c_str());
 
@@ -62,7 +64,7 @@ void Randomizer::RandomizeItem(RE2RR::Types::RE2RItem &itemToReplace, const RE2R
 
 void Randomizer::Randomize(const RE2RR::Types::Enums::Difficulty &difficulty, const RE2RR::Types::Enums::Scenario &scenario, int_fast32_t initialSeed)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::Randomize({:s}: {:s}, {:s}: {:s}, {:s}: {:d}) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::Randomize({:s}: {:s}, {:s}: {:s}, {:s}: {:d}) called.\n"sv,
 	                  NAMEOF(difficulty), RE2RR::Types::Enums::EnumDifficultyToString(difficulty).get()->c_str(),
 	                  NAMEOF(scenario), RE2RR::Types::Enums::EnumScenarioToString(scenario).get()->c_str(),
 	                  NAMEOF(initialSeed), initialSeed);
@@ -128,12 +130,12 @@ const std::vector<RE2RR::Types::ItemInformation> Randomizer::GetCandidates(const
 void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 {
 	using namespace RE2RR::Common::Guid::Guid_Literals;
-	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks({:s}: {:p}) called.\n",
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks({:s}: {:p}) called.\n"sv,
 	                  NAMEOF(gen), (void *)&gen);
 	std::vector<RE2RR::Types::ItemInformation> originals;
 	std::vector<RE2RR::Types::ItemInformation> candidates;
 
-	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Non-randomized items section.\n"sv);
 	for (const auto &[_, value] : originalItemInformation)
 	{
 		// if (value.Floor == RE2RR::Types::Enums::FloorID::OrphanAsylum_A ||
@@ -157,7 +159,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 
 	if (seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::CLAIRE_A || seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::LEON_A) // A scenarios
 	{
-		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n");
+		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: A scenario section.\n"sv);
 
 		// TODO: Redo this. Some of these can probably be randomized (KeySpade, BoltCutter).
 		for (const auto &[_, value] : originalItemInformation)
@@ -177,7 +179,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 	}
 	else // B scenarios
 	{
-		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n");
+		logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: B scenario section.\n"sv);
 
 		auto boltCutter = GetCandidates([](const std::pair<GUID, RE2RR::Types::ItemInformation> &kv)
 		                                { return kv.second.Item.ItemId == RE2RR::Types::Enums::ItemType::BoltCutter; })
@@ -305,7 +307,7 @@ void Randomizer::HandleSoftLocks(std::mt19937 &gen)
 		}
 	}
 
-	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::HandleSoftLocks: Completed.\n"sv);
 }
 
 void Randomizer::AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &originals, std::vector<RE2RR::Types::ItemInformation> &destinations, std::mt19937 &gen)
@@ -326,14 +328,14 @@ void Randomizer::AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &original
 	// Don't proceed if we're empty...
 	if (originals.empty() || destinations.empty())
 	{
-		logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem: No valid GUIDs available after filtering\n");
+		logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem: No valid GUIDs available after filtering\n"sv);
 		return;
 	}
 
 	size_t origIndex = std::uniform_int_distribution<size_t>(0, originals.size() - 1)(gen);
 	size_t destIndex = std::uniform_int_distribution<size_t>(0, destinations.size() - 1)(gen);
 
-	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[{:d}]\n\t{:s} ({:s})\n\t{:s} ({:s})\n",
+	logger.LogMessage("[RE2R-R] Randomizer::AddKeyItem[{:d}]\n\t{:s} ({:s})\n\t{:s} ({:s})\n"sv,
 	                  destIndex,
 	                  destinations[destIndex].Item.ToString().get()->c_str(),
 	                  RE2RR::Common::Guid::ToString(destinations[destIndex].ItemPositionGUID).c_str(),
@@ -348,7 +350,7 @@ void Randomizer::AddKeyItem(std::vector<RE2RR::Types::ItemInformation> &original
 
 const RE2RR::Types::Seed &Randomizer::GetSeed(void)
 {
-	logger.LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n");
+	logger.LogMessage("[RE2R-R] Randomizer::GetSeed() called.\n"sv);
 	return this->seed;
 }
 
@@ -356,7 +358,7 @@ void Randomizer::ExportCheatSheet()
 {
 	if (seed.gameMode.Scenario == RE2RR::Types::Enums::Scenario::INVALID)
 	{
-		logger.LogMessage("Seed not yet initialized!\n");
+		logger.LogMessage("Seed not yet initialized!\n"sv);
 		return;
 	}
 
@@ -365,7 +367,7 @@ void Randomizer::ExportCheatSheet()
 
 	if (!file.is_open())
 	{
-		logger.LogMessage("Unable to open file for writing: {:s}\n", filename.c_str());
+		logger.LogMessage("Unable to open file for writing: {:s}\n"sv, filename.c_str());
 		return;
 	}
 
